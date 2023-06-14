@@ -24,12 +24,13 @@ utterance_data = {
     ],
 }
 output_path = "/path/to/output"
-utterance_data_instance = InitUtteranceDict(utterance_data, output_path)
-marker_data_instance = MarkerUtteranceDict(utterance_data_instance)
-structure_interact_instance = StructureInteract(marker_data_instance)
-function_list = structure_interact_instance.function_list
-for x in function_list:
-    print(function_list)
+##utterance_data_instance = InitUtteranceDict(utterance_data, output_path)
+##marker_data_instance = MarkerUtteranceDict(utterance_data_instance)
+##structure_interact_instance = StructureInteract(marker_data_instance)
+structure_interact_instance = StructureInteract(utterance_data)
+names = structure_interact_instance.function_names("config.toml")
+for x in names:
+    print(x)
 
 
 # if __name__ == "__main__":

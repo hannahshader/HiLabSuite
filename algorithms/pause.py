@@ -2,9 +2,11 @@ import logging
 import io
 from typing import Dict, Any, List
 from dataclasses import dataclass
-from data_structures.data_objects import Marker
+from data_structures.data_objects import INTERNAL_MARKER, load_threshold
 from data_structures.data_objects import UttObj
 
+MARKER = INTERNAL_MARKER
+THRESHOLD = load_threshold()
 
 """
 Take two word nodes next to each other
@@ -14,9 +16,9 @@ Return a pause marker to insert
 
 class PausePlugin:
     def __init__(self) -> None:
-        pass
+        super().__init__()
 
-    def PauseMarker(curr_node, next_node):
+    def PauseMarker(curr, curr_next_value):
         """
         Algorithm:
         1.  takes in curr_node and get curr_next_node
@@ -29,49 +31,53 @@ class PausePlugin:
 
         """
 
-        # calculate floor transfer offset
-        fto = round(next_node[0].startTime - curr_node[-1].endTime, 2)
-
-        # only add a speaker marker if speakers are the same
-        if curr_node[0].sLabel == next_node[0].sLabel:
-            fto = round(next_node[0].startTime - curr_node[-1].endTime, 2)
+        # use existing algorithm to determine whether there is a pause
+        if curr[0].sLabel == curr_next_value[0].sLabel:
+            fto = round(curr_next_value[0].startTime - curr[-1].endTime, 2)
             markerText = ""
-            logging.info(f"get fto {fto}")
 
-            # determines if the threshold is reached for a latch
-            if THRESHOLD.LB_LATCH <= fto <= THRESHOLD.UB_LATCH:
-                logging.debug(f"latch detected with fto {fto}")
+            if (THRESHOLD.LB_LATCH <= fto) and (fto <= THRESHOLD.UB_LATCH):
                 markerText = MARKER.TYPE_INFO_SP.format(
-                    MARKER.PAUSES, str(round(fto, 2)), str(curr_node[-1].sLabel)
+                    MARKER.PAUSES, str(round(fto, 2)), str(curr[-1].sLabel)
+                )
+                return_marker = UttObj(
+                    curr[-1].endTime,
+                    curr_next_value[0].startTime,
+                    MARKER.PAUSES,
+                    markerText,
                 )
 
-                logging.debug(f"insert the latch marker {markerText}")
-
-            # determines if the threshold is reached for a pause
-            elif THRESHOLD.LB_PAUSE <= fto <= THRESHOLD.UB_PAUSE:
-                logging.debug(f" pauses detected with fto {fto}")
+            elif THRESHOLD.LB_LAUSE <= fto <= THRESHOLD.UB_PAUSE:
                 markerText = MARKER.TYPE_INFO_SP.format(
-                    MARKER.PAUSES, str(round(fto, 2)), str(curr_node[-1].sLabel)
+                    MARKER.PAUSES, str(round(fto, 2)), str(curr[-1].sLabel)
+                )
+                return_marker = UttObj(
+                    curr[-1].endTime,
+                    curr_next_value[0].startTime,
+                    MARKER.PAUSES,
+                    markerText,
                 )
 
-                logging.debug(f"insert the pause marker {markerText}")
-
-            # determines if the threshold is reached for a micropause
             elif THRESHOLD.LB_MICROPAUSE <= fto <= THRESHOLD.UB_MICROPAUSE:
-                logging.debug(f"micro pauses detected with fto {fto}")
                 markerText = MARKER.TYPE_INFO_SP.format(
-                    MARKER.PAUSES, str(round(fto, 1)), str(curr_node[-1].sLabel)
+                    MARKER.PAUSES, str(round(fto, 1)), str(curr[-1].sLabel)
+                )
+                return_marker = UttObj(
+                    curr[-1].endTime,
+                    curr_next_value[0].startTime,
+                    MARKER.PAUSES,
+                    markerText,
                 )
 
-                logging.debug(f"insert the micro pause marker {markerText}")
-
-            # determines if the threshold is reached for a large pause
             elif fto >= THRESHOLD.LB_LARGE_PAUSE:
-                logging.debug(f"large pauses detected with fto {fto}")
                 markerText = MARKER.TYPE_INFO_SP.format(
-                    MARKER.PAUSES, str(round(fto, 1)), str(curr_node[-1].sLabel)
+                    MARKER.PAUSES, str(round(fto, 1)), str(curr[-1].sLabel)
+                )
+                return_marker = UttObj(
+                    curr[-1].endTime,
+                    curr_next_value[0].startTime,
+                    MARKER.PAUSES,
+                    markerText,
                 )
 
-                logging.debug(f"insert the larger pause marker {markerText}")
-
-            # TODO: insert pause marker
+            return return_marker

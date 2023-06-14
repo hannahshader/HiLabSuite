@@ -1,9 +1,10 @@
 from typing import Any, Dict, List
 from data_structures.init_utterance_dict import InitUtteranceDict
+from data_structures.data_objects import INTERNAL_MARKER
+
 import copy
 from pydantic import BaseModel
 
-from algorithms.init import get_dependencies
 from algorithms.gap import GapPlugin as gap
 from algorithms.overlap import OverlapPlugin as overlap
 from algorithms.pause import PausePlugin as pause
@@ -11,28 +12,87 @@ from algorithms.syllab_rate import SyllableRatePlugin as syllab_rate
 from collections import OrderedDict
 
 
+# wrapper object for init_utterance_dict with functions to add marker
 class MarkerUtteranceDict:
     def __init__(self, utterance_map_obj: InitUtteranceDict):
         ##now we have a deep copy we can add markers to
-        self.map = copy.deepcopy(utterance_map_obj.utterance_map)
+        self.list = list(utterance_map_obj.utterance_map.values())
 
-    def insert_marker(self, key: Any, value: Any):
-        self.map[key] = value
-        for key in self.map:
-            self.map[key] = sorted(self.map[key], key=lambda x: x.start)
+    def insert_marker(self, value: Any):
+        self.list.append(value)
+        self.list = sorted(self.list, key=lambda x: x.start)
 
-    def get_next_item(self, key):
-        if key in self.map:
-            current_index = self.map.index(key)
-        if current_index + 1 < len(self.data):
-            next_key = self.map[current_index + 1]
-            next_value = self.map[next_key]
-            return next_key, next_value
-        return None, None
+    def get_next_item(self, current_item):
+        if current_item in self.list:
+            current_index = self.list.index(current_item)
+            if current_index + 1 < len(self.list):
+                next_item = self.list[current_index + 1]
+                return next_item
+            else:
+                ##error case
+                return False
+        else:
+            ##error case
+            return False
+
+    def get_next_item(self, current_item):
+        current_index = self.list.index(current_item)
+        if current_index + 1 < len(self.list):
+            next_item = self.list[current_index + 1]
+            return next_item
+        else:
+            ##error case
+            return False
+
+    def get_next_utt(self, current_item):
+        current_index = self.list.index(current_item)
+        for item in self.list[current_index + 1]:
+            if self.is_speaker_utt(item.speaker):
+                return item
+        return False
+
+    def is_speaker_utt(string):
+        internal_marker_set = INTERNAL_MARKER.INTERNAL_MARKER_SET
+        if string in internal_marker_set:
+            return True
+        else:
+            return False
+
+    """
+    def apply(self, apply_functions):
+        for item in self.list:
+            for func in apply_functions:
+                curr = item
+                curr_next = self.get_next_item
+                ##returns if there is no next item
+                if curr_next == False:
+                    return
+                func(curr, curr_next)
+    """
 
     def apply(self, apply_functions):
-        for key, value in self.map.items():
+        for item in self.list:
             for func in apply_functions:
-                curr = value
-                curr_next_key, curr_next_value = self.get_next_item(self, key)
-                func(curr, curr_next_value)
+                curr = item
+                func(curr)
+
+    ##Takes an instance of MarkerUtteranceDict, or self
+    ##Takes a list of functions to apply that have arguments as two utterances
+    ##These functions return either one or four marker values
+    ##These marker values are added one by one to the list in MarkerUtteranceDict
+    def apply_insert_marker(self, apply_functions):
+        for item in self.list:
+            if self.is_speaker_utt(item.speaker) == False:
+                continue
+            for func in apply_functions:
+                curr = item
+                curr_next = self.get_next_utt
+                ##returns if there is no next item
+                if curr_next == False:
+                    return
+                ##storing markers as a list becuase the overlap function
+                ##returns four markers
+                markers_list = []
+                markers_list.append(func(curr, curr_next))
+                for marker in markers_list:
+                    self.insert_marker(marker)

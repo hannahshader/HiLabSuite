@@ -1,1 +1,4 @@
 dict-to-dataclass 0.0.8
+syllables 1.0.7
+pydantic 
+toml

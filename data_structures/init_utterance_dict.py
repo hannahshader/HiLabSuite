@@ -7,6 +7,7 @@ from collections import OrderedDict
 from data_structures.data_objects import UttObj
 
 
+# object containing sorted original data
 class InitUtteranceDict:
     def __init__(self, utt_data=None, output_path=None):
         ##self.data stores the raw uttance data
