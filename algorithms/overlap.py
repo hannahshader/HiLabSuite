@@ -1,6 +1,7 @@
 from typing import Dict, Any, List
 from data_structures.data_objects import INTERNAL_MARKER, load_threshold
 from data_structures.data_objects import UttObj
+import logging
 
 MARKER = INTERNAL_MARKER
 THRESHOLD = load_threshold()
@@ -27,12 +28,15 @@ class OverlapPlugin:
             with given threshold
         4.  if there is "significant overlap," return Overlap Marker
         """
-
+        logging.debut(f"start analyzing overlap")
         # In the case of an overlap, get its 4 marker positions
         if next_utt[0].startTime < curr_utt[-1].endTime:
+            logging.debug(
+                    f"overlap detected between {next_utt[0].startTime} and {curr_utt[-1].endTime}"
+            )
             curr_x, curr_y, nxt_x, nxt_y = self._get_overlap_positions(curr_utt, next_utt)
             if (curr_x, curr_y, nxt_x, nxt_y) == INVALID_OVERLAP:
-                print("INVALID: overlap between same speaker detected")
+                logging.warn(f"overlap between the same speaker detected")
             else:
                 if curr_x >= len(curr_utt):
                     curr_x = -1

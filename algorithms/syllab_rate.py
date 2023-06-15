@@ -2,6 +2,7 @@ import syllables
 import numpy
 from typing import Dict, Any, List, TypedDict
 from scipy.stats import median_abs_deviation
+import logging
 
 
 from data_structures.data_objects import INTERNAL_MARKER, load_threshold
@@ -45,15 +46,18 @@ class SyllableRatePlugin:
         Takes the current utterance object; should not pass in utterance pair
         """
 
-        syll_num = 0
-
         syll_num = sum([syllables.estimate(word.text) for word in curr_utt])
         time_diff = abs(curr_utt[0].startTime - curr_utt[-1].endTime)
 
         if time_diff == 0:
+            logging.warn(
+                f"no time difference between {curr_utt[0].text}\
+                and {curr_utt[-1].text}"
+            )
             time_diff = 0.001
 
         syll_rate = round(syll_num / time_diff, 2)
+        logging.debug(f"syll_rate computed: {syll_rate}")
         
         # syllable rate for a single utterance
         utt_syllable: SYLLAB_DICT = {
