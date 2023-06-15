@@ -30,10 +30,10 @@ class StructureInteract:
 
     # general apply function list for key and values in the data structure
     def apply(self, apply_functions):
-        self.data_structure.apply(self.data_structure, apply_functions)
+        self.data_structure.apply(apply_functions)
 
     # Takes an instance of structure interact, which holds a MarkerUtterance object
     # Takes a list of functions, which take two sequential utterances as parameters
     # Calls apply_insert_marker, which takes an instance of MarkerUtterance and a list of functions
     def apply_markers(self, apply_functions):
-        self.data_structure.apply_insert_marker(self.data_structure, apply_functions)
+        self.data_structure.apply_insert_marker(apply_functions)

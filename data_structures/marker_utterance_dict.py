@@ -1,6 +1,7 @@
 from typing import Any, Dict, List
 from data_structures.init_utterance_dict import InitUtteranceDict
 from data_structures.data_objects import INTERNAL_MARKER
+import pickle
 
 import copy
 from pydantic import BaseModel
@@ -17,6 +18,7 @@ class MarkerUtteranceDict:
     def __init__(self, utterance_map_obj: InitUtteranceDict):
         ##now we have a deep copy we can add markers to
         self.list = list(utterance_map_obj.utterance_map.values())
+        ##self.isPicked = False
 
     def insert_marker(self, value: Any):
         self.list.append(value)
@@ -71,10 +73,10 @@ class MarkerUtteranceDict:
     """
 
     def apply(self, apply_functions):
+        ##continue debugging here
         for item in self.list:
             for func in apply_functions:
-                curr = item
-                func(curr)
+                func(item)
 
     ##Takes an instance of MarkerUtteranceDict, or self
     ##Takes a list of functions to apply that have arguments as two utterances
@@ -96,3 +98,9 @@ class MarkerUtteranceDict:
                 markers_list.append(func(curr, curr_next))
                 for marker in markers_list:
                     self.insert_marker(marker)
+
+    """
+    def store_list(list_to_store, filename):
+        with open(filename, 'wb') as f:
+            pickle.dump(list_to_store, f)
+    """

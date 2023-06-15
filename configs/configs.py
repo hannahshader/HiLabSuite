@@ -6,6 +6,18 @@ from dict_to_dataclass import DataclassFromDict, field_from_dict
 
 
 @dataclass
+class CON_FORMATTER:
+    TURN = "{0}\t{1} {2}{4}_{3}{4}\n"
+    TXT_SEP = " "
+
+
+@dataclass
+class CSV_FORMATTER:
+    HEADER = ["SPEAKER LABEL", "TEXT", "START TIME", "END TIME"]
+    TXT_SEP = " "
+
+
+@dataclass
 class INTERNAL_MARKER(DataclassFromDict):
     GAPS = "gaps"
     OVERLAPS = "overlaps"
