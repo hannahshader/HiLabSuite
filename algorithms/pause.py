@@ -18,7 +18,7 @@ class PausePlugin:
     def __init__(self) -> None:
         super().__init__()
 
-    def PauseMarker(curr, curr_next_value):
+    def PauseMarker(curr_utt, next_utt):
         """
         Algorithm:
         1.  takes in curr_node and get curr_next_node
@@ -32,50 +32,50 @@ class PausePlugin:
         """
 
         # use existing algorithm to determine whether there is a pause
-        if curr[0].sLabel == curr_next_value[0].sLabel:
-            fto = round(curr_next_value[0].startTime - curr[-1].endTime, 2)
+        if curr_utt[0].sLabel == next_utt[0].sLabel:
+            fto = round(next_utt[0].startTime - curr_utt[-1].endTime, 2)
             markerText = ""
 
             if (THRESHOLD.LB_LATCH <= fto) and (fto <= THRESHOLD.UB_LATCH):
                 markerText = MARKER.TYPE_INFO_SP.format(
-                    MARKER.PAUSES, str(round(fto, 2)), str(curr[-1].sLabel)
+                    MARKER.PAUSES, str(round(fto, 2)), str(curr_utt[-1].sLabel)
                 )
                 return_marker = UttObj(
-                    curr[-1].endTime,
-                    curr_next_value[0].startTime,
+                    curr_utt[-1].endTime,
+                    next_utt[0].startTime,
                     MARKER.PAUSES,
                     markerText,
                 )
 
             elif THRESHOLD.LB_LAUSE <= fto <= THRESHOLD.UB_PAUSE:
                 markerText = MARKER.TYPE_INFO_SP.format(
-                    MARKER.PAUSES, str(round(fto, 2)), str(curr[-1].sLabel)
+                    MARKER.PAUSES, str(round(fto, 2)), str(curr_utt[-1].sLabel)
                 )
                 return_marker = UttObj(
-                    curr[-1].endTime,
-                    curr_next_value[0].startTime,
+                    curr_utt[-1].endTime,
+                    next_utt[0].startTime,
                     MARKER.PAUSES,
                     markerText,
                 )
 
             elif THRESHOLD.LB_MICROPAUSE <= fto <= THRESHOLD.UB_MICROPAUSE:
                 markerText = MARKER.TYPE_INFO_SP.format(
-                    MARKER.PAUSES, str(round(fto, 1)), str(curr[-1].sLabel)
+                    MARKER.PAUSES, str(round(fto, 1)), str(curr_utt[-1].sLabel)
                 )
                 return_marker = UttObj(
-                    curr[-1].endTime,
-                    curr_next_value[0].startTime,
+                    curr_utt[-1].endTime,
+                    next_utt[0].startTime,
                     MARKER.PAUSES,
                     markerText,
                 )
 
             elif fto >= THRESHOLD.LB_LARGE_PAUSE:
                 markerText = MARKER.TYPE_INFO_SP.format(
-                    MARKER.PAUSES, str(round(fto, 1)), str(curr[-1].sLabel)
+                    MARKER.PAUSES, str(round(fto, 1)), str(curr_utt[-1].sLabel)
                 )
                 return_marker = UttObj(
-                    curr[-1].endTime,
-                    curr_next_value[0].startTime,
+                    curr_utt[-1].endTime,
+                    next_utt[0].startTime,
                     MARKER.PAUSES,
                     markerText,
                 )

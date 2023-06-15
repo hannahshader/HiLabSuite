@@ -1,18 +1,22 @@
-from data_structures.data_objects import Marker
+from typing import Dict, Any, List
+from data_structures.data_objects import INTERNAL_MARKER, load_threshold
 from data_structures.data_objects import UttObj
 
+MARKER = INTERNAL_MARKER
+THRESHOLD = load_threshold()
+INVALID_OVERLAP = (-1, -1, -1, -1)
 
 """
-Take two word nodes next to each other
-Return a overlap marker to insert
+Take utterance pair and return a overlap markers to insert
 """
 
 
 class OverlapPlugin:
     def __init__(self) -> None:
-        pass
+        super().__init__()
+        self.marker_limit = THRESHOLD.OVERLAP_MARKERLIMIT
 
-    def OverlapMarker(curr_node, next_node):
+    def OverlapMarker(self, curr_utt, next_utt):
         """
         Algorithm:
         1.  takes in curr_node and get curr_next_node
@@ -25,69 +29,70 @@ class OverlapPlugin:
         """
 
         # In the case of an overlap, get its 4 marker positions
-        if curr_next_value[0].startTime < curr[-1].endTime:
-            logging.debug(
-                f"overlap detected between {curr_next_value[0].startTime} and {curr[-1].endTime}"
-            )
-            curr_x, curr_y, nxt_x, nxt_y = self._get_overlap_positions(
-                curr, curr_next_value
-            )
+        if next_utt[0].startTime < curr_utt[-1].endTime:
+            curr_x, curr_y, nxt_x, nxt_y = self._get_overlap_positions(curr_utt, next_utt)
             if (curr_x, curr_y, nxt_x, nxt_y) == INVALID_OVERLAP:
-                logging.warn(f"detect overlap between the same speaker")
-                continue
+                print("INVALID: overlap between same speaker detected")
+            else:
+                if curr_x >= len(curr_utt):
+                    curr_x = -1
+                if nxt_x >= len(next_utt):
+                    nxt_x = -1
+                if curr_y >= len(curr_utt):
+                    curr_y = -1
+                if nxt_y >= len(next_utt):
+                    nxt_y = -1
 
-            if curr_x >= len(curr):
-                curr_x = -1
-            if nxt_x >= len(curr_next_value):
-                nxt_x = -1
-            if curr_y >= len(curr):
-                curr_y = -1
-            if nxt_y >= len(curr_next_value):
-                nxt_y = -1
+                fst_start = MARKER.TYPE_INFO_SP.format(
+                    MARKER.OVERLAP_FIRST_START, str(unique_id), curr_utt[0].sLabel
+                )
+                fst_end = MARKER.TYPE_INFO_SP.format(
+                    MARKER.OVERLAP_FIRST_END, str(unique_id), curr_utt[0].sLabel
+                )
+                snd_start = MARKER.TYPE_INFO_SP.format(
+                    MARKER.OVERLAP_SECOND_START, str(unique_id), next_utt[0].sLabel
+                )
+                snd_end = MARKER.TYPE_INFO_SP.format(
+                    MARKER.OVERLAP_SECOND_END, str(unique_id), next_utt[0].sLabel
+                )
 
-            fst_start = MARKER.TYPE_INFO_SP.format(
-                MARKER.OVERLAP_FIRST_START, str(unique_id), curr[0].sLabel
-            )
-            fst_end = MARKER.TYPE_INFO_SP.format(
-                MARKER.OVERLAP_FIRST_END, str(unique_id), curr[0].sLabel
-            )
-            snd_start = MARKER.TYPE_INFO_SP.format(
-                MARKER.OVERLAP_SECOND_START, str(unique_id), curr_next_value[0].sLabel
-            )
-            snd_end = MARKER.TYPE_INFO_SP.format(
-                MARKER.OVERLAP_SECOND_END, str(unique_id), curr_next_value[0].sLabel
-            )
+                # insert the overlap markers into the tree
+                return_marker_1 = UttObj(
+                    curr_utt[curr_x].startTime,
+                    curr_utt[curr_x].startTime,
+                    MARKER.OVERLAPS,
+                    fst_start,
+                )
+                return_marker_2 = UttObj(
+                    curr_utt[curr_y].endTime,
+                    curr_utt[curr_y].endTime,
+                    MARKER.OVERLAPS,
+                    fst_end,
+                )
+                return_marker_3 = UttObj(
+                    next_utt[nxt_x].startTime,
+                    next_utt[nxt_x].startTime,
+                    MARKER.OVERLAPS,
+                    snd_start,
+                )
+                return_marker_4 = UttObj(
+                    next_utt[nxt_y].endTime,
+                    next_utt[nxt_y].endTime,
+                    MARKER.OVERLAPS,
+                    snd_end,
+                )
+                unique_id += 1      # TODO: double check what this is for
 
-            # insert the overlap markers into the tree
-            return_marker_1 = UttObj(
-                curr[curr_x].startTime,
-                curr[curr_x].startTime,
-                MARKER.OVERLAPS,
-                fst_start,
-            )
-            return_marker_2 = UttObj(
-                curr[curr_y].endTime,
-                curr[curr_y].endTime,
-                MARKER.OVERLAPS,
-                fst_end,
-            )
-            return_marker_3 = UttObj(
-                curr_next_value[nxt_x].startTime,
-                curr_next_value[nxt_x].startTime,
-                MARKER.OVERLAPS,
-                snd_start,
-            )
-            return_marker_4 = UttObj(
-                curr_next_value[nxt_y].endTime,
-                curr_next_value[nxt_y].endTime,
-                MARKER.OVERLAPS,
-                snd_end,
-            )
-            unique_id += 1
+                overlap_markers_list = [
+                    return_marker_1, 
+                    return_marker_2, 
+                    return_marker_3, 
+                    return_marker_4
+                ]
 
-            return return_marker_1, return_marker_2, return_marker_3, return_marker_4
+                return overlap_markers_list
 
-    def _get_overlap_positions(self, curr_utt: List[Word], nxt_utt: List[Word]):
+    def _get_overlap_positions(self, curr_utt, nxt_utt):
         """
         Return the position of where the overlap markers should be inserted.
         """

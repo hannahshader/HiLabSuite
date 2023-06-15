@@ -17,7 +17,7 @@ class GapPlugin:
         super().__init__()
         self.lb_gap = THRESHOLD.GAPS_LB
 
-    def GapMarker(curr, curr_next_value):
+    def GapMarker(self, curr_utt, next_utt):
         """
         Algorithm:
         1.  takes in curr_node and get curr_next_node
@@ -28,20 +28,23 @@ class GapPlugin:
             with given threshold
         4.  if there is "significant gap," create and return a Gap Marker
         """
-        logging.debug(f"get current utterance {curr}, next utterance {curr_next_value}")
+        logging.debug(f"get current utterance {curr_utt}, next utterance {next_utt}")
 
         # use existing algorithm to determine whether there is a gap between
         # curr node and next node
-        fto = round(curr_next_value[0].startTime - curr[-1].endTime, 2)
+        fto = round(next_utt[0].startTime - curr_utt[-1].endTime, 2)
         logging.debug(f"get fto : {fto}")
 
-        if fto >= self.lb_gap and curr[0].sLabel != curr_next_value[0].sLabel:
+        if fto >= self.lb_gap and curr_utt[0].sLabel != next_utt[0].sLabel:
             markerText = MARKER.TYPE_INFO_SP.format(
-                MARKER.GAPS, str(round(fto, 1)), str(curr[-1].sLabel)
+                MARKER.GAPS, str(round(fto, 1)), str(curr_utt[-1].sLabel)
             )
             # create instance of marker
             return_marker = UttObj(
-                curr[-1].endTime, curr_next_value[0].startTime, MARKER.GAPS, markerText
+                curr_utt[-1].endTime, 
+                next_utt[0].startTime, 
+                MARKER.GAPS, 
+                markerText
             )
             # return marker
             return return_marker
