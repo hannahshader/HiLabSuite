@@ -28,19 +28,10 @@ class CSVPlugin:
         path = os.path.join(self.structure_interact_instance.output_path, OUTPUT_FILE.UTT_CSV)
 
         with open(path, "w", newline="") as outfile:
-            writer = csv.writer(outfile)
+        writer = csv.writer(outfile)
+        writer.writerow(CSV_FORMATTER.HEADER)
 
-            writer.writerow(CSV_FORMATTER.HEADER)
-
-            l = []
-            l.append(self.structure_interact_instance.apply(self.utterance_level_helper))
-            txt = CSV_FORMATTER.TXT_SEP.join(l)
-
-            sLabel = ""
-                if (
-                    curr_utt[0].sLabel != LABEL.PAUSE
-                    and curr_utt[0].sLabel != LABEL.GAPMARKER
-                ):
+            
 
     
     def utterance_level_helper(self, curr):
@@ -51,20 +42,16 @@ class CSVPlugin:
 
         sLabel = ""
         if (
-            curr_utt[0].sLabel != LABEL.PAUSE
-            and curr_utt[0].sLabel != LABEL.GAPMARKER
-        ):
+            curr[0].sLabel != LABEL.PAUSE
+            and curr[0].sLabel != LABEL.GAPMARKER
+            ):
             sLabel = LABEL.SPEAKERLABEL + str(curr_utt[0].sLabel)
             writer.writerow(
                 [sLabel, txt, curr_utt[0].startTime, curr_utt[-1].endTime]
             )
         else:
             writer.writerow(
-                ["", txt, curr_utt[0].startTime, curr_utt[-1].endTime]
-            )
-        if self.is_speaker_utt(curr.speaker):
-            return None
-        return curr.text
+                ["", txt, curr_utt[0].startTime, curr_utt[-1].endTime])
 
 
     def _word_level(self, dependency_outputs: Dict[str, Any], methods: GBPluginMethods):
