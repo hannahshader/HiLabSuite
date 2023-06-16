@@ -2,23 +2,20 @@ import logging
 from typing import Dict, Any, List
 from plugin_development_suite.configs.configs import (
     INTERNAL_MARKER,
+    THRESHOLD,
     load_threshold,
 )
 from plugin_development_suite.data_structures.data_objects import UttObj
 
 MARKER = INTERNAL_MARKER
 THRESHOLD = load_threshold()
-
 """
 Take two word nodes next to each other
-Return a gap marker to insert 
+Return a gap marker to insert
 """
 
 
 class GapPlugin:
-    def __init__(self) -> None:
-        return
-
     def GapMarker(curr_utt, next_utt):
         """
         Algorithm:
@@ -30,24 +27,48 @@ class GapPlugin:
             with given threshold
         4.  if there is "significant gap," create and return a Gap Marker
         logging.debug(f"current utterance {curr_utt}, next utterance {next_utt}")
-
+        """
         # use existing algorithm to determine whether there is a gap between
         # curr node and next node
-        fto = round(next_utt[0].startTime - curr_utt[-1].endTime, 2)
+        fto = round(next_utt.start - curr_utt.end, 2)
         logging.debug(f"get fto : {fto}")
-
-        if fto >= self.lb_gap and curr_utt[0].sLabel != next_utt[0].sLabel:
+        if fto >= THRESHOLD.GAPS_LB and curr_utt.speaker != next_utt.speaker:
+            logging.debug(f"get fto : {fto}")
             markerText = MARKER.TYPE_INFO_SP.format(
-                MARKER.GAPS, str(round(fto, 1)), str(curr_utt[-1].sLabel)
+                MARKER.GAPS, str(round(fto, 1)), str(curr_utt.speaker)
             )
             # create instance of marker
-            return_marker = UttObj(
-                curr_utt[-1].endTime, next_utt[0].startTime, MARKER.GAPS, markerText
+            return UttObj(
+                start=curr_utt.end,
+                end=next_utt.start,
+                speaker=MARKER.GAPS,
+                text=markerText,
             )
-            # return marker
-            return return_marker
-        """
+        else:
+            return
+
+
+## Previous testing file
+"""
+import logging
+from typing import Dict, Any, List
+from plugin_development_suite.configs.configs import (
+    INTERNAL_MARKER,
+    load_threshold,
+)
+from plugin_development_suite.data_structures.data_objects import UttObj
+
+MARKER = INTERNAL_MARKER
+THRESHOLD = load_threshold()
+
+class GapPlugin:
+    def __init__(self) -> None:
+        return
+
+    def GapMarker(curr_utt, next_utt):
+
         if curr_utt.start != 5.0:
             return []
-        ##make sure return value is a list
         return [UttObj(start=5, end=6, speaker="Speaker 2", text="GAPS")]
+
+"""

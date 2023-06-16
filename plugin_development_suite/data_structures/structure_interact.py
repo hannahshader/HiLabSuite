@@ -39,6 +39,9 @@ class StructureInteract(Plugin):
         marker_utterance_obj = MarkerUtteranceDict(utterances_map)
         self.data_structure = marker_utterance_obj
 
+        ## get sentence data
+        self.sentence_data = marker_utterance_obj.sentences
+
         ## apply plugins
         apply_plugins_instance = ApplyPlugins(config_file_path)
         apply_plugins_instance.apply_plugins(self)
@@ -59,3 +62,6 @@ class StructureInteract(Plugin):
     # Calls apply_insert_marker, which takes an instance of MarkerUtterance and a list of functions
     def apply_markers(self, apply_functions):
         self.data_structure.apply_insert_marker(apply_functions)
+
+    def apply_markers_overlap(self, apply_function):
+        self.data_structure.apply_for_overlap(apply_function)

@@ -76,6 +76,11 @@ class CSVPlugin:
 
                 ## iterate through all UttObjs in the data structure
                 for item in row:
+                    ## if the item is a marker, add the marker and continue
+                    if self.is_speaker_utt(item[0]) == False:
+                        speaker_sentence += item[1] + " "
+                        continue
+
                     ## if the UttObj shares a speaker with the previous UttObj,
                     ## add the text to a sentence
                     if item[0] == speaker:
@@ -112,3 +117,10 @@ class CSVPlugin:
         else:
             result = ["", txt, curr.start, curr.end]
         return result
+
+    def is_speaker_utt(self, string):
+        internal_marker_set = INTERNAL_MARKER.INTERNAL_MARKER_SET
+        if string in internal_marker_set:
+            return False
+        else:
+            return True

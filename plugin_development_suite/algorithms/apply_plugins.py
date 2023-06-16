@@ -11,6 +11,7 @@ import toml
 
 class ApplyPlugins:
     def __init__(self, config_file_path):
+        self.plugin_names = self.function_names(config_file_path)
         self.plugins = self.function_list(config_file_path)
 
     def function_names(self, file_path):
@@ -25,16 +26,17 @@ class ApplyPlugins:
 
     def function_list(self, config_file_path):
         result = []
-        plugin_names = self.function_names(config_file_path)
-        if "OverlapPlugin" in plugin_names:
-            result.append(OverlapPlugin.OverlapMarker)
-        ##if "PausePlugin" in plugin_names:
-        ##    result.append(PausePlugin.PauseMarker)
-        if "GapPlugin" in plugin_names:
+        ##if "PausePlugin" in self.plugin_names:
+        ##result.append(PausePlugin.PauseMarker)
+        if "GapPlugin" in self.plugin_names:
             result.append(GapPlugin.GapMarker)
-        ##if "SyllableRatePlugin" in plugin_names:
+        ##if "SyllableRatePlugin" in self.plugin_names:
         ##result.append(syllab_rate.add_syllab_marker)
         return result
 
     def apply_plugins(self, structure_interact_instance):
+        if "OverlapPlugin" in self.plugin_names:
+            structure_interact_instance.apply_markers_overlap(
+                OverlapPlugin.OverlapMarker
+            )
         structure_interact_instance.apply_markers(self.plugins)
