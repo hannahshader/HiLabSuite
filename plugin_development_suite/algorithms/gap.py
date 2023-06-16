@@ -31,7 +31,7 @@ class GapPlugin:
             with given threshold
         4.  if there is "significant gap," create and return a Gap Marker
         """
-        logging.debug(f"get current utterance {curr_utt}, next utterance {next_utt}")
+        logging.debug(f"current utterance {curr_utt}, next utterance {next_utt}")
 
         # use existing algorithm to determine whether there is a gap between
         # curr node and next node

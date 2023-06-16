@@ -24,10 +24,14 @@ class StructureInteract(Plugin):
         super().__init__()
         # populated in apply function
         self.data_structure = MarkerUtteranceDict()
+        self.output_path = ""
 
     def apply(self, methods: GBPluginMethods):
         ## get the utterance data from gailbot in form Dict[str, List[UttObj]]
         utterances_map: Dict[str, List[UttObj]] = methods.get_utterance_objects()
+
+        ## get the output path
+        self.output_path = methods.output_path
 
         ## pass data to marker_utterance_dict to interact with the underlying data structure
         marker_utterance_obj = MarkerUtteranceDict(utterances_map)

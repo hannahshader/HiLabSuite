@@ -33,54 +33,66 @@ class PausePlugin:
         4.  if there is a "significant pause," return Pause Marker
 
         """
-
         # use existing algorithm to determine whether there is a pause
         if curr_utt[0].sLabel == next_utt[0].sLabel:
+            logging.info("start pause analysis")
             fto = round(next_utt[0].startTime - curr_utt[-1].endTime, 2)
             markerText = ""
 
             if (THRESHOLD.LB_LATCH <= fto) and (fto <= THRESHOLD.UB_LATCH):
+                logging.debug(f"latch detected with fto {fto}")
                 markerText = MARKER.TYPE_INFO_SP.format(
                     MARKER.PAUSES, str(round(fto, 2)), str(curr_utt[-1].sLabel)
                 )
+                logging.debug(f"generating latch marker: {markerText}")
                 return_marker = UttObj(
                     curr_utt[-1].endTime,
                     next_utt[0].startTime,
                     MARKER.PAUSES,
                     markerText,
                 )
+                logging.debug(f"latch marker ({markerText}) generated")
 
-            elif THRESHOLD.LB_LAUSE <= fto <= THRESHOLD.UB_PAUSE:
+            elif THRESHOLD.LB_PAUSE <= fto <= THRESHOLD.UB_PAUSE:
+                logging.debug(f"pause detected with fto {fto}")
                 markerText = MARKER.TYPE_INFO_SP.format(
                     MARKER.PAUSES, str(round(fto, 2)), str(curr_utt[-1].sLabel)
                 )
+                logging.debug(f"generating pause marker: {markerText}")
                 return_marker = UttObj(
                     curr_utt[-1].endTime,
                     next_utt[0].startTime,
                     MARKER.PAUSES,
                     markerText,
                 )
+                logging.debug(f"pause marker ({markerText}) generated")
 
             elif THRESHOLD.LB_MICROPAUSE <= fto <= THRESHOLD.UB_MICROPAUSE:
+                logging.debug(f"micro pause detected with fto {fto}")
                 markerText = MARKER.TYPE_INFO_SP.format(
                     MARKER.PAUSES, str(round(fto, 1)), str(curr_utt[-1].sLabel)
                 )
+                logging.debug(f"generating micro pause marker: {markerText}")
                 return_marker = UttObj(
                     curr_utt[-1].endTime,
                     next_utt[0].startTime,
                     MARKER.PAUSES,
                     markerText,
                 )
+                logging.debug(f"micro pause marker ({markerText}) generated")
 
             elif fto >= THRESHOLD.LB_LARGE_PAUSE:
+                logging.debug(f"large pause detected with fto {fto}")
                 markerText = MARKER.TYPE_INFO_SP.format(
                     MARKER.PAUSES, str(round(fto, 1)), str(curr_utt[-1].sLabel)
                 )
+                logging.debug(f"generating larger pause marker: {markerText}")
                 return_marker = UttObj(
                     curr_utt[-1].endTime,
                     next_utt[0].startTime,
                     MARKER.PAUSES,
                     markerText,
                 )
+                logging.debug(f"larger pause marker ({markerText}) generated")
 
             return return_marker
