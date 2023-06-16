@@ -31,7 +31,7 @@ class CSVPlugin:
             writer = csv.writer(outfile)
             writer.writerow(CSV_FORMATTER.HEADER)
             # creates a list of just the one helper function that will be applied to element of the data structure
-            list_of_helper = [utterance_level_helper]
+            list_of_helper = [self.utterance_level_helper]
 
             # calls apply function to get results of each row and outputs it
             result = []
