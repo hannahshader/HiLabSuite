@@ -76,6 +76,8 @@ class CSVPlugin:
                 speaker = row[0][0]
                 prev_item = row[0]
                 for item in row:
+                    if self.is_speaker_utt(item[0]) == False:
+                        continue
                     if item[0] == speaker:
                         speaker_sentence += item[1] + " "
                         prev_item = item
@@ -87,6 +89,10 @@ class CSVPlugin:
                         speaker = item[0]
                         start_time = item[2]
                         prev_item = item
+            item[0] == speaker
+            prev_item[2] = start_time
+            prev_item[1] = speaker_sentence
+            writer.writerow(prev_item)
 
     def utterance_level_helper(self, curr):
         l = []
@@ -100,3 +106,11 @@ class CSVPlugin:
         else:
             result = ["", txt, curr.start, curr.end]
         return result
+
+    ## This function occurs two places- look into modularizing it
+    def is_speaker_utt(self, string):
+        internal_marker_set = INTERNAL_MARKER.INTERNAL_MARKER_SET
+        if string in internal_marker_set:
+            return False
+        else:
+            return True

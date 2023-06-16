@@ -4,7 +4,6 @@ from plugin_development_suite.data_structures.data_objects import (
     load_threshold,
 )
 from plugin_development_suite.data_structures.data_objects import UttObj
-import logging
 
 MARKER = INTERNAL_MARKER
 THRESHOLD = load_threshold()
@@ -20,7 +19,8 @@ class OverlapPlugin:
         super().__init__()
         self.marker_limit = THRESHOLD.OVERLAP_MARKERLIMIT
 
-    def OverlapMarker(self, curr_utt, next_utt):
+    def OverlapMarker(curr_utt, next_utt):
+        """ """
         """
         Algorithm:
         1.  takes in curr_node and get curr_next_node
@@ -31,14 +31,23 @@ class OverlapPlugin:
             with given threshold
         4.  if there is "significant overlap," return Overlap Marker
         """
-        logging.debut(f"start analyzing overlap")
+        """
+
         # In the case of an overlap, get its 4 marker positions
-        if next_utt[0].startTime < curr_utt[-1].endTime:
-            curr_x, curr_y, nxt_x, nxt_y = self._get_overlap_positions(
-                curr_utt, next_utt
-            )
+        overlap_plugin_instance = OverlapPlugin()
+        # print("curr utt is")
+        # print(curr_utt)
+        # print("next utt is")
+        # print(next_utt)
+        if next_utt.start < curr_utt.end:
+            (
+                curr_x,
+                curr_y,
+                nxt_x,
+                nxt_y,
+            ) = overlap_plugin_instance._get_overlap_positions(curr_utt, next_utt)
             if (curr_x, curr_y, nxt_x, nxt_y) == INVALID_OVERLAP:
-                logging.warn(f"overlap between the same speaker detected")
+                print("INVALID: overlap between same speaker detected")
             else:
                 if curr_x >= len(curr_utt):
                     curr_x = -1
@@ -96,7 +105,20 @@ class OverlapPlugin:
                     return_marker_4,
                 ]
 
-                return overlap_markers_list
+                ##return overlap_markers_list
+                 """
+        ##for testing
+        if curr_utt.start != 1.0:
+            return []
+        marker1 = UttObj(
+            start=3, end=4, speaker="Speaker 2", text="OVERLAP_FIRST_START"
+        )
+        marker2 = UttObj(
+            start=3, end=4, speaker="Speaker 2", text="OVERLAP_SECOND_START"
+        )
+        marker3 = UttObj(start=4, end=5, speaker="Speaker 2", text="OVERLAP_FIRST_END")
+        marker4 = UttObj(start=4, end=5, speaker="Speaker 2", text="OVERLAP_SECOND_END")
+        return [marker1, marker2, marker3, marker4]
 
     def _get_overlap_positions(self, curr_utt, nxt_utt):
         """

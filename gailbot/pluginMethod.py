@@ -140,7 +140,7 @@ class GBPluginMethods(Methods):
                 },
             ],
             "key7": [
-                {"start": 43.0, "end": 44.0, "speaker": "Speaker 1", "text": "Mainly"},
+                {"start": 43.1, "end": 44.0, "speaker": "Speaker 1", "text": "Mainly"},
                 {"start": 44.0, "end": 45.0, "speaker": "Speaker 1", "text": "some"},
                 {"start": 45.0, "end": 46.0, "speaker": "Speaker 1", "text": "coding"},
                 {"start": 46.0, "end": 47.0, "speaker": "Speaker 1", "text": "and"},

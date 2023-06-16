@@ -48,6 +48,8 @@ class MarkerUtteranceDict:
     def insert_marker(self, value: Any):
         self.list.append(value)
         self.list = sorted(self.list, key=lambda x: x.start)
+        print("\nlist is")
+        print(self.list)
 
     def get_next_item(self, current_item):
         if current_item in self.list:
@@ -72,18 +74,28 @@ class MarkerUtteranceDict:
             return False
 
     def get_next_utt(self, current_item):
-        current_index = self.list.index(current_item)
-        for item in self.list[current_index + 1]:
-            if self.is_speaker_utt(item.speaker):
-                return item
-        return False
+        for i, utterance in enumerate(self.list):
+            if (
+                (utterance.text == current_item.text)
+                and (utterance.start == current_item.start)
+                and (utterance.end == current_item.end)
+                and (utterance.end == current_item.end)
+                and (utterance.speaker == current_item.speaker)
+            ):
+                # Found the desired utterance object
+                if i + 1 < len(self.list):
+                    next_utterance = self.list[i + 1]
+                    if self.is_speaker_utt(next_utterance.speaker):
+                        return next_utterance
+                else:
+                    return False
 
     def is_speaker_utt(self, string):
         internal_marker_set = INTERNAL_MARKER.INTERNAL_MARKER_SET
         if string in internal_marker_set:
-            return True
-        else:
             return False
+        else:
+            return True
 
     """
     def apply(self, apply_functions):
@@ -114,14 +126,15 @@ class MarkerUtteranceDict:
                 continue
             for func in apply_functions:
                 curr = item
-                curr_next = self.get_next_utt
+                curr_next = self.get_next_utt(curr)
                 ##returns if there is no next item
                 if curr_next == False:
                     return
                 ##storing markers as a list becuase the overlap function
                 ##returns four markers
-                markers_list = []
-                markers_list.append(func(curr, curr_next))
+                markers_list = func(curr, curr_next)
+                ##print("\nmarkers list is")
+                ##print(func(curr, curr_next))
                 for marker in markers_list:
                     self.insert_marker(marker)
 

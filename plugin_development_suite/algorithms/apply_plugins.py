@@ -1,6 +1,6 @@
-from plugin_development_suite.algorithms.gap import GapPlugin as gap
-from plugin_development_suite.algorithms.overlap import OverlapPlugin as overlap
-from plugin_development_suite.algorithms.pause import PausePlugin as pause
+from plugin_development_suite.algorithms.gap import GapPlugin
+from plugin_development_suite.algorithms.overlap import OverlapPlugin
+from plugin_development_suite.algorithms.pause import PausePlugin
 from plugin_development_suite.algorithms.syllab_rate import (
     SyllableRatePlugin as syllab_rate,
 )
@@ -26,14 +26,14 @@ class ApplyPlugins:
     def function_list(self, config_file_path):
         result = []
         plugin_names = self.function_names(config_file_path)
-        if "overlaps" in plugin_names:
-            result.append(overlap.add_overlap_marker)
-        if "pauses" in plugin_names:
-            result.append(pause.add_pause_marker)
-        if "gaps" in plugin_names:
-            result.append(gap.add_gap_marker)
-        if "syllable_rate" in plugin_names:
-            result.append(syllab_rate.add_syllab_marker)
+        if "OverlapPlugin" in plugin_names:
+            result.append(OverlapPlugin.OverlapMarker)
+        ##if "PausePlugin" in plugin_names:
+        ##    result.append(PausePlugin.PauseMarker)
+        ##if "GapPlugin" in plugin_names:
+        ##    result.append(GapPlugin.GapMarker)
+        ##if "SyllableRatePlugin" in plugin_names:
+        ##result.append(syllab_rate.add_syllab_marker)
         return result
 
     def apply_plugins(self, structure_interact_instance):
