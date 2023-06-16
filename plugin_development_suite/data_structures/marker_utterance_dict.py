@@ -1,10 +1,8 @@
 from typing import Any, Dict, List
-from plugin_development_suite.data_structures.data_objects import INTERNAL_MARKER
+from plugin_development_suite.configs.configs import INTERNAL_MARKER
 from plugin_development_suite.data_structures.data_objects import UttObj
-import pickle
 
 import copy
-from pydantic import BaseModel
 
 from plugin_development_suite.algorithms.gap import GapPlugin as gap
 from plugin_development_suite.algorithms.overlap import OverlapPlugin as overlap
@@ -45,10 +43,12 @@ class MarkerUtteranceDict:
             # create a deep copy for the class
             self.list = copy.deepcopy(utterances)
 
+    # inserts a marker into the data structure and resorts the list
     def insert_marker(self, value: Any):
         self.list.append(value)
         self.list = sorted(self.list, key=lambda x: x.start)
 
+    # given a current element in list, gets the next element in the list
     def get_next_item(self, current_item):
         if current_item in self.list:
             current_index = self.list.index(current_item)
@@ -62,15 +62,8 @@ class MarkerUtteranceDict:
             ##error case
             return False
 
-    def get_next_item(self, current_item):
-        current_index = self.list.index(current_item)
-        if current_index + 1 < len(self.list):
-            next_item = self.list[current_index + 1]
-            return next_item
-        else:
-            ##error case
-            return False
-
+    # given a current element in the list, gets the next element in the
+    # list that is not a marker, but is an utterance with corresponding text
     def get_next_utt(self, current_item):
         for i, utterance in enumerate(self.list):
             if (
@@ -88,14 +81,17 @@ class MarkerUtteranceDict:
                 else:
                     return False
 
+    ## check the speaker field of piece of data to see if utterance is a marker
     def is_speaker_utt(self, string):
-        # check the speaker field of piece of data to see if utterance is a marker
         internal_marker_set = INTERNAL_MARKER.INTERNAL_MARKER_SET
         if string in internal_marker_set:
             return False
         else:
             return True
 
+    ## gets a list of functions
+    ## iterates through all items in the list and applies
+    ## the list of functions to each item
     def apply(self, apply_functions):
         result = []
         for item in self.list:
@@ -103,10 +99,10 @@ class MarkerUtteranceDict:
                 result.append(func(item))
         return result
 
-    ##Takes an instance of MarkerUtteranceDict, or self
-    ##Takes a list of functions to apply that have arguments as two utterances
-    ##These functions return either one or four marker values
-    ##These marker values are added one by one to the list in MarkerUtteranceDict
+    ## Takes an instance of MarkerUtteranceDict, or self
+    ## Takes a list of functions to apply that have arguments as two utterances
+    ## These functions return either one or four marker values
+    ## These marker values are added one by one to the list in MarkerUtteranceDict
     def apply_insert_marker(self, apply_functions):
         for item in self.list:
             if self.is_speaker_utt(item.speaker) == False:
@@ -122,9 +118,3 @@ class MarkerUtteranceDict:
                 markers_list = func(curr, curr_next)
                 for marker in markers_list:
                     self.insert_marker(marker)
-
-    """
-    def store_list(list_to_store, filename):
-        with open(filename, 'wb') as f:
-            pickle.dump(list_to_store, f)
-    """

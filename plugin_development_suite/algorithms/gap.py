@@ -1,6 +1,6 @@
 import logging
 from typing import Dict, Any, List
-from plugin_development_suite.data_structures.data_objects import (
+from plugin_development_suite.configs.configs import (
     INTERNAL_MARKER,
     load_threshold,
 )
@@ -20,11 +20,6 @@ class GapPlugin:
         return
 
     def GapMarker(curr_utt, next_utt):
-        print("curr utt is ")
-        print(curr_utt)
-        print("next utt is ")
-        print(curr_utt)
-
         """
         Algorithm:
         1.  takes in curr_node and get curr_next_node

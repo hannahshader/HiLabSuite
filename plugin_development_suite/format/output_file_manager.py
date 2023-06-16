@@ -19,6 +19,7 @@ from plugin_development_suite.configs.configs import (
 )
 
 from plugin_development_suite.format.csv import CSVPlugin
+from plugin_development_suite.format.text import TextPlugin
 
 
 class OutputFileManager:
@@ -31,3 +32,6 @@ class OutputFileManager:
         ## create the CSV files
         csv_init = CSVPlugin()
         csv_init.apply(structure_interact_instance)
+
+        text_init = TextPlugin()
+        text_init.apply(structure_interact_instance)

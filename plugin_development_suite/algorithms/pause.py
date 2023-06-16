@@ -2,7 +2,7 @@ import logging
 import io
 from typing import Dict, Any, List
 from dataclasses import dataclass
-from plugin_development_suite.data_structures.data_objects import (
+from plugin_development_suite.configs.configs import (
     INTERNAL_MARKER,
     load_threshold,
 )
