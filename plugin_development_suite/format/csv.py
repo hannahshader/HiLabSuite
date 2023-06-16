@@ -16,11 +16,7 @@ from plugin_development_suite.data_structures.structure_interact import (
 
 
 class CSVPlugin:
-    def apply(self):
-        structure_interact_instance = StructureInteract()
-        methods = GBPluginMethods()
-        structure_interact_instance = structure_interact_instance.apply(methods)
-
+    def apply(self, structure_interact_instance):
         self._utterance_level(structure_interact_instance)
         self._word_level(structure_interact_instance)
 

@@ -3,6 +3,7 @@ from plugin_development_suite.data_structures.structure_interact import (
 )
 from plugin_development_suite.data_structures.data_objects import UttObj
 from plugin_development_suite.format.csv import CSVPlugin
+from plugin_development_suite.format.output_file_manager import OutputFileManager
 from typing import Dict, Any
 from gailbot.plugin import Plugin
 from gailbot.pluginMethod import GBPluginMethods
@@ -21,7 +22,4 @@ from plugin_development_suite.configs.configs import (
 from pydantic import BaseModel
 from dataclasses import dataclass
 
-output_path = "/Users/hannahshader/Desktop/"
-
-csv_init = CSVPlugin()
-csv_init.apply()
+output_file_manager_init = OutputFileManager()

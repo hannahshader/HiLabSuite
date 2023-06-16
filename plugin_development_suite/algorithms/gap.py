@@ -20,20 +20,10 @@ class GapPlugin:
         return
 
     def GapMarker(curr_utt, next_utt):
-        fto = round(next_utt[0].startTime - curr_utt[-1].endTime, 2)
-        logging.debug(f"get fto : {fto}")
-        print(THRESHOLD.GAPS_LB)
-
-        if fto >= THRESHOLD.GAPS_LB and curr_utt[0].sLabel != next_utt[0].sLabel:
-            markerText = MARKER.TYPE_INFO_SP.format(
-                MARKER.GAPS, str(round(fto, 1)), str(curr_utt[-1].sLabel)
-            )
-            # create instance of marker
-            return_marker = UttObj(
-                curr_utt[-1].endTime, next_utt[0].startTime, MARKER.GAPS, markerText
-            )
-            # return marker
-        return return_marker
+        print("curr utt is ")
+        print(curr_utt)
+        print("next utt is ")
+        print(curr_utt)
 
         """
         Algorithm:
