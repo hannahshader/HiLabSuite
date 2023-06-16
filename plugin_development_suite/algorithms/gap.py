@@ -1,7 +1,10 @@
 import logging
 from typing import Dict, Any, List
-from data_structures.data_objects import INTERNAL_MARKER, load_threshold
-from data_structures.data_objects import UttObj
+from plugin_development_suite.data_structures.data_objects import (
+    INTERNAL_MARKER,
+    load_threshold,
+)
+from plugin_development_suite.data_structures.data_objects import UttObj
 
 MARKER = INTERNAL_MARKER
 THRESHOLD = load_threshold()
@@ -41,10 +44,7 @@ class GapPlugin:
             )
             # create instance of marker
             return_marker = UttObj(
-                curr_utt[-1].endTime, 
-                next_utt[0].startTime, 
-                MARKER.GAPS, 
-                markerText
+                curr_utt[-1].endTime, next_utt[0].startTime, MARKER.GAPS, markerText
             )
             # return marker
             return return_marker

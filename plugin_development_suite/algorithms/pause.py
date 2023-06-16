@@ -2,8 +2,11 @@ import logging
 import io
 from typing import Dict, Any, List
 from dataclasses import dataclass
-from data_structures.data_objects import INTERNAL_MARKER, load_threshold
-from data_structures.data_objects import UttObj
+from plugin_development_suite.data_structures.data_objects import (
+    INTERNAL_MARKER,
+    load_threshold,
+)
+from plugin_development_suite.data_structures.data_objects import UttObj
 
 MARKER = INTERNAL_MARKER
 THRESHOLD = load_threshold()

@@ -5,8 +5,11 @@ from typing import Dict, Any, List, TypedDict
 from scipy.stats import median_abs_deviation
 
 
-from data_structures.data_objects import INTERNAL_MARKER, load_threshold
-from data_structures.data_objects import UttObj
+from plugin_development_suite.data_structures.data_objects import (
+    INTERNAL_MARKER,
+    load_threshold,
+)
+from plugin_development_suite.data_structures.data_objects import UttObj
 
 MARKER = INTERNAL_MARKER
 THRESHOLD = load_threshold()

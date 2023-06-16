@@ -1,24 +1,49 @@
 from typing import Any, Dict, List
-from data_structures.init_utterance_dict import InitUtteranceDict
-from data_structures.data_objects import INTERNAL_MARKER
+from plugin_development_suite.data_structures.data_objects import INTERNAL_MARKER
+from plugin_development_suite.data_structures.data_objects import UttObj
 import pickle
 
 import copy
 from pydantic import BaseModel
 
-from algorithms.gap import GapPlugin as gap
-from algorithms.overlap import OverlapPlugin as overlap
-from algorithms.pause import PausePlugin as pause
-from algorithms.syllab_rate import SyllableRatePlugin as syllab_rate
+from plugin_development_suite.algorithms.gap import GapPlugin as gap
+from plugin_development_suite.algorithms.overlap import OverlapPlugin as overlap
+from plugin_development_suite.algorithms.pause import PausePlugin as pause
+from plugin_development_suite.algorithms.syllab_rate import (
+    SyllableRatePlugin as syllab_rate,
+)
 from collections import OrderedDict
+from gailbot.plugin import Plugin
+from gailbot.pluginMethod import GBPluginMethods
 
 
 # wrapper object for init_utterance_dict with functions to add marker
 class MarkerUtteranceDict:
-    def __init__(self, utterance_map_obj: InitUtteranceDict):
-        ##now we have a deep copy we can add markers to
-        self.list = list(utterance_map_obj.utterance_map.values())
-        ##self.isPicked = False
+    ##called on the resulting object from get_utterance_object from gailbot
+    ## return type is Dict[str, List[UttObj]]
+    ##methods: GBPluginMethods
+
+    def __init__(self, utterance_map: Dict[str, List[UttObj]] = None):
+        if utterance_map is None:
+            self.list = []
+        else:
+            ## get utterances into a list
+            utterances = []
+            for key, value in utterance_map.items():
+                for utt_dict in value:
+                    utt = UttObj(
+                        utt_dict["start"],
+                        utt_dict["end"],
+                        utt_dict["speaker"],
+                        utt_dict["text"],
+                    )
+                    utterances.append(utt)
+
+            ## sort the list
+            utterances = sorted(utterances, key=lambda x: x.start)
+
+            # create a deep copy for the class
+            self.list = copy.deepcopy(utterances)
 
     def insert_marker(self, value: Any):
         self.list.append(value)
@@ -53,7 +78,7 @@ class MarkerUtteranceDict:
                 return item
         return False
 
-    def is_speaker_utt(string):
+    def is_speaker_utt(self, string):
         internal_marker_set = INTERNAL_MARKER.INTERNAL_MARKER_SET
         if string in internal_marker_set:
             return True
@@ -73,10 +98,11 @@ class MarkerUtteranceDict:
     """
 
     def apply(self, apply_functions):
-        ##continue debugging here
+        result = []
         for item in self.list:
             for func in apply_functions:
-                func(item)
+                result.append(func(item))
+        return result
 
     ##Takes an instance of MarkerUtteranceDict, or self
     ##Takes a list of functions to apply that have arguments as two utterances
