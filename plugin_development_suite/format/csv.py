@@ -16,11 +16,7 @@ from plugin_development_suite.data_structures.structure_interact import (
 
 
 class CSVPlugin:
-    def apply(self):
-        structure_interact_instance = StructureInteract()
-        methods = GBPluginMethods()
-        structure_interact_instance = structure_interact_instance.apply(methods)
-
+    def apply(self, structure_interact_instance):
         self._utterance_level(structure_interact_instance)
         self._word_level(structure_interact_instance)
 
@@ -73,14 +69,20 @@ class CSVPlugin:
             speaker_sentence = ""
             start_time = 0
             for row in result:
+                ## sets the speaker value to the fist UttObj speaker
                 speaker = row[0][0]
+                ## intializes the previous item to the first UttObj
                 prev_item = row[0]
+
+                ## iterate through all UttObjs in the data structure
                 for item in row:
-                    if self.is_speaker_utt(item[0]) == False:
-                        continue
+                    ## if the UttObj shares a speaker with the previous UttObj,
+                    ## add the text to a sentence
                     if item[0] == speaker:
                         speaker_sentence += item[1] + " "
                         prev_item = item
+
+                    ## when the speaker changes, output the last speaker's sentence
                     else:
                         prev_item[2] = start_time
                         prev_item[1] = speaker_sentence
@@ -89,6 +91,10 @@ class CSVPlugin:
                         speaker = item[0]
                         start_time = item[2]
                         prev_item = item
+
+            ## print the last sentence seperately
+            ## at the end of the file, there is no speaker change to mark when
+            ## a sentence should be outputted
             item[0] == speaker
             prev_item[2] = start_time
             prev_item[1] = speaker_sentence
@@ -106,11 +112,3 @@ class CSVPlugin:
         else:
             result = ["", txt, curr.start, curr.end]
         return result
-
-    ## This function occurs two places- look into modularizing it
-    def is_speaker_utt(self, string):
-        internal_marker_set = INTERNAL_MARKER.INTERNAL_MARKER_SET
-        if string in internal_marker_set:
-            return False
-        else:
-            return True

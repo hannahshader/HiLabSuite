@@ -4,7 +4,7 @@ from plugin_development_suite.data_structures.marker_utterance_dict import (
 )
 from plugin_development_suite.data_structures.data_objects import UttObj
 from plugin_development_suite.algorithms.apply_plugins import ApplyPlugins
-from plugin_development_suite.data_structures.data_objects import INTERNAL_MARKER
+from plugin_development_suite.configs.configs import INTERNAL_MARKER
 import copy
 import os
 from pydantic import BaseModel
@@ -34,7 +34,8 @@ class StructureInteract(Plugin):
         ## get the output path
         self.output_path = methods.output_path
 
-        ## pass data to marker_utterance_dict to interact with the underlying data structure
+        ## pass data to marker_utterance_dict to interact with the underlying
+        ## data structure
         marker_utterance_obj = MarkerUtteranceDict(utterances_map)
         self.data_structure = marker_utterance_obj
 
@@ -45,6 +46,7 @@ class StructureInteract(Plugin):
         ##returns a version of itself
         return self
 
+    ## inserts and marker and maintains the organization of the data structure
     def interact_insert_marker(self, item):
         self.data_structure.insert_marker(self.data_structure, item)
 

@@ -1,6 +1,6 @@
 import logging
 from typing import Dict, Any, List
-from plugin_development_suite.data_structures.data_objects import (
+from plugin_development_suite.configs.configs import (
     INTERNAL_MARKER,
     load_threshold,
 )
@@ -20,21 +20,6 @@ class GapPlugin:
         return
 
     def GapMarker(curr_utt, next_utt):
-        fto = round(next_utt[0].startTime - curr_utt[-1].endTime, 2)
-        logging.debug(f"get fto : {fto}")
-        print(THRESHOLD.GAPS_LB)
-
-        if fto >= THRESHOLD.GAPS_LB and curr_utt[0].sLabel != next_utt[0].sLabel:
-            markerText = MARKER.TYPE_INFO_SP.format(
-                MARKER.GAPS, str(round(fto, 1)), str(curr_utt[-1].sLabel)
-            )
-            # create instance of marker
-            return_marker = UttObj(
-                curr_utt[-1].endTime, next_utt[0].startTime, MARKER.GAPS, markerText
-            )
-            # return marker
-        return return_marker
-
         """
         Algorithm:
         1.  takes in curr_node and get curr_next_node

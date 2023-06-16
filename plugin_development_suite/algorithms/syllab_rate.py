@@ -6,7 +6,7 @@ from scipy.stats import median_abs_deviation
 import logging
 
 
-from plugin_development_suite.data_structures.data_objects import (
+from plugin_development_suite.configs.configs import (
     INTERNAL_MARKER,
     load_threshold,
 )
