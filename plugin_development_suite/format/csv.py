@@ -26,7 +26,7 @@ class CSVPlugin:
 
     def _word_level(self, structure_interact_instance):
         path = os.path.join(
-            structure_interact_instance.output_path, OUTPUT_FILE.UTT_CSV
+            structure_interact_instance.output_path, OUTPUT_FILE.WORD_CSV
         )
 
         with open(path, "w", newline="") as outfile:
@@ -57,7 +57,7 @@ class CSVPlugin:
 
     def _utterance_level(self, structure_interact_instance):
         path = os.path.join(
-            structure_interact_instance.output_path, OUTPUT_FILE.WORD_CSV
+            structure_interact_instance.output_path, OUTPUT_FILE.UTT_CSV
         )
 
         with open(path, "w", newline="") as outfile:
