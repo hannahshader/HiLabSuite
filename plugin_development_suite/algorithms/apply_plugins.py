@@ -30,8 +30,8 @@ class ApplyPlugins:
             result.append(OverlapPlugin.OverlapMarker)
         ##if "PausePlugin" in plugin_names:
         ##    result.append(PausePlugin.PauseMarker)
-        ##if "GapPlugin" in plugin_names:
-        ##    result.append(GapPlugin.GapMarker)
+        if "GapPlugin" in plugin_names:
+            result.append(GapPlugin.GapMarker)
         ##if "SyllableRatePlugin" in plugin_names:
         ##result.append(syllab_rate.add_syllab_marker)
         return result

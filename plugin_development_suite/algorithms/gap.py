@@ -17,10 +17,24 @@ Return a gap marker to insert
 
 class GapPlugin:
     def __init__(self) -> None:
-        super().__init__()
-        self.lb_gap = THRESHOLD.GAPS_LB
+        return
 
-    def GapMarker(self, curr_utt, next_utt):
+    def GapMarker(curr_utt, next_utt):
+        fto = round(next_utt[0].startTime - curr_utt[-1].endTime, 2)
+        logging.debug(f"get fto : {fto}")
+        print(THRESHOLD.GAPS_LB)
+
+        if fto >= THRESHOLD.GAPS_LB and curr_utt[0].sLabel != next_utt[0].sLabel:
+            markerText = MARKER.TYPE_INFO_SP.format(
+                MARKER.GAPS, str(round(fto, 1)), str(curr_utt[-1].sLabel)
+            )
+            # create instance of marker
+            return_marker = UttObj(
+                curr_utt[-1].endTime, next_utt[0].startTime, MARKER.GAPS, markerText
+            )
+            # return marker
+        return return_marker
+
         """
         Algorithm:
         1.  takes in curr_node and get curr_next_node
@@ -30,7 +44,6 @@ class GapPlugin:
             assert that there is "significant gap" between curr_node and curr_next_node
             with given threshold
         4.  if there is "significant gap," create and return a Gap Marker
-        """
         logging.debug(f"current utterance {curr_utt}, next utterance {next_utt}")
 
         # use existing algorithm to determine whether there is a gap between
@@ -48,3 +61,8 @@ class GapPlugin:
             )
             # return marker
             return return_marker
+        """
+        if curr_utt.start != 5.0:
+            return []
+        ##make sure return value is a list
+        return [UttObj(start=5, end=6, speaker="Speaker 2", text="GAPS")]

@@ -26,6 +26,7 @@ class StructureInteract(Plugin):
         self.data_structure = MarkerUtteranceDict()
         self.output_path = ""
 
+    # driver for structure_interact
     def apply(self, methods: GBPluginMethods):
         ## get the utterance data from gailbot in form Dict[str, List[UttObj]]
         utterances_map: Dict[str, List[UttObj]] = methods.get_utterance_objects()

@@ -48,8 +48,6 @@ class MarkerUtteranceDict:
     def insert_marker(self, value: Any):
         self.list.append(value)
         self.list = sorted(self.list, key=lambda x: x.start)
-        print("\nlist is")
-        print(self.list)
 
     def get_next_item(self, current_item):
         if current_item in self.list:
@@ -91,23 +89,12 @@ class MarkerUtteranceDict:
                     return False
 
     def is_speaker_utt(self, string):
+        # check the speaker field of piece of data to see if utterance is a marker
         internal_marker_set = INTERNAL_MARKER.INTERNAL_MARKER_SET
         if string in internal_marker_set:
             return False
         else:
             return True
-
-    """
-    def apply(self, apply_functions):
-        for item in self.list:
-            for func in apply_functions:
-                curr = item
-                curr_next = self.get_next_item
-                ##returns if there is no next item
-                if curr_next == False:
-                    return
-                func(curr, curr_next)
-    """
 
     def apply(self, apply_functions):
         result = []
@@ -133,8 +120,6 @@ class MarkerUtteranceDict:
                 ##storing markers as a list becuase the overlap function
                 ##returns four markers
                 markers_list = func(curr, curr_next)
-                ##print("\nmarkers list is")
-                ##print(func(curr, curr_next))
                 for marker in markers_list:
                     self.insert_marker(marker)
 
