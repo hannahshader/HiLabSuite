@@ -77,13 +77,13 @@ class CSVPlugin:
                 prev_item = row[0]
                 for item in row:
                     if item[0] == speaker:
-                        speaker_sentence += " " + item[1]
+                        speaker_sentence += item[1] + " "
                         prev_item = item
                     else:
                         prev_item[2] = start_time
                         prev_item[1] = speaker_sentence
                         writer.writerow(prev_item)
-                        speaker_sentence = item[1]
+                        speaker_sentence = item[1] + " "
                         speaker = item[0]
                         start_time = item[2]
                         prev_item = item
