@@ -1,26 +1,21 @@
 from typing import Dict, Any, List
-from plugin_development_suite.configs.configs import (
+from plugin_development_suite.data_structures.data_objects import (
     INTERNAL_MARKER,
     load_threshold,
 )
 from plugin_development_suite.data_structures.data_objects import UttObj
-
+​
 MARKER = INTERNAL_MARKER
 THRESHOLD = load_threshold()
 INVALID_OVERLAP = (-1, -1, -1, -1)
-
+​
 """
 Take utterance pair and return a overlap markers to insert
 """
-
-
+​
+​
 class OverlapPlugin:
-    def __init__(self) -> None:
-        super().__init__()
-        self.marker_limit = THRESHOLD.OVERLAP_MARKERLIMIT
-
     def OverlapMarker(curr_utt, next_utt):
-        """ """
         """
         Algorithm:
         1.  takes in curr_node and get curr_next_node
@@ -31,150 +26,125 @@ class OverlapPlugin:
             with given threshold
         4.  if there is "significant overlap," return Overlap Marker
         """
-        """
-
+​
         # In the case of an overlap, get its 4 marker positions
         overlap_plugin_instance = OverlapPlugin()
-        # print("curr utt is")
-        # print(curr_utt)
-        # print("next utt is")
-        # print(next_utt)
+        unique_id = 0
+​
         if next_utt.start < curr_utt.end:
-            (
-                curr_x,
-                curr_y,
-                nxt_x,
-                nxt_y,
-            ) = overlap_plugin_instance._get_overlap_positions(curr_utt, next_utt)
-            if (curr_x, curr_y, nxt_x, nxt_y) == INVALID_OVERLAP:
+            curr_x, curr_y, next_x, next_y = overlap_plugin_instance._get_overlap_positions(curr_utt, next_utt)
+            if (curr_x, curr_y, next_x, next_y) == INVALID_OVERLAP:
                 print("INVALID: overlap between same speaker detected")
             else:
-                if curr_x >= len(curr_utt):
+                if curr_x >= len(curr_utt.text):
                     curr_x = -1
-                if nxt_x >= len(next_utt):
-                    nxt_x = -1
-                if curr_y >= len(curr_utt):
+                if next_x >= len(next_utt.text):
+                    next_x = -1
+                if curr_y >= len(curr_utt.text):
                     curr_y = -1
-                if nxt_y >= len(next_utt):
-                    nxt_y = -1
-
+                if next_y >= len(next_utt.text):
+                    next_y = -1
+​
                 fst_start = MARKER.TYPE_INFO_SP.format(
-                    MARKER.OVERLAP_FIRST_START, str(unique_id), curr_utt[0].sLabel
+                    MARKER.OVERLAP_FIRST_START, str(unique_id), curr_utt.speaker
                 )
                 fst_end = MARKER.TYPE_INFO_SP.format(
-                    MARKER.OVERLAP_FIRST_END, str(unique_id), curr_utt[0].sLabel
+                    MARKER.OVERLAP_FIRST_END, str(unique_id), curr_utt.speaker
                 )
                 snd_start = MARKER.TYPE_INFO_SP.format(
-                    MARKER.OVERLAP_SECOND_START, str(unique_id), next_utt[0].sLabel
+                    MARKER.OVERLAP_SECOND_START, str(unique_id), next_utt.speaker
                 )
                 snd_end = MARKER.TYPE_INFO_SP.format(
-                    MARKER.OVERLAP_SECOND_END, str(unique_id), next_utt[0].sLabel
+                    MARKER.OVERLAP_SECOND_END, str(unique_id), next_utt.speaker
                 )
-
+​
                 # insert the overlap markers into the tree
                 return_marker_1 = UttObj(
-                    curr_utt[curr_x].startTime,
-                    curr_utt[curr_x].startTime,
+                    curr_utt.start,
+                    curr_utt.start,
                     MARKER.OVERLAPS,
                     fst_start,
                 )
                 return_marker_2 = UttObj(
-                    curr_utt[curr_y].endTime,
-                    curr_utt[curr_y].endTime,
+                    curr_utt.end,
+                    curr_utt.end,
                     MARKER.OVERLAPS,
                     fst_end,
                 )
                 return_marker_3 = UttObj(
-                    next_utt[nxt_x].startTime,
-                    next_utt[nxt_x].startTime,
+                    next_utt.start,
+                    next_utt.start,
                     MARKER.OVERLAPS,
                     snd_start,
                 )
                 return_marker_4 = UttObj(
-                    next_utt[nxt_y].endTime,
-                    next_utt[nxt_y].endTime,
+                    next_utt.end,
+                    next_utt.end,
                     MARKER.OVERLAPS,
                     snd_end,
                 )
-                unique_id += 1  # TODO: double check what this is for
-
+                unique_id += 1
+​
                 overlap_markers_list = [
                     return_marker_1,
                     return_marker_2,
                     return_marker_3,
                     return_marker_4,
                 ]
-
+​
                 ##return overlap_markers_list
-                 """
-        ##for testing
-        if curr_utt.start != 1.0:
+                return overlap_markers_list
+        else:
             return []
-        marker1 = UttObj(
-            start=3, end=4, speaker="Speaker 2", text="OVERLAP_FIRST_START"
-        )
-        marker2 = UttObj(
-            start=3, end=4, speaker="Speaker 2", text="OVERLAP_SECOND_START"
-        )
-        marker3 = UttObj(start=4, end=5, speaker="Speaker 2", text="OVERLAP_FIRST_END")
-        marker4 = UttObj(start=4, end=5, speaker="Speaker 2", text="OVERLAP_SECOND_END")
-        return [marker1, marker2, marker3, marker4]
-
-    def _get_overlap_positions(self, curr_utt, nxt_utt):
+​
+    def _get_overlap_positions(self, curr_utt, next_utt):
         """
         Return the position of where the overlap markers should be inserted.
         """
-
+​
         # check speaker label
-        if curr_utt[0].sLabel == nxt_utt[0].sLabel:
+        if curr_utt.speaker == next_utt.speaker:
             return INVALID_OVERLAP
-
+​
         # when there is an overlap and diff speakers
-        next_start = nxt_utt[0].startTime
-        next_end = nxt_utt[-1].endTime
-        curr_start = curr_utt[0].startTime
-        curr_end = curr_utt[-1].endTime
-
+        next_start = next_utt.start
+        next_end = next_utt.end
+        curr_start = curr_utt.start
+        curr_end = curr_utt.end
+​
         # do dummy value
         curr_overlap_start_pos = 0
         curr_overlap_end_pos = 0
-
-        # iterate through every word in the current utterance
-        for word in curr_utt:
-            if word.startTime < next_end and word.endTime > next_start:
-                # overlap happening
-                if curr_overlap_start_pos != 0 and curr_overlap_end_pos == 0:
-                    curr_overlap_end_pos = curr_overlap_start_pos
-                    curr_overlap_end_pos += 1
-                else:
-                    curr_overlap_end_pos += 1
+​
+        # current utterance
+        if curr_start < next_end and curr_end > next_start:
+            if curr_overlap_start_pos != 0 and curr_overlap_end_pos == 0:
+                curr_overlap_end_pos = curr_overlap_start_pos
+                curr_overlap_end_pos += 1
             else:
-                if curr_overlap_end_pos == 0:
-                    curr_overlap_start_pos += 1
-                else:
-                    break
-
+                curr_overlap_end_pos += 1
+        else:
+            if curr_overlap_end_pos == 0:
+                curr_overlap_start_pos += 1
+​
         next_overlap_start_pos = 0
-        next_overlap_end_pos = len(nxt_utt) - 1
-
-        # iterate through every word in the next utterance
-        for word in nxt_utt:
-            if word.startTime < curr_end and word.endTime > curr_start:
-                # overlap happening
-                if next_overlap_start_pos != 0 and next_overlap_end_pos == 0:
-                    next_overlap_end_pos = next_overlap_start_pos
-                    next_overlap_end_pos += 1
-                else:
-                    next_overlap_end_pos += 1
+        next_overlap_end_pos = len(next_utt.text) - 1
+​
+        # next utterance
+        if next_start < curr_end and next_end > curr_start:
+            if next_overlap_start_pos != 0 and next_overlap_end_pos == 0:
+                next_overlap_end_pos = next_overlap_start_pos
+                next_overlap_end_pos += 1
             else:
-                if next_overlap_end_pos == 0:
-                    next_overlap_start_pos += 1
-                else:
-                    break
-
+                next_overlap_end_pos += 1
+        else:
+            if next_overlap_end_pos == 0:
+                next_overlap_start_pos += 1
+        
+        # check for invalid overlap
         if curr_overlap_end_pos == 0 and next_overlap_end_pos == 0:
             return INVALID_OVERLAP
-
+​
         return (
             curr_overlap_start_pos,
             curr_overlap_end_pos,
