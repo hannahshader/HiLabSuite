@@ -30,6 +30,10 @@ class PausePlugin:
         4.  if there is a "significant pause," return Pause Marker
         """
         # use existing algorithm to determine whether there is a pause
+        ##print("curr utt is")
+        ##print(curr_utt)
+        ##print("next utt is")
+        ##print(next_utt)
         if curr_utt.speaker == next_utt.speaker:
             logging.info("start pause analysis")
             fto = round(next_utt.start - curr_utt.end, 2)

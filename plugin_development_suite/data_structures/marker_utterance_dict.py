@@ -96,18 +96,25 @@ class MarkerUtteranceDict:
     # given a current element in the list, gets the next element in the
     # list that is not a marker, but is an utterance with corresponding text
     def get_next_utt(self, current_item):
-        current_index = self.list.index(current_item)
-        if current_index > len(self.list):
+        print("get to beginning get_next_utt")
+        if current_item in self.list:
+            current_index = self.list.index(current_item)
+            # print("index current is")
+            # print(current_index)
+            next_index = current_index + 1
+            while next_index < len(self.list):
+                next_utterance = self.list[next_index]
+                # print("curr utt is")
+                # print(current_item)
+                # print("next utt is")
+                # print(next_utterance)
+                if self.is_speaker_utt(next_utterance.speaker):
+                    print("get to return get_next_utt")
+                    return next_utterance
+                next_index += 1
             return False
-        next_index = current_index + 1
-
-        while next_index < len(self.list):
-            next_utterance = self.list[next_index]
-            if self.is_speaker_utt(next_utterance.speaker):
-                return next_utterance
-            next_index += 1
-
-        return False
+        else:
+            return False
 
     ## check the speaker field of piece of data to see if utterance is a marker
     def is_speaker_utt(self, string):
@@ -147,9 +154,13 @@ class MarkerUtteranceDict:
     ## These functions return either one or four marker values
     ## These marker values are added one by one to the list in MarkerUtteranceDict
     def apply_insert_marker(self, apply_functions):
-        for item in self.list:
+        ## deep copies the list so no infinite insertions/checks
+        copied_list = copy.deepcopy(self.list)
+        for item in copied_list:
+            ## only inspeaks non marker items of the list
             if self.is_speaker_utt(item.speaker) == False:
                 continue
+            ## applies each plugin function to each item
             for func in apply_functions:
                 curr = item
                 curr_next = self.get_next_utt(curr)

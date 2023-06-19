@@ -26,8 +26,8 @@ class ApplyPlugins:
 
     def function_list(self, config_file_path):
         result = []
-        ##if "PausePlugin" in self.plugin_names:
-        ##result.append(PausePlugin.PauseMarker)
+        if "PausePlugin" in self.plugin_names:
+            result.append(PausePlugin.PauseMarker)
         if "GapPlugin" in self.plugin_names:
             result.append(GapPlugin.GapMarker)
         ##if "SyllableRatePlugin" in self.plugin_names:
