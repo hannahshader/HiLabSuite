@@ -23,7 +23,7 @@ LABEL = load_label().TXT
 
 
 class TextPlugin(Plugin):
-    def apply(self, structure_interact_instance):
+    def run(self, structure_interact_instance):
         path = os.path.join(
             structure_interact_instance.output_path, OUTPUT_FILE.CON_TXT
         )

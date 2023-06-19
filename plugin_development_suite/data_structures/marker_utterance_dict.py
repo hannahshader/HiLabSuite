@@ -22,12 +22,16 @@ class MarkerUtteranceDict:
     ## return type is Dict[str, List[UttObj]]
     ##methods: GBPluginMethods
 
+    ## The underlying data structure holds two lists
+    ## One list is the data for individual words/markers spoken: their
+    ## speaker, their start time, their end time, and their id
+    ## One list holds data about the start times and end times of sentences
     def __init__(self, utterance_map: Dict[str, List[UttObj]] = None):
         if utterance_map is None:
             self.list = []
             self.sentences = []
         else:
-            ## get utterances into a list
+            ## Populate data about words spoken
             utterances = []
             for key, value in utterance_map.items():
                 for utt_dict in value:
@@ -39,6 +43,7 @@ class MarkerUtteranceDict:
                     )
                     utterances.append(utt)
 
+            # Populate data about sentences
             sentence_data = []
             for key, utt_objs in utterance_map.items():
                 first_start_time = float("inf")
@@ -59,57 +64,23 @@ class MarkerUtteranceDict:
             self.list = copy.deepcopy(utterances)
             self.sentences = copy.deepcopy(sentence_data)
 
-    # inserts a marker into the data structure and resorts the list
+    ## inserts a marker into the data structure
+    ## maintains original order
     def insert_marker(self, value: Any):
         if value == None:
             return
         index = bisect.bisect_left([obj.start for obj in self.list], value.start)
         self.list.insert(index, value)
 
-    # given a current element in list, gets the next element in the list
-    def get_next_item(self, current_item):
-        if current_item in self.list:
-            current_index = self.list.index(current_item)
-            if current_index + 1 < len(self.list):
-                next_item = self.list[current_index + 1]
-                return next_item
-            else:
-                ##error case
-                return None
-        else:
-            ##error case
-            return None
-
-    def get_next_sentence_item(self, current_item):
-        if current_item in self.sentences:
-            current_index = self.sentences.index(current_item)
-            if current_index + 1 < len(self.sentences):
-                next_item = self.sentences[current_index + 1]
-                return next_item
-            else:
-                ##error case
-                return None
-        else:
-            ##error case
-            return None
-
     # given a current element in the list, gets the next element in the
     # list that is not a marker, but is an utterance with corresponding text
     def get_next_utt(self, current_item):
-        print("get to beginning get_next_utt")
         if current_item in self.list:
             current_index = self.list.index(current_item)
-            # print("index current is")
-            # print(current_index)
             next_index = current_index + 1
             while next_index < len(self.list):
                 next_utterance = self.list[next_index]
-                # print("curr utt is")
-                # print(current_item)
-                # print("next utt is")
-                # print(next_utterance)
                 if self.is_speaker_utt(next_utterance.speaker):
-                    print("get to return get_next_utt")
                     return next_utterance
                 next_index += 1
             return False
@@ -134,22 +105,21 @@ class MarkerUtteranceDict:
                 result.append(func(item))
         return result
 
-    ## gets a list of functions
-    ## iterates through all items in the list and applies
-    ## the list of functions to each item
+    ## Iterates through list of sentence data
+    ## Inserts markers
+    ## Will always be used to add overlap plugin markers
     def apply_for_overlap(self, apply_function):
         result = []
-        for item in self.sentences:
-            curr = item
-            curr_next = self.get_next_sentence_item(curr)
-            ##returns if there is no next item
-            if curr_next == None:
+        for curr_item in self.sentences:
+            curr_index = self.sentences.index(curr_item)
+            if curr_index + 1 < len(self.sentences):
+                next_item = self.sentences[curr_index + 1]
+                markers_list = apply_function(curr_item, next_item)
+                for marker in markers_list:
+                    self.insert_marker(marker)
+            else:
                 return
-            markers_list = apply_function(curr, curr_next)
-            for marker in markers_list:
-                self.insert_marker(marker)
 
-    ## Takes an instance of MarkerUtteranceDict, or self
     ## Takes a list of functions to apply that have arguments as two utterances
     ## These functions return either one or four marker values
     ## These marker values are added one by one to the list in MarkerUtteranceDict

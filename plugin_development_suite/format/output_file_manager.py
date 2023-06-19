@@ -31,7 +31,7 @@ class OutputFileManager:
 
         ## create the CSV files
         csv_init = CSVPlugin()
-        csv_init.apply(structure_interact_instance)
+        csv_init.run(structure_interact_instance)
 
         text_init = TextPlugin()
-        text_init.apply(structure_interact_instance)
+        text_init.run(structure_interact_instance)
