@@ -166,3 +166,13 @@ class GBPluginMethods(Methods):
     @property
     def output_path(self) -> str:
         return "/Users/hannahshader/Desktop/Plugin-Development-Output"
+
+    @property
+    def temp_work_path(self) -> str:
+        """
+        Accesses and returns the temporary workspace path
+
+        Returns:
+            String containing the temporary workspace path
+        """
+        return "/Users/hannahshader/Desktop/Temp_Workspace"
