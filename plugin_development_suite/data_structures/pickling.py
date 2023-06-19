@@ -1,6 +1,7 @@
 import pickle
 import sys
 from gailbot.pluginMethod import GBPluginMethods
+import threading
 
 
 class Pickling:
@@ -16,26 +17,31 @@ class Pickling:
         """
         methods = GBPluginMethods
         self.filepath = methods.temp_work_path
+        self.lock = threading.Lock()
 
     # Save utterance data to disk
     def save_list_to_disk(self, list):
-        with open(str(self.filepath), "wb") as file:
-            pickle.dump(list, file)
+        with self.lock:
+            with open(str(self.filepath), "wb") as file:
+                pickle.dump(list, file)
 
     # Load utterance data from disk
     def load_list_from_disk(self, list):
-        with open(str(self.filepath), "rb") as file:
-            list = pickle.load(file)
+        with self.lock:
+            with open(str(self.filepath), "rb") as file:
+                list = pickle.load(file)
 
     # Save utterance data to disk
     def save_sentences_to_disk(self, sentences):
-        with open(str(self.filepath), "wb") as file:
-            pickle.dump(sentences, file)
+        with self.lock:
+            with open(str(self.filepath), "wb") as file:
+                pickle.dump(sentences, file)
 
     # Load utterance data from disk
     def load_sentences_from_disk(self, sentences):
-        with open(str(self.filepath), "rb") as file:
-            sentences = pickle.load(file)
+        with self.lock:
+            with open(str(self.filepath), "rb") as file:
+                sentences = pickle.load(file)
 
 
 """

@@ -7,6 +7,7 @@ import copy
 import bisect
 import pickle
 import sys
+import threading
 
 from plugin_development_suite.algorithms.gap import GapPlugin
 from plugin_development_suite.algorithms.overlap import OverlapPlugin
@@ -30,6 +31,7 @@ class MarkerUtteranceDict:
     ## speaker, their start time, their end time, and their id
     ## One list holds data about the start times and end times of sentences
     def __init__(self, utterance_map: Dict[str, List[UttObj]] = None):
+        self.lock = threading.Lock()
         self.pickle = Pickling()
         if utterance_map is None:
             self.list = []
@@ -72,12 +74,13 @@ class MarkerUtteranceDict:
     ## inserts a marker into the data structure
     ## maintains original order
     def insert_marker(self, value: Any):
-        self.pickle.load_list_from_disk(self.list)
-        if value == None:
-            return
-        index = bisect.bisect_left([obj.start for obj in self.list], value.start)
-        self.list.insert(index, value)
-        self.pickle.save_list_to_disk(self.list)
+        with self.lock:
+            self.pickle.load_list_from_disk(self.list)
+            if value == None:
+                return
+            index = bisect.bisect_left([obj.start for obj in self.list], value.start)
+            self.list.insert(index, value)
+            self.pickle.save_list_to_disk(self.list)
 
     # given a current element in the list, gets the next element in the
     # list that is not a marker, but is an utterance with corresponding text
