@@ -1,10 +1,9 @@
 ## ToDo: need additional installations for these imports
-##import syllables
-##import numpy
+import syllables
+import numpy
 from typing import Dict, Any, List, TypedDict
 from scipy.stats import median_abs_deviation
 import logging
-
 
 from plugin_development_suite.configs.configs import (
     INTERNAL_MARKER,
@@ -14,11 +13,6 @@ from plugin_development_suite.data_structures.data_objects import UttObj
 
 MARKER = INTERNAL_MARKER
 THRESHOLD = load_threshold()
-
-"""
-Takes a single utterance node
-Returns a overlap marker to insert
-"""
 
 
 class SYLLAB_DICT(TypedDict):
@@ -40,47 +34,45 @@ LimitDeviations = 2
 
 
 class SyllableRatePlugin:
-    def __init__(self) -> None:
-        super().__init__()
-        self.marker_limit = THRESHOLD.OVERLAP_MARKERLIMIT
+    def __init__(self, structure_interact_instance):
+        self.stats = None
+        self.list_of_syllab_dict = []
+        self.structure_interact_instance = structure_interact_instance
 
-    def syllab_marker(curr_utt, next_utt=None):
-        """
-        Calculates and returns the syllable rates for a single utterance
-        Takes the current utterance object; should not pass in utterance pair
-        """
+    def syllab_marker(self):
+        self.structure_interact_instance.apply_for_syllab_rate(
+            self.get_utt_syllable_rate
+        )
 
-        syll_num = sum([syllables.estimate(word.text) for word in curr_utt])
-        time_diff = abs(curr_utt[0].startTime - curr_utt[-1].endTime)
+        self.stats = self.get_stats(self.list_of_syllab_dict)
+        for item in self.list_of_syllab_dict:
+            results = self.syllab_markers(item)
+            if results != None:
+                for result in results:
+                    self.structure_interact_instance.interact_insert_marker(result)
+
+    # get syllab rates for each utt
+    def get_utt_syllable_rate(self, curr_utt, sentence_start, sentence_end):
+        time_diff = abs(sentence_end - sentence_start)
+        utt_syllab_num = syllables.estimate(curr_utt.text)
 
         if time_diff == 0:
             logging.warn(
-                f"no time difference between {curr_utt[0].text}\
-                and {curr_utt[-1].text}"
+                f"no time difference between {curr_utt.text}\
+                and {curr_utt.text}"
             )
             time_diff = 0.001
 
-        syll_rate = round(syll_num / time_diff, 2)
+        syllable_rate = round(utt_syllab_num / time_diff, 2)
 
-        logging.debug(f"syll_rate computed: {syll_rate}")
-
-        # syllable rate for a single utterance
         utt_syllable: SYLLAB_DICT = {
             "utt": curr_utt,  # might be a field of curr
-            "syllableNum": syll_num,
-            "syllRate": syll_rate,
+            "syllableNum": utt_syllab_num,
+            "syllableRate": syllable_rate,
         }
+        self.list_of_syllab_dict.append(utt_syllable)
 
-        return utt_syllable
-
-    """
-    !!!! STATS is not doable since we are supposed to be getting the stats for all
-    syllable rates (of the entire conversation)
-    Will prob need a function else that computes the stats after the entire
-    conversation is done !!!!
-    """
-
-    def stats(self, utt_syll_dict) -> STAT_DICT:
+    def get_stats(self, utt_syll_dict) -> STAT_DICT:
         """
         Creates and returns a dictionary containing the statistics for all
         syllab stats for all utterances of a conversation
@@ -88,11 +80,11 @@ class SyllableRatePlugin:
         """
         allRates = []
         for dic in utt_syll_dict:
-            allRates.append(dic["syllRate"])
+            allRates.append(dic["syllableRate"])
 
         allRates = numpy.sort(numpy.array(allRates))
         median = numpy.median(allRates)
-        median_absolute_deviation = round(median_abs_deviation(allRates, 2))
+        median_absolute_deviation = round(median_abs_deviation(allRates), 2)
         lowerLimit = median - (LimitDeviations * median_absolute_deviation)
         upperLimit = median + (LimitDeviations * median_absolute_deviation)
 
@@ -107,31 +99,58 @@ class SyllableRatePlugin:
         return stats
 
     # add nodes
-    def add_marker(self, utt_syllable: SYLLAB_DICT):
-        """
-        Adds fast and slow speech delimiter markers to a markers list
-        to be returned. Should take in self and syllable rate for one utterance
-
-        !!! Not doable since determination of fast and slow speech depends on
-        speech stats of the entire conversation !!!
-        """
+    def syllab_markers(self, curr_utt):
         vowels = ["a", "e", "i", "o", "u"]
         fastCount = 0
         slowCount = 0
-        if utt_syllable["syllableRate"] <= statsDic["lowerLimit"]:
-            print("slow speech determination and marker")
-            print("increment slow speech count")
-        elif utt_syllable["syllableRate"] >= statsDic["upperLimit"]:
-            print("fast speech determination and marker")
-            print("increment fast speech count")
+        if curr_utt["syllableRate"] <= self.stats["lowerLimit"]:
+            markertText1 = MARKER.TYPE_INFO_SP.format(
+                MARKER.SLOWSPEECH_START, MARKER.SLOWSPEECH_DELIM, curr_utt.speaker
+            )
+            markerText2 = MARKER.TYPE_INFO_SP.format(
+                MARKER.SLOWSPEECH_END, MARKER.SLOWSPEECH_DELIM, curr_utt.speaker
+            )
 
+            slowStartMarker = UttObj(
+                curr_utt.start,
+                curr_utt.start,
+                MARKER.SLOWSPEECH_START,
+                markertText1,
+            )
+            slowEndMarker = UttObj(
+                curr_utt.start,
+                curr_utt.start,
+                MARKER.SLOWSPEECH_END,
+                markertText2,
+            )
+            slowCount += 1
+            return [slowStartMarker, slowEndMarker]
+        elif curr_utt["syllableRate"] >= self.stats["upperLimit"]:
+            markertText1 = MARKER.TYPE_INFO_SP.format(
+                MARKER.FASTSPEECH_START,
+                MARKER.FASTSPEECH_DELIM,
+                curr_utt["utt"].speaker,
+            )
+            markerText2 = MARKER.TYPE_INFO_SP.format(
+                MARKER.FASTSPEECH_END,
+                MARKER.FASTSPEECH_DELIM,
+                curr_utt["utt"].speaker,
+            )
 
-"""
-    NOTE: THOUGHTS: our approach of running through all plugin algorithms for each
-    utterance and its next utterance is not memory efficient.
+            fastStartMarker = UttObj(
+                curr_utt["utt"].start,
+                curr_utt["utt"].start,
+                MARKER.FASTSPEECH_START,
+                markertText1,
+            )
+            fastEndMarker = UttObj(
+                curr_utt["utt"].start,
+                curr_utt["utt"].start,
+                MARKER.FASTSPEECH_END,
+                markerText2,
+            )
+            fastCount += 1
+            return fastStartMarker, fastEndMarker
 
-    We are repeatedly recreating variables that were only created once in the
-    old plugin algorithms that traverses through data dictionaries once per
-    plugin. 
-
-"""
+        else:
+            return

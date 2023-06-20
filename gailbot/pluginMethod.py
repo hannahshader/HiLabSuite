@@ -90,7 +90,7 @@ class GBPluginMethods(Methods):
                 },
                 {
                     "start": 38.0,
-                    "end": 39.0,
+                    "end": 38.1,
                     "speaker": "Speaker 1",
                     "text": "happening?",
                 },

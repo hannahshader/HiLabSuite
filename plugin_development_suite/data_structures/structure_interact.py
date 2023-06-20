@@ -51,7 +51,7 @@ class StructureInteract(Plugin):
 
     ## inserts and marker and maintains the organization of the data structure
     def interact_insert_marker(self, item):
-        self.data_structure.insert_marker(self.data_structure, item)
+        self.data_structure.insert_marker(item)
 
     # general apply function list for key and values in the data structure
     def apply_functions(self, apply_functions):
@@ -65,3 +65,6 @@ class StructureInteract(Plugin):
 
     def apply_markers_overlap(self, apply_function):
         self.data_structure.apply_for_overlap(apply_function)
+
+    def apply_for_syllab_rate(self, apply_function):
+        self.data_structure.apply_for_syllab_rate(apply_function)

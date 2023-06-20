@@ -9,12 +9,6 @@ import pickle
 import sys
 import threading
 
-from plugin_development_suite.algorithms.gap import GapPlugin
-from plugin_development_suite.algorithms.overlap import OverlapPlugin
-from plugin_development_suite.algorithms.pause import PausePlugin
-from plugin_development_suite.algorithms.syllab_rate import (
-    SyllableRatePlugin as syllab_rate,
-)
 from collections import OrderedDict
 from gailbot.plugin import Plugin
 from gailbot.pluginMethod import GBPluginMethods
@@ -137,6 +131,22 @@ class MarkerUtteranceDict:
             else:
                 self.pickle.save_sentences_to_disk(self.sentences)
                 return
+
+    def apply_for_syllab_rate(self, func):
+        self.pickle.load_sentences_from_disk(self.sentences)
+        self.pickle.load_list_from_disk(self.list)
+        for curr_sentence in self.sentences:
+            ## using second list item, get the sentence end time
+            sentence_end_time = curr_sentence[1]
+            for curr_item in self.list:
+                if self.is_speaker_utt(curr_item.speaker) == False:
+                    continue
+                elif curr_item.end <= sentence_end_time:
+                    func(curr_item, curr_sentence[0], curr_sentence[1])
+                    self.pickle.save_sentences_to_disk(self.sentences)
+                    self.pickle.save_list_to_disk(self.list)
+                else:
+                    continue
 
     ## Takes a list of functions to apply that have arguments as two utterances
     ## These functions return either one or four marker values

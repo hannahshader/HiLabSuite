@@ -61,20 +61,11 @@ class Pickling:
                     processed_section = []
                     prev_item = None
                     for item in section:
-                        # Perform operations on the item
-                        processed_item = (
-                            for func in apply_functions:
-                            curr = item
-                            curr_next = self.get_next_utt(curr)
-                            ##returns if there is no next item
-                            if curr_next == False:
-                                return
-                            ##storing markers as a list becuase the overlap function
-                            ##returns four markers
+                        for func in apply_functions:
                             marker = func(curr, curr_next)
                             self.insert_marker(marker)
-                        )
-                        processed_section.append(processed_item)
+                        # Perform operations on the item
+                        processed_section.append(item)
 
                     # Repickle the processed section back to the file
                     file.seek(file.tell() - (self.load_items * self.list_item_size))
@@ -83,4 +74,11 @@ class Pickling:
 
                 except EOFError:
                     break
+                    
+    def pickle_for_loop_helper(item_prev, item, apply_functions):
+        for func in apply_functions:
+                marker = func(curr, curr_next)
+                self.insert_marker(marker)
+
+        
 """

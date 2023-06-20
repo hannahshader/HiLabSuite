@@ -1,9 +1,7 @@
 from plugin_development_suite.algorithms.gap import GapPlugin
 from plugin_development_suite.algorithms.overlap import OverlapPlugin
 from plugin_development_suite.algorithms.pause import PausePlugin
-from plugin_development_suite.algorithms.syllab_rate import (
-    SyllableRatePlugin as syllab_rate,
-)
+from plugin_development_suite.algorithms.syllab_rate import SyllableRatePlugin
 from collections import OrderedDict
 from typing import OrderedDict as OrderedDictType, TypeVar
 import toml
@@ -50,6 +48,9 @@ class ApplyPlugins:
             structure_interact_instance.apply_markers_overlap(
                 OverlapPlugin.OverlapMarker
             )
+        if "SyllableRatePlugin" in self.plugin_names:
+            syllab_rate_instance = SyllableRatePlugin(structure_interact_instance)
+            syllab_rate_instance.syllab_marker()
 
         ## Applies function to the list that only rely on word data
         structure_interact_instance.apply_markers(self.plugins)
