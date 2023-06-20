@@ -46,29 +46,3 @@ class GapPlugin:
             )
         else:
             return
-
-
-## Previous testing file
-"""
-import logging
-from typing import Dict, Any, List
-from plugin_development_suite.configs.configs import (
-    INTERNAL_MARKER,
-    load_threshold,
-)
-from plugin_development_suite.data_structures.data_objects import UttObj
-
-MARKER = INTERNAL_MARKER
-THRESHOLD = load_threshold()
-
-class GapPlugin:
-    def __init__(self) -> None:
-        return
-
-    def GapMarker(curr_utt, next_utt):
-
-        if curr_utt.start != 5.0:
-            return []
-        return [UttObj(start=5, end=6, speaker="Speaker 2", text="GAPS")]
-
-"""
