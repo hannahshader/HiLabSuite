@@ -33,37 +33,40 @@ class MarkerUtteranceDict:
         else:
             ## Populate data about words spoken
             utterances = []
+            sentence_data_plain = []
+            speaker = ""
+            prev_utt = None
             for key, value in utterance_map.items():
                 for utt_dict in value:
+                    if utt_dict.speaker != speaker:
+                        if prev_utt != None:
+                            sentence_data_plain.append(prev_utt.end)
+                        sentence_data_plain.append(utt_dict.start)
+                        speaker = utt_dict.speaker
                     utt = UttObj(
-                        utt_dict["start"],
-                        utt_dict["end"],
-                        utt_dict["speaker"],
-                        utt_dict["text"],
+                        utt_dict.start,
+                        utt_dict.end,
+                        utt_dict.speaker,
+                        utt_dict.text,
                     )
                     utterances.append(utt)
+                    prev_utt = utt_dict
+                sentence_data_plain.append((value[-1]).end)
 
-            # Populate data about sentences
             sentence_data = []
-            for key, utt_objs in utterance_map.items():
-                first_start_time = float("inf")
-                last_end_time = float("-inf")
+            for i in range(0, len(sentence_data_plain), 2):
+                sublist = [sentence_data_plain[i], sentence_data_plain[i + 1]]
+                sentence_data.append(sublist)
 
-                for obj in utt_objs:
-                    start_time = obj["start"]
-                    end_time = obj["end"]
-                    if start_time < first_start_time:
-                        first_start_time = start_time
-                    if end_time > last_end_time:
-                        last_end_time = end_time
-
-                result = [first_start_time, last_end_time]
-                sentence_data.append(result)
             # create a deep copy for the class
             self.list = copy.deepcopy(utterances)
             self.pickle.save_list_to_disk(self.list)
             self.sentences = copy.deepcopy(sentence_data)
             self.pickle.save_sentences_to_disk(self.sentences)
+            # print("sentence list is")
+            # print(self.sentences)
+            # print("list is")
+            # print(self.list)
 
     ## inserts a marker into the data structure
     ## maintains original order
@@ -135,18 +138,47 @@ class MarkerUtteranceDict:
     def apply_for_syllab_rate(self, func):
         self.pickle.load_sentences_from_disk(self.sentences)
         self.pickle.load_list_from_disk(self.list)
+
+        sentences_copy = copy.deepcopy(self.sentences)
+        list_copy = copy.deepcopy(self.list)
+
+        utt_list = []
+        sentence_index = 0
+        while sentence_index < len(sentences_copy):
+            utt_index = 0
+            while utt_index < len(list_copy):
+                sentence = sentences_copy[sentence_index]
+                utt = list_copy[utt_index]
+                if sentence[0] <= utt.start <= sentence[1]:
+                    if self.is_speaker_utt(utt.speaker) != False:
+                        utt_list.append(utt)
+                    utt_index += 1
+                else:
+                    func(utt_list, sentence[0], sentence[1])
+                    utt_list = []
+                    sentence_index += 1
+
+            sentence_index += 1
+
+        self.pickle.save_sentences_to_disk(self.sentences)
+        self.pickle.save_list_to_disk(self.list)
+
+        """
         for curr_sentence in self.sentences:
             ## using second list item, get the sentence end time
-            sentence_end_time = curr_sentence[1]
-            for curr_item in self.list:
-                if self.is_speaker_utt(curr_item.speaker) == False:
-                    continue
-                elif curr_item.end <= sentence_end_time:
-                    func(curr_item, curr_sentence[0], curr_sentence[1])
-                    self.pickle.save_sentences_to_disk(self.sentences)
-                    self.pickle.save_list_to_disk(self.list)
-                else:
-                    continue
+        sentence_end_time = curr_sentence[1]
+        for curr_item in self.list:
+            print("current item is")
+            print(curr_item)
+            if curr_item.start > sentence_end_time:
+                break
+            if self.is_speaker_utt(curr_item.speaker) == False:
+                continue
+            else:
+                func(curr_item, curr_sentence[0], curr_sentence[1])
+                self.pickle.save_sentences_to_disk(self.sentences)
+                self.pickle.save_list_to_disk(self.list)
+        """
 
     ## Takes a list of functions to apply that have arguments as two utterances
     ## These functions return either one or four marker values

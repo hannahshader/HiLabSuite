@@ -29,7 +29,7 @@ class CSVPlugin:
             writer = csv.writer(outfile)
             writer.writerow(CSV_FORMATTER.HEADER)
             # creates a list of just the one helper function that will be applied to element of the data structure
-            list_of_helper = [self.utterance_level_helper]
+            list_of_helper = [self.word_level_helper]
 
             # calls apply function to get results of each row and outputs it
             result = []
@@ -45,11 +45,33 @@ class CSVPlugin:
 
         speaker = ""
         result = []
-        if curr.speaker != "PAUSES" and curr.speaker != "GAPS":
-            result = [curr.speaker, txt, curr.start, curr.end]
-        else:
-            result = ["", txt, curr.start, curr.end]
+        if self.is_speaker_utt(curr.speaker) == False:
+            print("curr is")
+            print(curr)
+            return [
+                self.extract_marker_speaker_value(curr.text),
+                txt,
+                curr.start,
+                curr.end,
+            ]
+        result = [curr.speaker, txt, curr.start, curr.end]
+        # if curr.speaker != "PAUSES" and curr.speaker != "GAPS":
+        #    result = [curr.speaker, txt, curr.start, curr.end]
+        # else:
+        #    result = ["", txt, curr.start, curr.end]
         return result
+
+    def extract_marker_speaker_value(self, input_string):
+        marker_speaker_index = input_string.find("markerSpeaker=")
+        if marker_speaker_index == -1:
+            return None
+
+        start_index = marker_speaker_index + len("markerSpeaker=")
+        substring = input_string[start_index:]
+
+        value = substring[0] if len(substring) > 0 else None
+
+        return value
 
     def _utterance_level(self, structure_interact_instance):
         path = os.path.join(
@@ -68,9 +90,11 @@ class CSVPlugin:
             speaker = ""
             speaker_sentence = ""
             start_time = 0
+
+            speaker = self.get_first_speaker(result)
+
             for row in result:
                 ## sets the speaker value to the fist UttObj speaker
-                speaker = row[0][0]
                 ## intializes the previous item to the first UttObj
                 prev_item = row[0]
 
@@ -112,10 +136,14 @@ class CSVPlugin:
 
         speaker = ""
         result = []
-        if curr.speaker != "PAUSES" and curr.speaker != "GAPS":
-            result = [curr.speaker, txt, curr.start, curr.end]
+        if curr.speaker == "pauses":
+            string = "(Pause=" + str(round((curr.end - curr.start), 2)) + ")"
+            result = [curr.speaker, string, curr.start, curr.end]
+        elif curr.speaker == "gaps":
+            string = "(Gap=" + str(round((curr.end - curr.start), 2)) + ")"
+            result = [curr.speaker, string, curr.start, curr.end]
         else:
-            result = ["", txt, curr.start, curr.end]
+            result = [curr.speaker, txt, curr.start, curr.end]
         return result
 
     def is_speaker_utt(self, string):
@@ -124,3 +152,12 @@ class CSVPlugin:
             return False
         else:
             return True
+
+    def get_first_speaker(self, result):
+        for x, row in enumerate(result):
+            for y, value in enumerate(result[x]):
+                if self.is_speaker_utt(value[0]):
+                    return value[0]
+            else:
+                continue
+            break
