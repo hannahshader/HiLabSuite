@@ -23,46 +23,23 @@ LABEL = load_label().TXT
 
 
 class TextPlugin(Plugin):
+    ## Calls the functions to print our output to a text file
     def run(self, structure_interact_instance):
         path = os.path.join(
             structure_interact_instance.output_path, OUTPUT_FILE.CON_TXT
         )
 
+        ## Creates the path where the text file will be written
         with io.open(path, "w", encoding="utf-8") as outfile:
             structure_interact_instance.print_all_rows_text(
                 self.format_markers, outfile, self.formatter
             )
 
-            """
-            list_of_helper = [self.text_file_helper]
-
-            result = []
-            result.append(structure_interact_instance.apply_functions(list_of_helper))
-            speaker = ""
-            speaker_sentence = ""
-            start_time = 0
-            for row in result:
-                speaker = row[0][0]
-                prev_item = row[0]
-                for item in row:
-                    if item[0] == speaker:
-                        speaker_sentence += item[1] + " "
-                        prev_item = item
-                    else:
-                        outfile.write(
-                            self.item_to_output(prev_item, start_time, speaker_sentence)
-                        )
-                        speaker_sentence = item[1] + " "
-                        speaker = item[0]
-                        start_time = item[2]
-                        prev_item = item
-            item[0] == speaker
-            outfile.write(self.item_to_output(prev_item, start_time, speaker_sentence))
-        """
-
+    ## Converts the given outfile to a string so it may be written to a text file
     def convert_to_string(self, sentence_obj, outfile):
         outfile.write(sentence_obj[1])
 
+    ## Provides the formatter of the text file. 0x15
     def formatter(self, item1, item2, item3, item4):
         return CON_FORMATTER.TURN.format(
             item1,
@@ -72,6 +49,7 @@ class TextPlugin(Plugin):
             0x15,
         )
 
+    ## Properly formats our markers before appending them to the string
     def format_markers(self, curr):
         if curr.speaker == "pauses":
             return "(Pause=" + str(round((curr.end - curr.start), 2)) + ")"
@@ -80,6 +58,7 @@ class TextPlugin(Plugin):
         else:
             return curr.text
 
+    ## A helper function which creates the text we want to append to the text file
     def text_file_helper(self, curr):
         l = []
         l.append(curr.text)

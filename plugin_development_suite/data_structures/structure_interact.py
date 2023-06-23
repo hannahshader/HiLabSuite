@@ -70,6 +70,10 @@ class StructureInteract(Plugin):
     def print_all_rows_csv(self, print_func, format_markers):
         self.data_structure.print_all_rows_csv(print_func, format_markers)
 
+    # apply function to print all the rows for  chat output
+    def print_all_rows_chat(self, format_markers):
+        return self.data_structure.print_all_rows_chat(format_markers)
+
     # Takes an instance of structure interact, which holds a MarkerUtterance object
     # Takes a list of functions, which take two sequential utterances as parameters
     # Calls apply_insert_marker, which takes an instance of MarkerUtterance and a list of functions

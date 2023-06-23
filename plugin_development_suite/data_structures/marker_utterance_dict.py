@@ -272,3 +272,36 @@ class MarkerUtteranceDict:
                     sentence_obj[1] += self.list[index].text + " "
                     if self.is_speaker_utt(self.list[index].speaker):
                         sentence_obj[0] = self.list[index].speaker
+
+    def print_all_rows_chat(self, format_markers):
+        ##speaker, text, start, end
+        string_result = ""
+        sentence_obj = ["", "", 0, 0]
+        for index in range(len(self.list)):
+            ## if not a speaker, then add text and continue
+            if self.is_speaker_utt(self.list[index].speaker) == False:
+                ##sentence_obj[1] += self.list[index].speaker + " "
+                sentence_obj[1] += format_markers(self.list[index])
+            else:
+                ## gets the next utterance. gives false if end of list
+                next_utt = self.get_next_utt(self.list[index])
+                ## if the next index is from a different speaker
+                if next_utt == False or next_utt.speaker != self.list[index].speaker:
+                    sentence_obj[3] = self.list[index].end
+                    sentence_obj[1] += self.list[index].text
+                    sentence_obj[0] = self.list[index].speaker
+                    ## makes sure that the string doesn't have any trailing white space
+                    string_result += (
+                        "*" + sentence_obj[0] + ":\t" + sentence_obj[1].rstrip() + "\n"
+                    )
+                    sentence_obj[1] = ""
+                    sentence_obj[2] = self.list[index].start
+                ## if we have the same speaker as the previous instances
+                ## just add the text to the end of the line
+                else:
+                    sentence_obj[1] += self.list[index].text + " "
+                    if self.is_speaker_utt(self.list[index].speaker):
+                        sentence_obj[0] = self.list[index].speaker
+        print("string result is")
+        print(string_result)
+        return string_result

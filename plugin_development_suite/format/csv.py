@@ -20,6 +20,8 @@ class CSVPlugin:
         self._utterance_level(structure_interact_instance)
         self._word_level(structure_interact_instance)
 
+    ## Creates the path where the csv file will be created, and runs the apply function
+    ## which prints all of the rows of said csv file
     def _word_level(self, structure_interact_instance):
         path = os.path.join(
             structure_interact_instance.output_path, OUTPUT_FILE.WORD_CSV
@@ -34,6 +36,7 @@ class CSVPlugin:
             for item in result:
                 writer.writerow(item)
 
+    ## Appends the text of the current node to the end of the sentence
     def word_level_helper(self, curr):
         l = []
         l.append(curr.text)
@@ -51,6 +54,7 @@ class CSVPlugin:
         result = [curr.speaker, txt, curr.start, curr.end]
         return result
 
+    ## Gets the speaker value from a specific marker and returns said value
     def extract_marker_speaker_value(self, input_string):
         marker_speaker_index = input_string.find("markerSpeaker=")
         if marker_speaker_index == -1:
@@ -63,6 +67,8 @@ class CSVPlugin:
 
         return value
 
+    ## Formats the given markers appropriately given the conventions the csv files
+    ## Returns what we actually want to concatenate to the end of the string
     def format_markers(self, curr):
         if curr.speaker == "pauses":
             return "(Pause=" + str(round((curr.end - curr.start), 2)) + ")"
@@ -71,6 +77,7 @@ class CSVPlugin:
         else:
             return curr.text
 
+    ## Determines the path for the utterance level
     def _utterance_level(self, structure_interact_instance):
         path = os.path.join(
             structure_interact_instance.output_path, OUTPUT_FILE.UTT_CSV
@@ -84,74 +91,7 @@ class CSVPlugin:
                 writer.writerow, self.format_markers
             )
 
-        """
-            # calls apply function to get results of each row and outputs it
-            result = structure_interact_instance.apply_function(
-                self.utterance_level_helper
-            )
-            speaker = ""
-            speaker_sentence = ""
-            start_time = 0
-
-            speaker = self.get_first_speaker(result)
-            print("result is")
-            print(result)
-            print("\n")
-
-            ## initalize prev item to data about the first utterance
-            prev_item = result[0]
-
-            ## iterate through all UttObjs in the data structure
-            for item in result:
-                ## if the item is a marker, add the marker and continue
-                if self.is_speaker_utt(item[0]) == False:
-                    speaker_sentence += item[1] + " "
-                    continue
-
-                ## if the UttObj shares a speaker with the previous UttObj,
-                ## add the text to a sentence
-                if item[0] == speaker:
-                    speaker_sentence += item[1] + " "
-                    prev_item = item
-
-                ## when the speaker changes, output the last speaker's sentence
-                else:
-                    prev_item[2] = start_time
-                    prev_item[1] = speaker_sentence
-                    writer.writerow(prev_item)
-                    speaker_sentence = item[1] + " "
-                    speaker = item[0]
-                    start_time = item[2]
-                    prev_item = item
-
-            ## print the last sentence seperately
-            ## at the end of the file, there is no speaker change to mark when
-            ## a sentence should be outputted
-            item[0] == speaker
-            prev_item[2] = start_time
-            prev_item[1] = speaker_sentence
-            writer.writerow(prev_item)
-        """
-
-    """
-    def utterance_level_helper(self, curr):
-        l = []
-        l.append(curr.text)
-        txt = CSV_FORMATTER.TXT_SEP.join(l)
-
-        speaker = ""
-        result = []
-        if curr.speaker == "pauses":
-            string = "(Pause=" + str(round((curr.end - curr.start), 2)) + ")"
-            result = [curr.speaker, string, curr.start, curr.end]
-        elif curr.speaker == "gaps":
-            string = "(Gap=" + str(round((curr.end - curr.start), 2)) + ")"
-            result = [curr.speaker, string, curr.start, curr.end]
-        else:
-            result = [curr.speaker, txt, curr.start, curr.end]
-        return result
-    """
-
+    ## Checks if the given input is a speaker marker. If not, returns False
     def is_speaker_utt(self, string):
         internal_marker_set = INTERNAL_MARKER.INTERNAL_MARKER_SET
         if string in internal_marker_set:
@@ -159,6 +99,7 @@ class CSVPlugin:
         else:
             return True
 
+    ## Returns whether or not the current node is pointing to the first speaker
     def get_first_speaker(self, result):
         for x, row in enumerate(result):
             for y, value in enumerate(result[x]):

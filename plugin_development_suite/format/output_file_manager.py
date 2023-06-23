@@ -37,5 +37,5 @@ class OutputFileManager:
         text_init = TextPlugin()
         text_init.run(structure_interact_instance)
 
-        # chat_init = ChatPlugin()
-        # chat_init.run(structure_interact_instance)
+        chat_init = ChatPlugin()
+        chat_init.run(structure_interact_instance)
