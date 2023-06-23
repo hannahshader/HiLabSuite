@@ -126,8 +126,6 @@ class SyllableRatePlugin:
 
     # add nodes
     def syllab_markers(self, sentence):
-        print("sentence is")
-        print(sentence)
         vowels = ["a", "e", "i", "o", "u"]
         fastCount = 0
         slowCount = 0

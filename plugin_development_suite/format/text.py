@@ -29,6 +29,11 @@ class TextPlugin(Plugin):
         )
 
         with io.open(path, "w", encoding="utf-8") as outfile:
+            structure_interact_instance.print_all_rows_text(
+                self.format_markers, outfile, self.formatter
+            )
+
+            """
             list_of_helper = [self.text_file_helper]
 
             result = []
@@ -53,6 +58,27 @@ class TextPlugin(Plugin):
                         prev_item = item
             item[0] == speaker
             outfile.write(self.item_to_output(prev_item, start_time, speaker_sentence))
+        """
+
+    def convert_to_string(self, sentence_obj, outfile):
+        outfile.write(sentence_obj[1])
+
+    def formatter(self, item1, item2, item3, item4):
+        return CON_FORMATTER.TURN.format(
+            item1,
+            item2,
+            item3,
+            item4,
+            0x15,
+        )
+
+    def format_markers(self, curr):
+        if curr.speaker == "pauses":
+            return "(Pause=" + str(round((curr.end - curr.start), 2)) + ")"
+        elif curr.speaker == "gaps":
+            return "(Gap=" + str(round((curr.end - curr.start), 2)) + ")"
+        else:
+            return curr.text
 
     def text_file_helper(self, curr):
         l = []

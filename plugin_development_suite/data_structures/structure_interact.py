@@ -54,9 +54,21 @@ class StructureInteract(Plugin):
         if item != None:
             self.data_structure.insert_marker(item)
 
-    # general apply function list for key and values in the data structure
+    # general apply function list for items data structure
     def apply_functions(self, apply_functions):
-        return self.data_structure.apply(apply_functions)
+        return self.data_structure.apply_functions(apply_functions)
+
+    # general apply function to apply one function to items in list
+    def apply_function(self, apply_functions):
+        return self.data_structure.apply_function(apply_functions)
+
+    # apply function to print all the rows for the text output
+    def print_all_rows_text(self, format_markers, outfile, formatter):
+        self.data_structure.print_all_rows_text(format_markers, outfile, formatter)
+
+    # apply function to print all the rows for the csv output
+    def print_all_rows_csv(self, print_func, format_markers):
+        self.data_structure.print_all_rows_csv(print_func, format_markers)
 
     # Takes an instance of structure interact, which holds a MarkerUtterance object
     # Takes a list of functions, which take two sequential utterances as parameters

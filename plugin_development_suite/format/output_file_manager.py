@@ -20,6 +20,7 @@ from plugin_development_suite.configs.configs import (
 
 from plugin_development_suite.format.csv import CSVPlugin
 from plugin_development_suite.format.text import TextPlugin
+from plugin_development_suite.format.chat import ChatPlugin
 
 
 class OutputFileManager:
@@ -35,3 +36,6 @@ class OutputFileManager:
 
         text_init = TextPlugin()
         text_init.run(structure_interact_instance)
+
+        # chat_init = ChatPlugin()
+        # chat_init.run(structure_interact_instance)

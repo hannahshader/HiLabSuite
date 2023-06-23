@@ -63,10 +63,6 @@ class MarkerUtteranceDict:
             self.pickle.save_list_to_disk(self.list)
             self.sentences = copy.deepcopy(sentence_data)
             self.pickle.save_sentences_to_disk(self.sentences)
-            # print("sentence list is")
-            # print(self.sentences)
-            # print("list is")
-            # print(self.list)
 
     ## inserts a marker into the data structure
     ## maintains original order
@@ -108,12 +104,23 @@ class MarkerUtteranceDict:
     ## gets a list of functions
     ## iterates through all items in the list and applies
     ## the list of functions to each item
-    def apply(self, apply_functions):
+    def apply_functions(self, apply_functions):
         self.pickle.load_list_from_disk(self.list)
         result = []
         for item in self.list:
             for func in apply_functions:
                 result.append(func(item))
+        self.pickle.save_list_to_disk(self.list)
+        return result
+
+    ## get a single function
+    ## iterates through all items in the list and applies
+    ## function to each item
+    def apply_function(self, func):
+        self.pickle.load_list_from_disk(self.list)
+        result = []
+        for item in self.list:
+            result.append(func(item))
         self.pickle.save_list_to_disk(self.list)
         return result
 
@@ -206,3 +213,62 @@ class MarkerUtteranceDict:
                 self.insert_marker(marker)
 
         self.pickle.save_list_to_disk(self.list)
+
+    def print_all_rows_text(self, format_markers, outfile, formatter):
+        ##speaker, text, start, end
+        sentence_obj = ["", "", 0, 0]
+        for index in range(len(self.list)):
+            ## if not a speaker, then add text and continue
+            if self.is_speaker_utt(self.list[index].speaker) == False:
+                ##sentence_obj[1] += self.list[index].speaker + " "
+                sentence_obj[1] += format_markers(self.list[index])
+            else:
+                ## gets the next utterance. gives false if end of list
+                next_utt = self.get_next_utt(self.list[index])
+                ## if the next index is from a different speaker
+                if next_utt == False or next_utt.speaker != self.list[index].speaker:
+                    sentence_obj[3] = self.list[index].end
+                    sentence_obj[1] += self.list[index].text + " "
+                    sentence_obj[0] = self.list[index].speaker
+                    write_string = formatter(
+                        sentence_obj[0],
+                        sentence_obj[1],
+                        sentence_obj[2],
+                        sentence_obj[3],
+                    )
+                    outfile.write(write_string)
+                    sentence_obj[1] = ""
+                    sentence_obj[2] = self.list[index].start
+                ## if we have the same speaker as the previous instances
+                ## just add the text to the end of the line
+                else:
+                    sentence_obj[1] += self.list[index].text + " "
+                    if self.is_speaker_utt(self.list[index].speaker):
+                        sentence_obj[0] = self.list[index].speaker
+
+    ## creates the csv output for Gailbot, separating each line by its speaker
+    def print_all_rows_csv(self, print_func, format_markers):
+        ##speaker, text, start, end
+        sentence_obj = ["", "", 0, 0]
+        for index in range(len(self.list)):
+            ## if not a speaker, then add text and continue
+            if self.is_speaker_utt(self.list[index].speaker) == False:
+                ##sentence_obj[1] += self.list[index].speaker + " "
+                sentence_obj[1] += format_markers(self.list[index])
+            else:
+                ## gets the next utterance. gives false if end of list
+                next_utt = self.get_next_utt(self.list[index])
+                ## if the next index is from a different speaker
+                if next_utt == False or next_utt.speaker != self.list[index].speaker:
+                    sentence_obj[3] = self.list[index].end
+                    sentence_obj[1] += self.list[index].text + " "
+                    sentence_obj[0] = self.list[index].speaker
+                    print_func(sentence_obj)
+                    sentence_obj[1] = ""
+                    sentence_obj[2] = self.list[index].start
+                ## if we have the same speaker as the previous instances
+                ## just add the text to the end of the line
+                else:
+                    sentence_obj[1] += self.list[index].text + " "
+                    if self.is_speaker_utt(self.list[index].speaker):
+                        sentence_obj[0] = self.list[index].speaker

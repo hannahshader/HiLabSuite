@@ -111,7 +111,7 @@ class GBPluginMethods(Methods):
                 UttObj(start=26.85, end=27.22, speaker="0", text="%HESITATION"),
                 UttObj(start=28.17, end=28.66, speaker="0", text="hi"),
                 UttObj(start=28.66, end=28.99, speaker="0", text="Lester"),
-            ]
+            ],
         }
 
     @property

@@ -28,15 +28,11 @@ class CSVPlugin:
         with open(path, "w", newline="") as outfile:
             writer = csv.writer(outfile)
             writer.writerow(CSV_FORMATTER.HEADER)
-            # creates a list of just the one helper function that will be applied to element of the data structure
-            list_of_helper = [self.word_level_helper]
 
             # calls apply function to get results of each row and outputs it
-            result = []
-            result.append(structure_interact_instance.apply_functions(list_of_helper))
-            for row in result:
-                for item in row:
-                    writer.writerow(item)
+            result = structure_interact_instance.apply_function(self.word_level_helper)
+            for item in result:
+                writer.writerow(item)
 
     def word_level_helper(self, curr):
         l = []
@@ -46,8 +42,6 @@ class CSVPlugin:
         speaker = ""
         result = []
         if self.is_speaker_utt(curr.speaker) == False:
-            print("curr is")
-            print(curr)
             return [
                 self.extract_marker_speaker_value(curr.text),
                 txt,
@@ -55,10 +49,6 @@ class CSVPlugin:
                 curr.end,
             ]
         result = [curr.speaker, txt, curr.start, curr.end]
-        # if curr.speaker != "PAUSES" and curr.speaker != "GAPS":
-        #    result = [curr.speaker, txt, curr.start, curr.end]
-        # else:
-        #    result = ["", txt, curr.start, curr.end]
         return result
 
     def extract_marker_speaker_value(self, input_string):
@@ -73,6 +63,14 @@ class CSVPlugin:
 
         return value
 
+    def format_markers(self, curr):
+        if curr.speaker == "pauses":
+            return "(Pause=" + str(round((curr.end - curr.start), 2)) + ")"
+        elif curr.speaker == "gaps":
+            return "(Gap=" + str(round((curr.end - curr.start), 2)) + ")"
+        else:
+            return curr.text
+
     def _utterance_level(self, structure_interact_instance):
         path = os.path.join(
             structure_interact_instance.output_path, OUTPUT_FILE.UTT_CSV
@@ -81,45 +79,50 @@ class CSVPlugin:
         with open(path, "w", newline="") as outfile:
             writer = csv.writer(outfile)
             writer.writerow(CSV_FORMATTER.HEADER)
-            # creates a list of just the one helper function that will be applied to element of the data structure
-            list_of_helper = [self.utterance_level_helper]
 
+            structure_interact_instance.print_all_rows_csv(
+                writer.writerow, self.format_markers
+            )
+
+        """
             # calls apply function to get results of each row and outputs it
-            result = []
-            result.append(structure_interact_instance.apply_functions(list_of_helper))
+            result = structure_interact_instance.apply_function(
+                self.utterance_level_helper
+            )
             speaker = ""
             speaker_sentence = ""
             start_time = 0
 
             speaker = self.get_first_speaker(result)
+            print("result is")
+            print(result)
+            print("\n")
 
-            for row in result:
-                ## sets the speaker value to the fist UttObj speaker
-                ## intializes the previous item to the first UttObj
-                prev_item = row[0]
+            ## initalize prev item to data about the first utterance
+            prev_item = result[0]
 
-                ## iterate through all UttObjs in the data structure
-                for item in row:
-                    ## if the item is a marker, add the marker and continue
-                    if self.is_speaker_utt(item[0]) == False:
-                        speaker_sentence += item[1] + " "
-                        continue
+            ## iterate through all UttObjs in the data structure
+            for item in result:
+                ## if the item is a marker, add the marker and continue
+                if self.is_speaker_utt(item[0]) == False:
+                    speaker_sentence += item[1] + " "
+                    continue
 
-                    ## if the UttObj shares a speaker with the previous UttObj,
-                    ## add the text to a sentence
-                    if item[0] == speaker:
-                        speaker_sentence += item[1] + " "
-                        prev_item = item
+                ## if the UttObj shares a speaker with the previous UttObj,
+                ## add the text to a sentence
+                if item[0] == speaker:
+                    speaker_sentence += item[1] + " "
+                    prev_item = item
 
-                    ## when the speaker changes, output the last speaker's sentence
-                    else:
-                        prev_item[2] = start_time
-                        prev_item[1] = speaker_sentence
-                        writer.writerow(prev_item)
-                        speaker_sentence = item[1] + " "
-                        speaker = item[0]
-                        start_time = item[2]
-                        prev_item = item
+                ## when the speaker changes, output the last speaker's sentence
+                else:
+                    prev_item[2] = start_time
+                    prev_item[1] = speaker_sentence
+                    writer.writerow(prev_item)
+                    speaker_sentence = item[1] + " "
+                    speaker = item[0]
+                    start_time = item[2]
+                    prev_item = item
 
             ## print the last sentence seperately
             ## at the end of the file, there is no speaker change to mark when
@@ -128,7 +131,9 @@ class CSVPlugin:
             prev_item[2] = start_time
             prev_item[1] = speaker_sentence
             writer.writerow(prev_item)
+        """
 
+    """
     def utterance_level_helper(self, curr):
         l = []
         l.append(curr.text)
@@ -145,6 +150,7 @@ class CSVPlugin:
         else:
             result = [curr.speaker, txt, curr.start, curr.end]
         return result
+    """
 
     def is_speaker_utt(self, string):
         internal_marker_set = INTERNAL_MARKER.INTERNAL_MARKER_SET
