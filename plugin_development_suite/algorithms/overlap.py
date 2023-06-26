@@ -46,7 +46,6 @@ class OverlapPlugin:
                 MARKER.OVERLAPS,
                 "overlap_end",
             )
-
             return [overlap_start, overlap_end]
         else:
             return []

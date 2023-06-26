@@ -51,7 +51,11 @@ class MarkerUtteranceDict:
                     )
                     utterances.append(utt)
                     prev_utt = utt_dict
+                ## get the end time of the sentence
                 sentence_data_plain.append((value[-1]).end)
+                ## reset the speaker data and prev for the next file
+                speaker = ""
+                prev_utt = None
 
             sentence_data = []
             for i in range(0, len(sentence_data_plain), 2):
@@ -63,6 +67,11 @@ class MarkerUtteranceDict:
             self.pickle.save_list_to_disk(self.list)
             self.sentences = copy.deepcopy(sentence_data)
             self.pickle.save_sentences_to_disk(self.sentences)
+
+    # sorts the list by start times
+    # integrates all words from each files into the main data structure
+    def sort_list(self):
+        self.list = sorted(self.list, key=lambda x: x.start)
 
     ## inserts a marker into the data structure
     ## maintains original order
@@ -129,6 +138,7 @@ class MarkerUtteranceDict:
     ## Will always be used to add overlap plugin markers
     def apply_for_overlap(self, apply_function):
         self.pickle.load_sentences_from_disk(self.sentences)
+
         result = []
         for curr_item in self.sentences:
             curr_index = self.sentences.index(curr_item)
@@ -143,6 +153,9 @@ class MarkerUtteranceDict:
                 return
 
     def apply_for_syllab_rate(self, func):
+        # print("self.list is")
+        # for item in self.list:
+        #    print(item)
         self.pickle.load_sentences_from_disk(self.sentences)
         self.pickle.load_list_from_disk(self.list)
 
@@ -151,12 +164,18 @@ class MarkerUtteranceDict:
 
         utt_list = []
         sentence_index = 0
+        # print("length of setence is")
+        # print(len(sentences_copy))
         while sentence_index < len(sentences_copy):
             utt_index = 0
             while utt_index < len(list_copy):
+                # print("sentence index is")
+                # print(sentence_index)
                 sentence = sentences_copy[sentence_index]
                 utt = list_copy[utt_index]
-                if sentence[0] <= utt.start <= sentence[1]:
+                # print("utt is")
+                # print(utt)
+                if sentence[0] <= utt.start and utt.end <= sentence[1]:
                     if self.is_speaker_utt(utt.speaker) != False:
                         utt_list.append(utt)
                     utt_index += 1
@@ -164,7 +183,6 @@ class MarkerUtteranceDict:
                     func(utt_list, sentence[0], sentence[1])
                     utt_list = []
                     sentence_index += 1
-
             sentence_index += 1
 
         self.pickle.save_sentences_to_disk(self.sentences)
@@ -291,6 +309,7 @@ class MarkerUtteranceDict:
                     sentence_obj[1] += self.list[index].text
                     sentence_obj[0] = self.list[index].speaker
                     ## makes sure that the string doesn't have any trailing white space
+                    ## adds punctuation to the end of a sentence
                     string_result += (
                         "*" + sentence_obj[0] + ":\t" + sentence_obj[1].rstrip() + "\n"
                     )
@@ -302,6 +321,4 @@ class MarkerUtteranceDict:
                     sentence_obj[1] += self.list[index].text + " "
                     if self.is_speaker_utt(self.list[index].speaker):
                         sentence_obj[0] = self.list[index].speaker
-        print("string result is")
-        print(string_result)
         return string_result

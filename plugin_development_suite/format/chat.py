@@ -15,8 +15,6 @@ from gailbot.pluginMethod import GBPluginMethods
 class ChatPlugin:
     def run(self, structure_interact_instance):
         path = os.path.join(structure_interact_instance.output_path, OUTPUT_FILE.CHAT)
-        print("path is")
-        print(path)
         with open(path, "w", encoding="utf-8") as outfile:
             big_string = structure_interact_instance.print_all_rows_chat(
                 self.format_markers
@@ -29,9 +27,20 @@ class ChatPlugin:
             outfile.write(string)
 
     def format_markers(self, curr):
-        print("curr speaker is")
-        print(curr)
-        if curr.speaker == "pauses" or curr.speaker == "gaps":
+        # print("curr speaker is")
+        # print(curr)
+        if (
+            curr.speaker == "slowspeech_start"
+            or curr.speaker == "slowspeech_end"
+            or curr.speaker == "fastspeech_start"
+            or curr.speaker == "fastspeech_end"
+        ):
+            return ""
+        elif curr.text == "overlap_end":
+            return "[<] "
+        elif curr.text == "overlap_start":
+            return "[>] "
+        elif curr.speaker == "pauses" or curr.speaker == "gaps":
             return "(.) "
         else:
             return curr.text

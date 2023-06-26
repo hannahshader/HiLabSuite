@@ -66,6 +66,8 @@ class SyllableRatePlugin:
     def get_utt_syllable_rate(self, utt_list, sentence_start, sentence_end):
         sentence_syllab_count = 0
         # sentence_string = ""
+        # print("utt list is")
+        # print(utt_list)
         speaker = utt_list[0].speaker
         for curr_utt in utt_list:
             ## doesn't include other paralinguistic markers data

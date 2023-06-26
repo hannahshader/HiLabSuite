@@ -26,10 +26,16 @@ class Pickling:
                 pickle.dump(list, file)
 
     # Load utterance data from disk
-    def load_list_from_disk(self, list):
+    def load_list_from_disk(self, my_list):
         with self.lock:
-            with open(str(self.filepath), "rb") as file:
-                list = pickle.load(file)
+            try:
+                file = open(str(self.filepath), "rb")
+                my_list = pickle.load(file)
+                file.close()
+            ## case for if it's already open
+            except IOError:
+                pass
+        return my_list
 
     # Save utterance data to disk
     def save_sentences_to_disk(self, sentences):

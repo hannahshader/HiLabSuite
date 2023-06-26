@@ -49,6 +49,10 @@ class StructureInteract(Plugin):
         ##returns a version of itself
         return self
 
+    ## sorts the list by start times, integrates text in the files
+    def sort_list(self):
+        self.data_structure.sort_list()
+
     ## inserts and marker and maintains the organization of the data structure
     def interact_insert_marker(self, item):
         if item != None:

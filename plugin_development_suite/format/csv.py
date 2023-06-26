@@ -70,12 +70,26 @@ class CSVPlugin:
     ## Formats the given markers appropriately given the conventions the csv files
     ## Returns what we actually want to concatenate to the end of the string
     def format_markers(self, curr):
+        print("curr is")
+        print(curr)
         if curr.speaker == "pauses":
-            return "(Pause=" + str(round((curr.end - curr.start), 2)) + ")"
+            return " (Pause=" + str(round((curr.end - curr.start), 2)) + ") "
         elif curr.speaker == "gaps":
-            return "(Gap=" + str(round((curr.end - curr.start), 2)) + ")"
+            return " (Gap=" + str(round((curr.end - curr.start), 2)) + ") "
+        elif curr.text == "overlap_start":
+            return " (Overlap Start) "
+        elif curr.text == "overlap_end":
+            return " (Overlap End) "
+        elif curr.speaker == "slowspeech_start":
+            return " (Slowspeech Start) "
+        elif curr.speaker == "slowspeech_end":
+            return " (Slowspeech End) "
+        elif curr.speaker == "fastspeech_start":
+            return " (Fastspeech start) "
+        elif curr.speaker == "fastspeech_end":
+            return " (Fastspeech end) "
         else:
-            return curr.text
+            return " " + curr.text + " "
 
     ## Determines the path for the utterance level
     def _utterance_level(self, structure_interact_instance):

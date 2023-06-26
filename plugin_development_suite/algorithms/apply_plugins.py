@@ -44,13 +44,18 @@ class ApplyPlugins:
         ## because it relies on speaker start and end time data
         ## rather than relying on individual word start and end
         ## time data
+        if "SyllableRatePlugin" in self.plugin_names:
+            syllab_rate_instance = SyllableRatePlugin(structure_interact_instance)
+            syllab_rate_instance.syllab_marker()
+
+        ## after data from individual setences in seperate files have
+        ## been analyzed, the sentences from different files can be integrated
+        structure_interact_instance.sort_list()
+
         if "OverlapPlugin" in self.plugin_names:
             structure_interact_instance.apply_markers_overlap(
                 OverlapPlugin.OverlapMarker
             )
-        if "SyllableRatePlugin" in self.plugin_names:
-            syllab_rate_instance = SyllableRatePlugin(structure_interact_instance)
-            syllab_rate_instance.syllab_marker()
 
         ## Applies function to the list that only rely on word data
         structure_interact_instance.apply_markers(self.plugins)

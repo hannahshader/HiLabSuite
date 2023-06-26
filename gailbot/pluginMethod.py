@@ -112,6 +112,11 @@ class GBPluginMethods(Methods):
                 UttObj(start=28.17, end=28.66, speaker="0", text="hi"),
                 UttObj(start=28.66, end=28.99, speaker="0", text="Lester"),
             ],
+            "test recording 2": [
+                UttObj(start=23.92, end=24.13, speaker="0", text="hey"),
+                UttObj(start=24.17, end=25.05, speaker="0", text="there"),
+                UttObj(start=25.10, end=25.25, speaker="0", text="man"),
+            ],
         }
 
     @property
