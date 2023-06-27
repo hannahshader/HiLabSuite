@@ -100,13 +100,14 @@ class SyllableRatePlugin:
         lowerLimit = median - (LimitDeviations * median_absolute_deviation)
         upperLimit = median + (LimitDeviations * median_absolute_deviation)
 
-        # create and return a dictionary for stats
+        # creates a dictionary for stat fields
         stats: STAT_DICT = {
             "median": median,
             "medianAbsDev": median_absolute_deviation,
             "upperLimit": upperLimit,
             "lowerLimit": lowerLimit,
         }
+
         return stats
 
     # add markers
