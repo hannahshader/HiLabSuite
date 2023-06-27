@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# @Author: Hannah Shader, Jason Wu, Jacob Boyar
+# @Date:   2023-06-26 12:15:56
+# @Last Modified by:   Jacob Boyar
+# @Last Modified time: 2023-06-26 15:37:26
+# @Description: Creates the csv output for our plugins
+
 from typing import Dict, Any
 import os
 import csv
@@ -16,6 +23,7 @@ from plugin_development_suite.data_structures.structure_interact import (
 
 
 class CSVPlugin:
+    ## generates Csv file
     def run(self, structure_interact_instance):
         self._utterance_level(structure_interact_instance)
         self._word_level(structure_interact_instance)

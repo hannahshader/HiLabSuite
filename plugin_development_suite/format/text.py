@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# @Author: Hannah Shader, Jason Wu, Jacob Boyar
+# @Date:   2023-06-26 12:15:56
+# @Last Modified by:   Jacob Boyar
+# @Last Modified time: 2023-06-26 15:38:11
+# @Description: Creates the text output for our plugins
+
 from typing import Dict, Any, List, Tuple
 import re
 import io
@@ -72,12 +79,11 @@ class TextPlugin(Plugin):
             result = ["", txt, curr.start, curr.end]
         return result
 
-    ## Updates fields to that previous item stores the start time of the
-    ## speaker sentence to be written about, rather than the start time of the
-    ## individual utterance
-    ## Stores sentence data in a format that can be read by
-    ## CON_FORMATTER.TURN.format
+    ## gvien a sentence, formats it into a line
     def item_to_output(self, prev_item, start_time, speaker_sentence):
+        ## Updates fields to that previous item stores the start time of the
+        ## speaker sentence to be written about, rather than the start time of the
+        ## individual utterance
         prev_item[2] = start_time
         prev_item[1] = speaker_sentence
         turn = CON_FORMATTER.TURN.format(

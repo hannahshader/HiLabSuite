@@ -116,7 +116,7 @@ class SyllableRatePlugin:
 
         return stats
 
-    # add nodes
+    # add markers
     def syllab_markers(self, sentence):
         vowels = ["a", "e", "i", "o", "u"]
         fastCount = 0

@@ -1,3 +1,11 @@
+# -*- coding: utf-8 -*-
+# @Author: Hannah Shader, Jason Wu, Jacob Boyar
+# @Date:   2023-06-26 12:15:56
+# @Last Modified by:   Jacob Boyar
+# @Last Modified time: 2023-06-26 14:53:13
+# @Description: Contains wrapper function for our data structures
+# so we do not need to access the data structure directly
+
 from typing import Any, Dict, List
 from plugin_development_suite.data_structures.marker_utterance_dict import (
     MarkerUtteranceDict,
@@ -13,8 +21,7 @@ from typing import OrderedDict as OrderedDictType, TypeVar
 from gailbot.plugin import Plugin
 from gailbot.pluginMethod import GBPluginMethods
 
-## Used to be OUT_PATH = "/Users/yike/Desktop/plugin_output"
-OUT_PATH = "Temporary"
+## Change this when we know where this comes from
 config_file_path = "/Users/hannahshader/Desktop/GailBot/Plugin-Development/plugin_development_suite/config.toml"
 
 
@@ -96,11 +103,14 @@ class StructureInteract(Plugin):
     def apply_markers(self, apply_functions):
         self.data_structure.apply_insert_marker(apply_functions)
 
+    # Applies the markers for the overlap plugin
     def apply_markers_overlap(self, apply_function):
         self.data_structure.apply_for_overlap(apply_function)
 
+    # Applies the markers for the syllable rate plugin
     def apply_for_syllab_rate(self, apply_function):
         self.data_structure.apply_for_syllab_rate(apply_function)
 
+    # Returns whether or not the given marker is a speaker utterance
     def is_speaker_utt(self, string):
         return self.data_structure.is_speaker_utt(string)
