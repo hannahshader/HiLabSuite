@@ -90,9 +90,10 @@ class SyllableRatePlugin:
 
         """
         allRates = []
+        # get all utterance syllable data
         for dic in utt_syll_dict:
             allRates.append(dic["syllableRate"])
-
+        # compute median, median absolute deviation, and limits
         allRates = numpy.sort(numpy.array(allRates))
         median = numpy.median(allRates)
         median_absolute_deviation = round(median_abs_deviation(allRates), 2)

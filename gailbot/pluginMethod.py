@@ -117,10 +117,6 @@ class GBPluginMethods(Methods):
                 UttObj(start=24.17, end=25.05, speaker="0", text="there"),
                 UttObj(start=25.10, end=25.25, speaker="0", text="man"),
             ],
-            "test recording 3": [
-                UttObj(start=3.92, end=4.13, speaker="1", text="another"),
-                UttObj(start=5.00, end=5.05, speaker="1", text="overlap"),
-            ],
         }
 
     @property
