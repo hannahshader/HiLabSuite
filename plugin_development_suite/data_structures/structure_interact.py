@@ -25,6 +25,7 @@ class StructureInteract(Plugin):
         # populated in apply function
         self.data_structure = MarkerUtteranceDict()
         self.output_path = ""
+        self.chatter_path = ""
 
     # driver for structure_interact
     def apply(self, methods: GBPluginMethods):
@@ -33,6 +34,9 @@ class StructureInteract(Plugin):
 
         ## get the output path
         self.output_path = methods.output_path
+
+        ## get the path for the xml to csv converter
+        self.chatter_path = methods.chatter_path
 
         ## pass data to marker_utterance_dict to interact with the underlying
         ## data structure
@@ -52,6 +56,10 @@ class StructureInteract(Plugin):
     ## sorts the list by start times, integrates text in the files
     def sort_list(self):
         self.data_structure.sort_list()
+
+    ## for generating the xml file, gets all speakers in the list
+    def get_speakers(self):
+        return self.data_structure.speakers
 
     ## inserts and marker and maintains the organization of the data structure
     def interact_insert_marker(self, item):
@@ -74,9 +82,13 @@ class StructureInteract(Plugin):
     def print_all_rows_csv(self, print_func, format_markers):
         self.data_structure.print_all_rows_csv(print_func, format_markers)
 
-    # apply function to print all the rows for  chat output
-    def print_all_rows_chat(self, format_markers):
-        return self.data_structure.print_all_rows_chat(format_markers)
+    # apply function to print all the rows for xml output
+    def print_all_rows_xml(
+        self, apply_subelement_root, apply_subelement_word, apply_sentence_end
+    ):
+        return self.data_structure.print_all_rows_xml(
+            apply_subelement_root, apply_subelement_word, apply_sentence_end
+        )
 
     # Takes an instance of structure interact, which holds a MarkerUtterance object
     # Takes a list of functions, which take two sequential utterances as parameters

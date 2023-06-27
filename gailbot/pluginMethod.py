@@ -132,3 +132,8 @@ class GBPluginMethods(Methods):
             String containing the temporary workspace path
         """
         return "/Users/hannahshader/Desktop/Temp_Workspace"
+
+    ##jar path
+    @property
+    def chatter_path(self) -> str:
+        return "/Users/hannahshader/Desktop/chatter/chatter.jar"

@@ -48,8 +48,6 @@ class SyllableRatePlugin:
         #    print(x)
         markers_list = []
         self.stats = self.get_stats(self.list_of_syllab_dict)
-        print("stats are")
-        print(self.stats)
         # print("stats are")
         # print(self.stats)
         marker1, marker2 = None, None
@@ -65,9 +63,6 @@ class SyllableRatePlugin:
     # get syllab rates for each utt
     def get_utt_syllable_rate(self, utt_list, sentence_start, sentence_end):
         sentence_syllab_count = 0
-        # sentence_string = ""
-        # print("utt list is")
-        # print(utt_list)
         speaker = utt_list[0].speaker
         for curr_utt in utt_list:
             ## doesn't include other paralinguistic markers data
@@ -75,11 +70,6 @@ class SyllableRatePlugin:
             ## assumes all feature text starts with non numberic char
             if (curr_utt.text[0].isalpha()) == False:
                 continue
-
-            # print("current utt is")
-            # print(curr_utt)
-            # print("each syllable estimate is")
-            # print(syllables.estimate(curr_utt.text))
             sentence_syllab_count += syllables.estimate(curr_utt.text)
 
         time_diff = abs(sentence_start - sentence_end)

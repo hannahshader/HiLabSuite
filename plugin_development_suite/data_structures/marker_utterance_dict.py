@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# @Author: Hannah Shader, Jason Wu, Jacob Boyar
+# @Date:   2023-06-26 12:15:56
+# @Last Modified by:   Jacob Boyar
+# @Last Modified time: 2023-06-26 14:22:48
+# @Description: Creates a marker utterance dictionary
+
 from typing import Any, Dict, List
 from plugin_development_suite.configs.configs import INTERNAL_MARKER
 from plugin_development_suite.data_structures.data_objects import UttObj
@@ -30,15 +37,20 @@ class MarkerUtteranceDict:
         if utterance_map is None:
             self.list = []
             self.sentences = []
+            self.speakers = []
         else:
             ## Populate data about words spoken
             utterances = []
             sentence_data_plain = []
+            self.speakers = []
             speaker = ""
             prev_utt = None
             for key, value in utterance_map.items():
                 for utt_dict in value:
                     if utt_dict.speaker != speaker:
+                        ## potentially add a new speaker to the list of speakers
+                        if utt_dict.speaker not in self.speakers:
+                            self.speakers.append(utt_dict.speaker)
                         if prev_utt != None:
                             sentence_data_plain.append(prev_utt.end)
                         sentence_data_plain.append(utt_dict.start)
@@ -291,34 +303,29 @@ class MarkerUtteranceDict:
                     if self.is_speaker_utt(self.list[index].speaker):
                         sentence_obj[0] = self.list[index].speaker
 
-    def print_all_rows_chat(self, format_markers):
-        ##speaker, text, start, end
-        string_result = ""
-        sentence_obj = ["", "", 0, 0]
+    def print_all_rows_xml(
+        self, apply_subelement_root, apply_subelement_word, apply_sentence_end
+    ):
+        ## initialize setnence to contain first word's speaker
+        sentence = apply_subelement_root(self.list[0].speaker)
+
         for index in range(len(self.list)):
-            ## if not a speaker, then add text and continue
-            if self.is_speaker_utt(self.list[index].speaker) == False:
-                ##sentence_obj[1] += self.list[index].speaker + " "
-                sentence_obj[1] += format_markers(self.list[index])
-            else:
-                ## gets the next utterance. gives false if end of list
-                next_utt = self.get_next_utt(self.list[index])
-                ## if the next index is from a different speaker
-                if next_utt == False or next_utt.speaker != self.list[index].speaker:
-                    sentence_obj[3] = self.list[index].end
-                    sentence_obj[1] += self.list[index].text
-                    sentence_obj[0] = self.list[index].speaker
-                    ## makes sure that the string doesn't have any trailing white space
-                    ## adds punctuation to the end of a sentence
-                    string_result += (
-                        "*" + sentence_obj[0] + ":\t" + sentence_obj[1].rstrip() + "\n"
-                    )
-                    sentence_obj[1] = ""
-                    sentence_obj[2] = self.list[index].start
-                ## if we have the same speaker as the previous instances
-                ## just add the text to the end of the line
+            next_utt = self.get_next_utt(self.list[index])
+            ## if the next index is from a different speaker
+            if next_utt == False or next_utt.speaker != self.list[index].speaker:
+                ## case for last word in the list
+                if index == (len(self.list) - 1):
+                    apply_subelement_word(sentence, self.list[index].text)
+                    t_elem = apply_sentence_end(sentence)
+                    return
+                if self.is_speaker_utt(self.list[index].speaker):
+                    apply_subelement_word(sentence, self.list[index].text)
+                    t_elem = apply_sentence_end(sentence)
+                    sentence = apply_subelement_root(self.list[index].speaker)
                 else:
-                    sentence_obj[1] += self.list[index].text + " "
-                    if self.is_speaker_utt(self.list[index].speaker):
-                        sentence_obj[0] = self.list[index].speaker
-        return string_result
+                    apply_subelement_word(sentence, self.list[index].speaker)
+                    # sentence = apply_subelement_root(next_utt.speaker)
+            ## if we have the same speaker as the previous instances
+            ## just add the text to the end of the line
+            else:
+                apply_subelement_word(sentence, self.list[index].text)

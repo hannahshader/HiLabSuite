@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# @Author: Hannah Shader, Jason Wu, Jacob Boyar
+# @Date:   2023-06-26 12:15:56
+# @Last Modified by:   Jacob Boyar
+# @Last Modified time: 2023-06-26 14:23:21
+# @Description: The class configurations for formats, labels and output files
+
 import os
 from dataclasses import dataclass
 import toml
@@ -27,19 +34,12 @@ class INTERNAL_MARKER(DataclassFromDict):
     MICROPAUSE = "micropause"
     NO_SPEAKER = " "
 
-    # marker text
     MARKERTYPE = "markerType"
     MARKERINFO = "markerInfo"
     MARKERSPEAKER = "markerSpeaker"
     MARKER_SEP = ":"
     KEYVALUE_SEP = "="
     TYPE_INFO_SP = "(markerType={0}:markerInfo={1}:markerSpeaker={2})"
-    # invariant:
-    # TYPE_INFO_SP ="({MARKERTYPE}{KEYVALUE_SEP}{0}
-    #                 {MAKRER_SEP}{MARKERINFO}{KEYVALUE_SEP}{1}
-    #                 {MARKER_SEP}MARKERSPEAKER{KEYVALUE_SEP}{2}"
-
-    # Speaker label for underlying overlap markers
     OVERLAP_FIRST_START = "overlap-firstStart"
     OVERLAP_FIRST_END = "overlap-firstEnd"
     OVERLAP_SECOND_START = "overlap-secondStart"
@@ -133,6 +133,7 @@ class OUTPUT_FILE:
     WORD_CSV = "words.csv"
     UTT_CSV = "conversation.csv"
     CON_TXT = "conversation.txt"
+    CHAT_ERROR = "chat_error.txt"
 
 
 def load_label():
