@@ -21,7 +21,7 @@ from plugin_development_suite.configs.configs import (
 class ChatPlugin:
     ## generates Chat file from Xml file
     def run(self, structure_interact_instance):
-        ## gets filepaths
+        ## get filepaths
         input_path = os.path.join(
             structure_interact_instance.output_path, OUTPUT_FILE.NATIVE_XML
         )
@@ -30,6 +30,8 @@ class ChatPlugin:
             structure_interact_instance.output_path, OUTPUT_FILE.CHAT
         )
 
+        ## NOTE: need to integrate chatter path into Gailbot because this was
+        ## not operational beforehand
         jar_path = structure_interact_instance.chatter_path
 
         ## runs commands

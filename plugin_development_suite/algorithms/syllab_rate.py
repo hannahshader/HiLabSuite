@@ -43,17 +43,10 @@ class SyllableRatePlugin:
         self.structure_interact_instance.apply_for_syllab_rate(
             self.get_utt_syllable_rate
         )
-        # print("syllab dict is")
-        # for x in self.list_of_syllab_dict:
-        #    print(x)
         markers_list = []
         self.stats = self.get_stats(self.list_of_syllab_dict)
-        # print("stats are")
-        # print(self.stats)
         marker1, marker2 = None, None
         for sentence in self.list_of_syllab_dict:
-            # print("item is")
-            # print(item)
             if self.syllab_markers(sentence) is not None:
                 marker1, marker2 = self.syllab_markers(sentence)
                 if marker1 is not None and marker2 is not None:
@@ -73,13 +66,13 @@ class SyllableRatePlugin:
             sentence_syllab_count += syllables.estimate(curr_utt.text)
 
         time_diff = abs(sentence_start - sentence_end)
-
+        # no time difference
         if time_diff == 0:
             logging.warn(f"no time difference between sentence start and end")
             time_diff = 0.001
-
+        # compute syllable rate
         syllable_rate = round(sentence_syllab_count / time_diff, 2)
-
+        # create utterance syllable data and append to dictionary
         utt_syllable: SYLLAB_DICT = {
             "speaker": speaker,
             "sentence_start": sentence_start,
@@ -147,7 +140,6 @@ class SyllableRatePlugin:
 
             slowCount += 1
             return slowStartMarker, slowEndMarker
-        ##elif sentence["syllableRate"] >= self.stats["upperLimit"]:
         elif sentence["syllableRate"] >= 6.4:
             markertText1 = MARKER.TYPE_INFO_SP.format(
                 MARKER.FASTSPEECH_START, MARKER.FASTSPEECH_DELIM, sentence["speaker"]

@@ -54,8 +54,8 @@ class CSVPlugin:
         result = []
         if self.is_speaker_utt(curr.speaker) == False:
             return [
-                self.extract_marker_speaker_value(curr.text),
-                txt,
+                "",
+                curr.speaker,
                 curr.start,
                 curr.end,
             ]

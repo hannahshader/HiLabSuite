@@ -29,17 +29,15 @@ class PausePlugin:
             with given threshold
         4.  if there is a "significant pause," return Pause Marker
         """
-        # use existing algorithm to determine whether there is a pause
-        ##print("curr utt is")
-        ##print(curr_utt)
-        ##print("next utt is")
-        ##print(next_utt)
+        # pause if uttered by same speaker
         if curr_utt.speaker == next_utt.speaker:
             logging.info("start pause analysis")
             fto = round(next_utt.start - curr_utt.end, 2)
             markerText = ""
+            # check for latch threshold
             if (THRESHOLD.LB_LATCH <= fto) and (fto <= THRESHOLD.UB_LATCH):
                 logging.debug(f"latch detected with fto {fto}")
+                # format marker text
                 markerText = MARKER.TYPE_INFO_SP.format(
                     MARKER.PAUSES, str(round(fto, 2)), str(curr_utt.speaker)
                 )
@@ -51,6 +49,7 @@ class PausePlugin:
                     markerText,
                 )
                 ## logging.debug(f"latch marker ({markerText}) generated")
+            # check for pause threshold
             elif THRESHOLD.LB_PAUSE <= fto <= THRESHOLD.UB_PAUSE:
                 logging.debug(f"pause detected with fto {fto}")
                 markerText = MARKER.TYPE_INFO_SP.format(
@@ -64,6 +63,7 @@ class PausePlugin:
                     markerText,
                 )
                 logging.debug(f"pause marker ({markerText}) generated")
+            # check for micro pause threshold
             elif THRESHOLD.LB_MICROPAUSE <= fto <= THRESHOLD.UB_MICROPAUSE:
                 logging.debug(f"micro pause detected with fto {fto}")
                 markerText = MARKER.TYPE_INFO_SP.format(
@@ -77,6 +77,7 @@ class PausePlugin:
                     markerText,
                 )
                 logging.debug(f"micro pause marker ({markerText}) generated")
+            # check for large pause threshold
             elif fto >= THRESHOLD.LB_LARGE_PAUSE:
                 logging.debug(f"large pause detected with fto {fto}")
                 markerText = MARKER.TYPE_INFO_SP.format(

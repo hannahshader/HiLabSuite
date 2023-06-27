@@ -27,10 +27,13 @@ class OverlapPlugin:
         5. return two markers
 
         """
+        # define markers
         curr_start, curr_end = curr_sentence[0], curr_sentence[1]
         next_start, next_end = next_sentence[0], next_sentence[1]
 
+        # overlap exist when next_start < curr_end
         if next_start < curr_end:
+            # set overlap start marker
             overlap_start_time = next_start
             overlap_start = UttObj(
                 overlap_start_time,
@@ -38,7 +41,7 @@ class OverlapPlugin:
                 MARKER.OVERLAPS,
                 "overlap_start",
             )
-
+            # set overlap end marker
             overlap_end_time = min(curr_end, next_end)
             overlap_end = UttObj(
                 overlap_end_time,
