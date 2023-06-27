@@ -1,29 +1,34 @@
-from typing import Any, Dict, List
-from plugin_development_suite.configs.configs import INTERNAL_MARKER
-from plugin_development_suite.data_structures.data_objects import UttObj
-from plugin_development_suite.data_structures.pickling import Pickling
+# -*- coding: utf-8 -*-
+# @Author: Hannah Shader, Jason Wu, Jacob Boyar
+# @Date:   2023-06-26 12:15:56
+# @Last Modified by:   Jacob Boyar
+# @Last Modified time: 2023-06-26 14:22:48
+# @Description: Creates a marker utterance dictionary
 
 import copy
 import bisect
 import pickle
 import sys
 import threading
-
+from typing import Any, Dict, List
 from collections import OrderedDict
+
+from plugin_development_suite.configs.configs import INTERNAL_MARKER
+from plugin_development_suite.data_structures.data_objects import UttObj
+from plugin_development_suite.data_structures.pickling import Pickling
 from gailbot.plugin import Plugin
 from gailbot.pluginMethod import GBPluginMethods
 
 
-# wrapper object for init_utterance_dict with functions to add marker
+# A wrapper object for init_utterance_dict with functions to add markers
 class MarkerUtteranceDict:
-    ##called on the resulting object from get_utterance_object from gailbot
-    ## return type is Dict[str, List[UttObj]]
-    ##methods: GBPluginMethods
+    # Called on the resulting object from get_utterance_object from gailbot
+    # Return type is Dict[str, List[UttObj]]
 
-    ## The underlying data structure holds two lists
-    ## One list is the data for individual words/markers spoken: their
-    ## speaker, their start time, their end time, and their id
-    ## One list holds data about the start times and end times of sentences
+    # The underlying data structure holds two lists
+    # One list is the data for individual words/markers spoken: their
+    # speaker, their start time, their end time, and their id
+    # One list holds data about the start times and end times of sentences
     def __init__(self, utterance_map: Dict[str, List[UttObj]] = None):
         self.lock = threading.Lock()
         self.pickle = Pickling()
@@ -31,7 +36,7 @@ class MarkerUtteranceDict:
             self.list = []
             self.sentences = []
         else:
-            ## Populate data about words spoken
+            # Populates the data about words spoken
             utterances = []
             sentence_data_plain = []
             speaker = ""
@@ -58,24 +63,26 @@ class MarkerUtteranceDict:
                 sublist = [sentence_data_plain[i], sentence_data_plain[i + 1]]
                 sentence_data.append(sublist)
 
-            # create a deep copy for the class
+            # Create a deep copy for the class
             self.list = copy.deepcopy(utterances)
             self.pickle.save_list_to_disk(self.list)
             self.sentences = copy.deepcopy(sentence_data)
             self.pickle.save_sentences_to_disk(self.sentences)
 
-    ## inserts a marker into the data structure
-    ## maintains original order
+    # Inserts a marker into the data structure 
+    # while maintaining the original order
     def insert_marker(self, value: Any):
         with self.lock:
             self.pickle.load_list_from_disk(self.list)
             if value == None:
                 return
-            index = bisect.bisect_left([obj.start for obj in self.list], value.start)
+            index = bisect.bisect_left([obj.start for obj in self.list], 
+                value.start
+            )
             self.list.insert(index, value)
             self.pickle.save_list_to_disk(self.list)
 
-    # given a current element in the list, gets the next element in the
+    # Given a current element in the list, gets the next element in the
     # list that is not a marker, but is an utterance with corresponding text
     def get_next_utt(self, current_item):
         self.pickle.load_list_from_disk(self.list)
@@ -93,7 +100,7 @@ class MarkerUtteranceDict:
             self.pickle.save_list_to_disk(self.list)
             return False
 
-    ## check the speaker field of piece of data to see if utterance is a marker
+    # Checks the speaker field of piece of data to see if utterance is a marker
     def is_speaker_utt(self, string):
         internal_marker_set = INTERNAL_MARKER.INTERNAL_MARKER_SET
         if string in internal_marker_set:
@@ -101,9 +108,9 @@ class MarkerUtteranceDict:
         else:
             return True
 
-    ## gets a list of functions
-    ## iterates through all items in the list and applies
-    ## the list of functions to each item
+    # Gets a list of functions
+    # Iterates through all items in the list and applies
+    # The list of functions to each item
     def apply_functions(self, apply_functions):
         self.pickle.load_list_from_disk(self.list)
         result = []
@@ -113,9 +120,9 @@ class MarkerUtteranceDict:
         self.pickle.save_list_to_disk(self.list)
         return result
 
-    ## get a single function
-    ## iterates through all items in the list and applies
-    ## function to each item
+    # Gets a single function
+    # Iterates through all items in the list and applies 
+    # said function to each item
     def apply_function(self, func):
         self.pickle.load_list_from_disk(self.list)
         result = []
@@ -124,9 +131,8 @@ class MarkerUtteranceDict:
         self.pickle.save_list_to_disk(self.list)
         return result
 
-    ## Iterates through list of sentence data
-    ## Inserts markers
-    ## Will always be used to add overlap plugin markers
+    # Iterates through list of sentence data and inserts markers
+    # Will always be used to add overlap plugin markers
     def apply_for_overlap(self, apply_function):
         self.pickle.load_sentences_from_disk(self.sentences)
         result = []
@@ -142,6 +148,8 @@ class MarkerUtteranceDict:
                 self.pickle.save_sentences_to_disk(self.sentences)
                 return
 
+    # Iterates through list of sentence data and inserts pairs of markers 
+    # for the start and end of fast/slow speech
     def apply_for_syllab_rate(self, func):
         self.pickle.load_sentences_from_disk(self.sentences)
         self.pickle.load_list_from_disk(self.list)
@@ -170,63 +178,48 @@ class MarkerUtteranceDict:
         self.pickle.save_sentences_to_disk(self.sentences)
         self.pickle.save_list_to_disk(self.list)
 
-        """
-        for curr_sentence in self.sentences:
-            ## using second list item, get the sentence end time
-        sentence_end_time = curr_sentence[1]
-        for curr_item in self.list:
-            print("current item is")
-            print(curr_item)
-            if curr_item.start > sentence_end_time:
-                break
-            if self.is_speaker_utt(curr_item.speaker) == False:
-                continue
-            else:
-                func(curr_item, curr_sentence[0], curr_sentence[1])
-                self.pickle.save_sentences_to_disk(self.sentences)
-                self.pickle.save_list_to_disk(self.list)
-        """
-
-    ## Takes a list of functions to apply that have arguments as two utterances
-    ## These functions return either one or four marker values
-    ## These marker values are added one by one to the list in MarkerUtteranceDict
+    # Takes a list of functions to apply that have arguments as two utterances
+    # These functions return either one or four marker values
+    # These marker values are added one by one to the list in 
+    # MarkerUtteranceDict
     def apply_insert_marker(self, apply_functions):
         self.pickle.load_list_from_disk(self.list)
 
-        ## deep copies the list so no infinite insertions/checks
+        # Deep copies the list so no infinite insertions/checks
         copied_list = copy.deepcopy(self.list)
         for item in copied_list:
-            ## only inspeaks non marker items of the list
+            # Only inspeaks non marker items of the list
             if self.is_speaker_utt(item.speaker) == False:
                 continue
-            ## applies each plugin function to each item
+            # Applies each plugin function to each item
             for func in apply_functions:
                 curr = item
                 curr_next = self.get_next_utt(curr)
-                ##returns if there is no next item
+                # Returns if there is no next item
                 if curr_next == False:
                     self.pickle.save_list_to_disk(self.list)
                     return
-                ##storing markers as a list becuase the overlap function
-                ##returns four markers
+                # Stores markers as a list becuase the overlap function
+                # Returns four markers
                 marker = func(curr, curr_next)
                 self.insert_marker(marker)
 
         self.pickle.save_list_to_disk(self.list)
 
+    # Creates the text output for Gailbot
     def print_all_rows_text(self, format_markers, outfile, formatter):
-        ##speaker, text, start, end
+        # Format: speaker, text, start, end
         sentence_obj = ["", "", 0, 0]
         for index in range(len(self.list)):
-            ## if not a speaker, then add text and continue
+            # If not a speaker, then add text and continue
             if self.is_speaker_utt(self.list[index].speaker) == False:
-                ##sentence_obj[1] += self.list[index].speaker + " "
                 sentence_obj[1] += format_markers(self.list[index])
             else:
-                ## gets the next utterance. gives false if end of list
+                # Gets the next utterance. Gives false if end of list
                 next_utt = self.get_next_utt(self.list[index])
-                ## if the next index is from a different speaker
-                if next_utt == False or next_utt.speaker != self.list[index].speaker:
+                # Checks if the next index is from a different speaker
+                if (next_utt == False 
+                    or next_utt.speaker != self.list[index].speaker):
                     sentence_obj[3] = self.list[index].end
                     sentence_obj[1] += self.list[index].text + " "
                     sentence_obj[0] = self.list[index].speaker
@@ -239,65 +232,66 @@ class MarkerUtteranceDict:
                     outfile.write(write_string)
                     sentence_obj[1] = ""
                     sentence_obj[2] = self.list[index].start
-                ## if we have the same speaker as the previous instances
-                ## just add the text to the end of the line
+                # If we have the same speaker as the previous instances, then
+                # just add the text to the end of the line
                 else:
                     sentence_obj[1] += self.list[index].text + " "
                     if self.is_speaker_utt(self.list[index].speaker):
                         sentence_obj[0] = self.list[index].speaker
 
-    ## creates the csv output for Gailbot, separating each line by its speaker
+    # Creates the csv output for Gailbot, separating each line by its speaker
     def print_all_rows_csv(self, print_func, format_markers):
-        ##speaker, text, start, end
+        # Format: speaker, text, start, end
         sentence_obj = ["", "", 0, 0]
         for index in range(len(self.list)):
-            ## if not a speaker, then add text and continue
+            # If not a speaker, then add text and continue
             if self.is_speaker_utt(self.list[index].speaker) == False:
-                ##sentence_obj[1] += self.list[index].speaker + " "
                 sentence_obj[1] += format_markers(self.list[index])
             else:
-                ## gets the next utterance. gives false if end of list
+                # Gets the next utterance. Gives false if end of list
                 next_utt = self.get_next_utt(self.list[index])
-                ## if the next index is from a different speaker
-                if next_utt == False or next_utt.speaker != self.list[index].speaker:
+                # Checks if the next index is from a different speaker
+                if (next_utt == False 
+                    or next_utt.speaker != self.list[index].speaker):
                     sentence_obj[3] = self.list[index].end
                     sentence_obj[1] += self.list[index].text + " "
                     sentence_obj[0] = self.list[index].speaker
                     print_func(sentence_obj)
                     sentence_obj[1] = ""
                     sentence_obj[2] = self.list[index].start
-                ## if we have the same speaker as the previous instances
-                ## just add the text to the end of the line
+                # If we have the same speaker as the previous instances,
+                # just add the text to the end of the line
                 else:
                     sentence_obj[1] += self.list[index].text + " "
                     if self.is_speaker_utt(self.list[index].speaker):
                         sentence_obj[0] = self.list[index].speaker
 
+    # Creates the CHAT output for Gailbot
     def print_all_rows_chat(self, format_markers):
-        ##speaker, text, start, end
+        # Format: speaker, text, start, end
         string_result = ""
         sentence_obj = ["", "", 0, 0]
         for index in range(len(self.list)):
-            ## if not a speaker, then add text and continue
+            # If not a speaker, then add text and continue
             if self.is_speaker_utt(self.list[index].speaker) == False:
-                ##sentence_obj[1] += self.list[index].speaker + " "
                 sentence_obj[1] += format_markers(self.list[index])
             else:
-                ## gets the next utterance. gives false if end of list
+                # Gets the next utterance. Gives false if end of list
                 next_utt = self.get_next_utt(self.list[index])
-                ## if the next index is from a different speaker
-                if next_utt == False or next_utt.speaker != self.list[index].speaker:
+                # Checks if the next index is from a different speaker
+                if (next_utt == False 
+                    or next_utt.speaker != self.list[index].speaker):
                     sentence_obj[3] = self.list[index].end
                     sentence_obj[1] += self.list[index].text
                     sentence_obj[0] = self.list[index].speaker
-                    ## makes sure that the string doesn't have any trailing white space
+                    # Makes sure that the string has no trailing white space
                     string_result += (
                         "*" + sentence_obj[0] + ":\t" + sentence_obj[1].rstrip() + "\n"
                     )
                     sentence_obj[1] = ""
                     sentence_obj[2] = self.list[index].start
-                ## if we have the same speaker as the previous instances
-                ## just add the text to the end of the line
+                # If we have the same speaker as the previous instances,
+                # just add the text to the end of the line
                 else:
                     sentence_obj[1] += self.list[index].text + " "
                     if self.is_speaker_utt(self.list[index].speaker):

@@ -1,6 +1,14 @@
+# -*- coding: utf-8 -*-
+# @Author: Hannah Shader, Jason Wu, Jacob Boyar
+# @Date:   2023-06-26 12:15:56
+# @Last Modified by:   Jacob Boyar
+# @Last Modified time: 2023-06-26 14:23:21
+# @Description: The class configurations for formats, labels and output files
+
+
 import os
-from dataclasses import dataclass
 import toml
+from dataclasses import dataclass
 from typing import List
 from dict_to_dataclass import DataclassFromDict, field_from_dict
 
@@ -27,7 +35,7 @@ class INTERNAL_MARKER(DataclassFromDict):
     MICROPAUSE = "micropause"
     NO_SPEAKER = " "
 
-    # marker text
+    # Marker text
     MARKERTYPE = "markerType"
     MARKERINFO = "markerInfo"
     MARKERSPEAKER = "markerSpeaker"
@@ -69,7 +77,6 @@ class INTERNAL_MARKER(DataclassFromDict):
         FASTSPEECH_END,
         FASTSPEECH_START,
     }
-    # marker text
 
 
 @dataclass

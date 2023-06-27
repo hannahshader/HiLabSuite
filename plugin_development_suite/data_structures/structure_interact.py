@@ -1,90 +1,114 @@
+# -*- coding: utf-8 -*-
+# @Author: Hannah Shader, Jason Wu, Jacob Boyar
+# @Date:   2023-06-26 12:15:56
+# @Last Modified by:   Jacob Boyar
+# @Last Modified time: 2023-06-26 14:53:13
+# @Description: Contains our structures for running our plugins and creating
+            #   their output.
+
+
+import copy
+import os
 from typing import Any, Dict, List
+from typing import OrderedDict as OrderedDictType, TypeVar
+from pydantic import BaseModel
+from collections import OrderedDict
+
 from plugin_development_suite.data_structures.marker_utterance_dict import (
     MarkerUtteranceDict,
 )
 from plugin_development_suite.data_structures.data_objects import UttObj
 from plugin_development_suite.algorithms.apply_plugins import ApplyPlugins
 from plugin_development_suite.configs.configs import INTERNAL_MARKER
-import copy
-import os
-from pydantic import BaseModel
-from collections import OrderedDict
-from typing import OrderedDict as OrderedDictType, TypeVar
 from gailbot.plugin import Plugin
 from gailbot.pluginMethod import GBPluginMethods
 
-## Used to be OUT_PATH = "/Users/yike/Desktop/plugin_output"
+# OUT_PATH is dependent on the user's own computer setup
+# Formerly OUT_PATH = "/Users/yike/Desktop/plugin_output"
 OUT_PATH = "Temporary"
-config_file_path = "/Users/hannahshader/Desktop/GailBot/Plugin-Development/plugin_development_suite/config.toml"
+config_file_path = (
+    "/Users/hannahshader/Desktop/GailBot/"
+    "Plugin-Development/plugin_development_suite/config.toml"
+)
 
-
-# outermost layer, wraps around marker_utterance_obj
+# Outermost layer of our data structure, wraps around marker_utterance_obj
 class StructureInteract(Plugin):
+    # Initializes the Marker Utterance Dictionary and its output path
     def __init__(self):
         super().__init__()
-        # populated in apply function
+        # Populated in the apply function
         self.data_structure = MarkerUtteranceDict()
         self.output_path = ""
 
-    # driver for structure_interact
+    # The driver for structure_interact
     def apply(self, methods: GBPluginMethods):
-        ## get the utterance data from gailbot in form Dict[str, List[UttObj]]
-        utterances_map: Dict[str, List[UttObj]] = methods.get_utterance_objects()
+        # get the utterance data from gailbot in form Dict[str, List[UttObj]]
+        utterances_map: Dict[str, List[UttObj]] 
+            = methods.get_utterance_objects()
 
-        ## get the output path
+        # Gets the output path
         self.output_path = methods.output_path
 
-        ## pass data to marker_utterance_dict to interact with the underlying
-        ## data structure
+        # Passes data to marker_utterance_dict to interact with the underlying
+        # data structure
         marker_utterance_obj = MarkerUtteranceDict(utterances_map)
         self.data_structure = marker_utterance_obj
 
-        ## get sentence data
+        # Gets the sentence data
         self.sentence_data = marker_utterance_obj.sentences
 
-        ## apply plugins
+        # Applies plugins
         apply_plugins_instance = ApplyPlugins(config_file_path)
         apply_plugins_instance.apply_plugins(self)
 
-        ##returns a version of itself
+        # Returns a version of itself
         return self
 
-    ## inserts and marker and maintains the organization of the data structure
+    # Inserts a marker and maintains the organization of the data structure
     def interact_insert_marker(self, item):
         if item != None:
             self.data_structure.insert_marker(item)
 
-    # general apply function list for items data structure
-    def apply_functions(self, apply_functions):
-        return self.data_structure.apply_functions(apply_functions)
+    # A general apply function list for items data structure
+    def apply_functions_list(self, apply_functions_list):
+        return self.data_structure.apply_functions_list(apply_functions_list)
 
-    # general apply function to apply one function to items in list
-    def apply_function(self, apply_functions):
-        return self.data_structure.apply_function(apply_functions)
+    # A general apply function to apply one function to items in list
+    # Changed the () from (self, apply_functionS) to the current
+    def apply_function(self, apply_function):
+        return self.data_structure.apply_function(apply_function)
 
-    # apply function to print all the rows for the text output
+    # An apply function to print all the rows for the text output
     def print_all_rows_text(self, format_markers, outfile, formatter):
-        self.data_structure.print_all_rows_text(format_markers, outfile, formatter)
+        self.data_structure.print_all_rows_text(format_markers, outfile, 
+        formatter
+        )
 
-    # apply function to print all the rows for the csv output
+    # An apply function to print all the rows for the csv output
     def print_all_rows_csv(self, print_func, format_markers):
         self.data_structure.print_all_rows_csv(print_func, format_markers)
 
-    # apply function to print all the rows for  chat output
+    # An apply function to print all the rows for the chat output
     def print_all_rows_chat(self, format_markers):
         return self.data_structure.print_all_rows_chat(format_markers)
 
-    # Takes an instance of structure interact, which holds a MarkerUtterance object
-    # Takes a list of functions, which take two sequential utterances as parameters
-    # Calls apply_insert_marker, which takes an instance of MarkerUtterance and a list of functions
+    # Takes an instance of structure interact, which holds a MarkerUtterance 
+    # object
+    # Takes a list of functions, which take two sequential utterances as 
+    # parameters
+    # Calls apply_insert_marker, which takes an instance of MarkerUtterance and 
+    # a list of functions
     def apply_markers(self, apply_functions):
         self.data_structure.apply_insert_marker(apply_functions)
 
+    # Applies the markers for the overlap plugin
     def apply_markers_overlap(self, apply_function):
         self.data_structure.apply_for_overlap(apply_function)
 
+    # Applies the markers for the syllable rate plugin
     def apply_for_syllab_rate(self, apply_function):
         self.data_structure.apply_for_syllab_rate(apply_function)
 
+    # Returns whether or not the given marker is a speaker utterance
     def is_speaker_utt(self, string):
         return self.data_structure.is_speaker_utt(string)

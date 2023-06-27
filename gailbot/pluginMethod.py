@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# @Author: Hannah Shader, Jason Wu, Jacob Boyar
+# @Date:   2023-06-26 12:15:56
+# @Last Modified by:   Jacob Boyar
+# @Last Modified time: 2023-06-26 13:51:25
+# @Description: Replicates the input from the Gailbot app for testing purposes
+
 import os
 from typing import Dict, Union, List, Any
 from pydantic import BaseModel
@@ -10,7 +17,6 @@ class Methods:
     a wrapper around objects
     that may want to be passed to a plugin.
     """
-
     def __init__(self):
         pass
 
@@ -19,7 +25,6 @@ class Plugin:
     """
     Template superclass for any plugin.
     """
-
     def __init__(self) -> None:
         self.name = self.__class__
         self.successful = False
@@ -30,7 +35,8 @@ class Plugin:
         return self.successful
 
     def apply(
-        self, dependency_outputs: Dict[str, Any], methods: Methods, *args, **kwargs
+        self, dependency_outputs: Dict[str, Any], 
+        methods: Methods, *args, **kwargs
     ) -> Any:
         """
         Wrapper for plugin algorithm that has access to dependencies =,
@@ -122,7 +128,6 @@ class GBPluginMethods(Methods):
     def temp_work_path(self) -> str:
         """
         Accesses and returns the temporary workspace path
-
         Returns:
             String containing the temporary workspace path
         """

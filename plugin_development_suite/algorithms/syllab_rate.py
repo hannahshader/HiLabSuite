@@ -1,9 +1,16 @@
-## ToDo: need additional installations for these imports
+# -*- coding: utf-8 -*-
+# @Author: Hannah Shader, Jason Wu, Jacob Boyar
+# @Date:   2023-06-26 12:15:56
+# @Last Modified by:   Jacob Boyar
+# @Last Modified time: 2023-06-26 14:52:14
+# @Description: Calculates the average syllable rate for all speakers
+            #   Denotes any sections of especially fast or slow speech.
+
 import syllables
 import numpy
+import logging
 from typing import Dict, Any, List, TypedDict
 from scipy.stats import median_abs_deviation
-import logging
 
 from plugin_development_suite.configs.configs import (
     INTERNAL_MARKER,
@@ -34,50 +41,44 @@ LimitDeviations = 2
 
 
 class SyllableRatePlugin:
+    # Initializes the list of syllables
     def __init__(self, structure_interact_instance):
         self.stats = None
         self.list_of_syllab_dict = []
         self.structure_interact_instance = structure_interact_instance
 
+    # Creates a syllable marker to get the overall syllable rate
     def syllab_marker(self):
         self.structure_interact_instance.apply_for_syllab_rate(
             self.get_utt_syllable_rate
         )
-        # print("syllab dict is")
-        # for x in self.list_of_syllab_dict:
-        #    print(x)
         markers_list = []
         self.stats = self.get_stats(self.list_of_syllab_dict)
         print("stats are")
         print(self.stats)
-        # print("stats are")
-        # print(self.stats)
         marker1, marker2 = None, None
         for sentence in self.list_of_syllab_dict:
-            # print("item is")
-            # print(item)
             if self.syllab_markers(sentence) is not None:
                 marker1, marker2 = self.syllab_markers(sentence)
                 if marker1 is not None and marker2 is not None:
-                    self.structure_interact_instance.interact_insert_marker(marker1)
-                    self.structure_interact_instance.interact_insert_marker(marker2)
+                    self.structure_interact_instance.interact_insert_marker(
+                        marker1
+                    )
+                    self.structure_interact_instance.interact_insert_marker(
+                        marker2
+                    )
 
-    # get syllab rates for each utt
+    # Gets the syllable rates for each utterance
     def get_utt_syllable_rate(self, utt_list, sentence_start, sentence_end):
         sentence_syllab_count = 0
-        # sentence_string = ""
         speaker = utt_list[0].speaker
         for curr_utt in utt_list:
-            ## doesn't include other paralinguistic markers data
-            ## in the speaker rate data
-            ## assumes all feature text starts with non numberic char
+            # Doesn't include other paralinguistic markers data
+            # in the speaker rate data
+            # Assumes all feature text starts with non numberic char
             if (curr_utt.text[0].isalpha()) == False:
                 continue
 
-            # print("current utt is")
-            # print(curr_utt)
-            # print("each syllable estimate is")
-            # print(syllables.estimate(curr_utt.text))
             sentence_syllab_count += syllables.estimate(curr_utt.text)
 
         time_diff = abs(sentence_start - sentence_end)
@@ -114,7 +115,7 @@ class SyllableRatePlugin:
         lowerLimit = median - (LimitDeviations * median_absolute_deviation)
         upperLimit = median + (LimitDeviations * median_absolute_deviation)
 
-        # creates a dictionary for stat fields
+        # Creates a dictionary for stat fields
         stats: STAT_DICT = {
             "median": median,
             "medianAbsDev": median_absolute_deviation,
@@ -124,7 +125,7 @@ class SyllableRatePlugin:
 
         return stats
 
-    # add nodes
+    # Adds syllable marker nodes
     def syllab_markers(self, sentence):
         vowels = ["a", "e", "i", "o", "u"]
         fastCount = 0
@@ -136,7 +137,8 @@ class SyllableRatePlugin:
                 sentence["speaker"],
             )
             markerText2 = MARKER.TYPE_INFO_SP.format(
-                MARKER.SLOWSPEECH_END, MARKER.SLOWSPEECH_DELIM, sentence["speaker"]
+                MARKER.SLOWSPEECH_END, MARKER.SLOWSPEECH_DELIM, 
+                sentence["speaker"]
             )
 
             slowStartMarker = UttObj(
@@ -155,10 +157,11 @@ class SyllableRatePlugin:
 
             slowCount += 1
             return slowStartMarker, slowEndMarker
-        ##elif sentence["syllableRate"] >= self.stats["upperLimit"]:
+
         elif sentence["syllableRate"] >= 6.4:
             markertText1 = MARKER.TYPE_INFO_SP.format(
-                MARKER.FASTSPEECH_START, MARKER.FASTSPEECH_DELIM, sentence["speaker"]
+                MARKER.FASTSPEECH_START, MARKER.FASTSPEECH_DELIM, 
+                sentence["speaker"]
             )
             markerText2 = MARKER.TYPE_INFO_SP.format(
                 MARKER.FASTSPEECH_END,
