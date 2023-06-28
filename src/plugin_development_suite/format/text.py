@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-06-28 15:17:16
+# @Last Modified time: 2023-06-28 16:11:53
 # @Description: Creates the text output for our plugins
 
 import re
@@ -119,7 +119,6 @@ class TextPlugin(Plugin):
         individual utterance.
         Stores sentence data in a format that can be read by
         CON_FORMATTER.TURN.format
-        
         """
         prev_item[2] = start_time
         prev_item[1] = speaker_sentence

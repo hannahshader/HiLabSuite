@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-06-28 15:31:59
+# @Last Modified time: 2023-06-28 16:11:27
 # @Description: Creates the xml output for our plugins
 
 from typing import Dict, Any

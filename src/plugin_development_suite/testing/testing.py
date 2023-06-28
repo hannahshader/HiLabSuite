@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-06-28 15:21:32
+# @Last Modified time: 2023-06-28 16:08:27
 # @Description: Testing file to assert that other functions are running properly
 
 from ..data_structures.marker_utterance_dict import MarkerUtteranceDict
@@ -21,10 +21,9 @@ class TestMarkerUtteranceDict:
         marker_dict = MarkerUtteranceDict()
         assert len(marker_dict.list) == 0
 
-    # Initializing MarkerUtteranceDict and inserting a Marker
     def test_marker_utterance_dict_insertMarker(self):
         """
-        Initializing MarkerUtteranceDict
+        Initializing MarkerUtteranceDict and inserting a marker
         """
         marker_dict = MarkerUtteranceDict()
         marker = UttObj(0, 1, "Speaker 1", "Hello")
@@ -32,10 +31,9 @@ class TestMarkerUtteranceDict:
         assert len(marker_dict.list) == 1
         assert marker_dict.list[0] == marker
 
-    # Initializing MarkerUtteranceDict and inserting many Markers
     def test_marker_utterance_dict_insertManyMarkers(self):
         """
-        Initializing MarkerUtteranceDict
+        Initializing MarkerUtteranceDict and inserting many Markers
         """
         marker_dict = MarkerUtteranceDict()
         marker = UttObj(2, 3, "Speaker 1", "Hello")
@@ -51,7 +49,7 @@ class TestMarkerUtteranceDict:
 
     def test_marker_utterance_dict_getNextItem(self):
         """
-        IInitializing MarkerUtteranceDict and inserting many Markers
+        Initializing MarkerUtteranceDict and getting the next item
         """
         marker_dict = MarkerUtteranceDict()
         marker = UttObj(2, 3, "Speaker 1", "Hello")
@@ -70,7 +68,7 @@ class TestMarkerUtteranceDict:
 
     def test_marker_utterance_dict_getNextUtt(self):
         """
-        Initializing MarkerUtteranceDict and inserting many Markers
+        Initializing MarkerUtteranceDict and getting the next utterance
         """
         marker_dict = MarkerUtteranceDict()
         marker = UttObj(0, 1, "markerSpeaker", "Hello")
