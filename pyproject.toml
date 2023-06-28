@@ -1,0 +1,56 @@
+[project]
+name = "Plugin-Development"
+version = "0.0.1a"
+authors = [
+  { name="Muhammad Umair", email="umair.aarij@gmail.com" },
+]
+
+readme = "README.md"
+license = { file="LICENSE" }
+requires-python = ">=3.10"
+
+dynamic = ["dependencies"]
+
+
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
+
+[project.urls]
+"Homepage" = "https://github.com/mumair01/TRP-Detection"
+"Bug Tracker" = "https://github.com/mumair01/TRP-Detection/issues"
+
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-cov",
+    "pytest-timeout",
+    "pytest-xdist",
+    "pipdeptree",
+    "ipython"
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+log_cli = true
+log_cli_level = "DEBUG"
+log_cli_format = "%(asctime)s [%(levelname)8s] %(message)s (%(filename)s:%(lineno)s)"
+log_cli_date_format = "%Y-%m-%d %H:%M:%S"
+
+pythonpath = [
+    "src"
+]
+minversion = "6.0"
+addopts = "-rA"
+testpaths = [
+    "tests",
+]
+filterwarnings = [
+    "ignore::DeprecationWarning"
+]
