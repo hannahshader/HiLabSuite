@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-06-28 13:53:17
+# @Last Modified time: 2023-06-28 14:06:10
 # @Description: Creates the csv output for our plugins
 
 import os
@@ -26,7 +26,7 @@ PAUSES = "pauses"
 GAPS = "gaps"
 
 class CSVPlugin:
-    ## generates Csv file
+    # Generates Csv file
     def run(self, structure_interact_instance):
         self._utterance_level(structure_interact_instance)
         self._word_level(structure_interact_instance)

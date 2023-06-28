@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-06-28 13:47:25
+# @Last Modified time: 2023-06-28 14:41:55
 # @Description: Checks for overlaps between multiple speakers
 
 from typing import Dict, Any, List
@@ -22,17 +22,12 @@ THRESHOLD = load_threshold()
 INVALID_OVERLAP = (-1, -1, -1, -1)
 
 ############
-# class Definitions
+# CLASS DEFINITIONS
 ############
 
 
-"""
-Take utterance pair and return a overlap markers to insert
-"""
-
-
 class OverlapPlugin:
-    def OverlapMarker(curr_sentence, next_sentence) -> List[str]:
+    def overlap_marker(curr_sentence, next_sentence) -> List[str]:
         """
         Algorithm: modified
         1. Given current sentence and next sentence
@@ -40,17 +35,17 @@ class OverlapPlugin:
         3. If no, not an overlap
         4. If yes:
             curr overlap start marker = next.start
-            curr overlap end marker = min(curr.end, next.end)
+                curr overlap end marker = min(curr.end, next.end)
         5. Return two markers
 
         """
-        # define markers
+        # Define markers
         curr_start, curr_end = curr_sentence[0], curr_sentence[1]
         next_start, next_end = next_sentence[0], next_sentence[1]
 
-        # overlap exist when next_start < curr_end
+        # Overlap exist when next_start < curr_end
         if next_start < curr_end:
-            # set overlap start marker
+            # Set overlap start marker
             overlap_start_time = next_start
             overlap_start = UttObj(
                 overlap_start_time,
@@ -58,7 +53,7 @@ class OverlapPlugin:
                 MARKER.OVERLAPS,
                 "overlap_start",
             )
-            # set overlap end marker
+            # Set overlap end marker
             overlap_end_time = min(curr_end, next_end)
             overlap_end = UttObj(
                 overlap_end_time,

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-# @Last Modified by:   Muhammad Umair
-# @Last Modified time: 2023-06-27 12:55:09
+# @Last Modified by:   Jacob Boyar
+# @Last Modified time: 2023-06-28 14:08:14
 # @Description: Creates the CHAT output for our plugins based on TalkBank format
 
 import subprocess
@@ -19,9 +19,9 @@ from plugin_development_suite.configs.configs import (
 
 
 class ChatPlugin:
-    ## generates Chat file from Xml file
+    # Generates Chat file from Xml file
     def run(self, structure_interact_instance):
-        ## get filepaths
+        # Get filepaths
         input_path = os.path.join(
             structure_interact_instance.output_path, OUTPUT_FILE.NATIVE_XML
         )
@@ -30,11 +30,11 @@ class ChatPlugin:
             structure_interact_instance.output_path, OUTPUT_FILE.CHAT
         )
 
-        ## NOTE: need to integrate chatter path into Gailbot because this was
-        ## not operational beforehand
+        # NOTE: need to integrate chatter path into Gailbot because this was
+        # not operational beforehand
         jar_path = structure_interact_instance.chatter_path
 
-        ## runs commands
+        # Runs commands
         # TODO: Do not hard-code these commands.
         # TODO: Store chatter in with GailBot locally - ask Vivian how to get the local paths.
         command = f"java -cp {jar_path} org.talkbank.chatter.App -inputFormat xml -outputFormat cha -output {output_path} {input_path}"
@@ -42,13 +42,13 @@ class ChatPlugin:
         process = subprocess.Popen(command.split(), stdout=subprocess.PIPE)
         output, error = process.communicate()
 
-        ## checks if there was a failure
+        # Checks if there was a failure
         if output:
             pass
         if error:
             self.error_file
 
-    ## create a text file with an error message if conversation fails
+    # Create a text file with an error message if conversation fails
     def error_file(self, structure_interact_instance):
         path = os.path.join(
             structure_interact_instance.output_path, OUTPUT_FILE.CHAT_ERROR

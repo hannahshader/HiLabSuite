@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-06-28 13:44:53
+# @Last Modified time: 2023-06-28 14:04:23
 # @Description: Replicates the input from the Gailbot app for testing purposes
 
 import os
@@ -17,6 +17,9 @@ class UttObj(BaseModel):
 
 
 class GBPluginMethods(Methods):
+    '''
+    
+    '''
     def get_utterance_objects(self) -> Dict[str, List[UttObj]]:
         return {
             "test recording": [
@@ -96,7 +99,7 @@ class GBPluginMethods(Methods):
         """
         return "/Users/hannahshader/Desktop/Temp_Workspace"
 
-    ##jar path
+    # jar path
     @property
     def chatter_path(self) -> str:
         return "/Users/hannahshader/Desktop/chatter/chatter.jar"
