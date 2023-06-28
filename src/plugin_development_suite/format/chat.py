@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-06-28 14:08:14
+# @Last Modified time: 2023-06-28 15:09:32
 # @Description: Creates the CHAT output for our plugins based on TalkBank format
 
 import subprocess
@@ -19,9 +19,9 @@ from plugin_development_suite.configs.configs import (
 
 
 class ChatPlugin:
-    # Generates Chat file from Xml file
-    def run(self, structure_interact_instance):
-        # Get filepaths
+    """Generates a chat file as an output"""
+    def run(self, structure_interact_instance) -> None:
+        """Returns the input and output paths"""
         input_path = os.path.join(
             structure_interact_instance.output_path, OUTPUT_FILE.NATIVE_XML
         )
@@ -48,8 +48,8 @@ class ChatPlugin:
         if error:
             self.error_file
 
-    # Create a text file with an error message if conversation fails
-    def error_file(self, structure_interact_instance):
+    def error_file(self, structure_interact_instance) -> None:
+        """Create a text file with an error message if conversation fails"""
         path = os.path.join(
             structure_interact_instance.output_path, OUTPUT_FILE.CHAT_ERROR
         )

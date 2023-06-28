@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-06-28 14:06:10
+# @Last Modified time: 2023-06-28 15:12:18
 # @Description: Creates the csv output for our plugins
 
 import os
@@ -22,18 +22,36 @@ from plugin_development_suite.data_structures.structure_interact import (
     StructureInteract,
 )
 
+############
+# GLOBALS
+############
+
 PAUSES = "pauses"
+"""Variable name for pauses"""
 GAPS = "gaps"
+"""Variable name for gaps"""
+
+
+############
+# CLASS DEFINITIONS
+############
 
 class CSVPlugin:
-    # Generates Csv file
+    """
+    Generates a CSV file based on the given specifications 
+    """
     def run(self, structure_interact_instance):
+        """
+        Runs the utterance level and word level analysis
+        """
         self._utterance_level(structure_interact_instance)
         self._word_level(structure_interact_instance)
 
-    # Creates the path where the csv file will be created, and runs the apply 
-    # function, which prints all of the rows of said csv file
     def _word_level(self, structure_interact_instance):
+        """
+        Creates the path where the csv file will be created, and runs the 
+        apply function, which prints all of the rows of said csv file
+        """
         path = os.path.join(
             structure_interact_instance.output_path, OUTPUT_FILE.WORD_CSV
         )
@@ -49,8 +67,10 @@ class CSVPlugin:
             for item in result:
                 writer.writerow(item)
 
-    # Appends the text of the current node to the end of the sentence
     def word_level_helper(self, curr):
+        """
+        Appends the text of the current node to the end of the sentence
+        """
         l = []
         l.append(curr.text)
         txt = CSV_FORMATTER.TXT_SEP.join(l)
@@ -67,8 +87,10 @@ class CSVPlugin:
         result = [curr.speaker, txt, curr.start, curr.end]
         return result
 
-    # Gets the speaker value from a specific marker and returns said value
     def extract_marker_speaker_value(self, input_string):
+        """
+        Gets the speaker value from a specific marker and returns said value
+        """
         marker_speaker_index = input_string.find("markerSpeaker=")
         if marker_speaker_index == -1:
             return None
@@ -79,9 +101,11 @@ class CSVPlugin:
 
         return value
 
-    # Formats the given markers appropriately given csv file conventions
-    # Returns what we actually want to concatenate to the end of the string
     def format_markers(self, curr):
+        """
+        Formats the given markers appropriately given csv file conventions.
+        Returns what we actually want to concatenate to the end of the string
+        """
         # TODO: Do NOT hard code anything....
         if curr.speaker == "pauses":
             return " (Pause=" + str(round((curr.end - curr.start), 2)) + ") "
@@ -102,8 +126,10 @@ class CSVPlugin:
         else:
             return " " + curr.text + " "
 
-    # Determines the path for the utterance level
     def _utterance_level(self, structure_interact_instance):
+        """
+        Determines the path for the utterance level
+        """
         path = os.path.join(
             structure_interact_instance.output_path, OUTPUT_FILE.UTT_CSV
         )
@@ -115,14 +141,18 @@ class CSVPlugin:
                 writer.writerow, self.format_markers
             )
 
-    # Checks if the given input is a speaker marker. If not, returns False
     def is_speaker_utt(self, string):
+        """
+        Checks if the given input is a speaker marker. If not, returns False
+        """
         internal_marker_set = INTERNAL_MARKER.INTERNAL_MARKER_SET
         # TODO: Classic C++ mistake
         return not string in internal_marker_set
 
-    # Returns whether or not the current node is pointing to the first speaker
     def get_first_speaker(self, result):
+        """
+        Returns whether or not the current node is pointing to the first speaker
+        """
         for x, row in enumerate(result):
             for y, value in enumerate(result[x]):
                 if self.is_speaker_utt(value[0]):

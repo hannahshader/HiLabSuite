@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-06-28 14:41:55
+# @Last Modified time: 2023-06-28 14:49:21
 # @Description: Checks for overlaps between multiple speakers
 
 from typing import Dict, Any, List
@@ -18,8 +18,12 @@ from plugin_development_suite.data_structures.data_objects import UttObj
 ############
 
 MARKER = INTERNAL_MARKER
+""" The format of the marker to be inserted into the list """
 THRESHOLD = load_threshold()
+""" The threshold for what length of time qualifies an 'overlap' """
 INVALID_OVERLAP = (-1, -1, -1, -1)
+""" A dummy format for an invalid overlap """
+
 
 ############
 # CLASS DEFINITIONS
@@ -29,7 +33,8 @@ INVALID_OVERLAP = (-1, -1, -1, -1)
 class OverlapPlugin:
     def overlap_marker(curr_sentence, next_sentence) -> List[str]:
         """
-        Algorithm: modified
+        Algorithm:
+        ----------
         1. Given current sentence and next sentence
         2. Check if: next.start < curr.end
         3. If no, not an overlap

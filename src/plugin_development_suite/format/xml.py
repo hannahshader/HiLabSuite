@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-06-28 14:07:22
+# @Last Modified time: 2023-06-28 15:18:31
 # @Description: Creates the xml output for our plugins
 
 from typing import Dict, Any
@@ -21,9 +21,9 @@ import xml.dom.minidom
 
 
 class XmlPlugin:
-    # Creates xml file
+    """Creates the XML file"""
     def run(self, structure_interact_instance):
-        ## gets filepath
+        """Gets the output file path and writes the xml header"""
         path = os.path.join(
             structure_interact_instance.output_path, OUTPUT_FILE.NATIVE_XML
         )
@@ -85,8 +85,10 @@ class XmlPlugin:
         with open(path, "w") as file:
             file.write(pretty_xml_str)
 
-    # Creates xml formatting for the beginning of a sentence
     def apply_subelement_root(self, speaker):
+        """
+        Creates xml formatting for the beginning of a sentence
+        """
         # Get speaker index
         index = self.get_string_index(self.speaker_list, speaker)
 
@@ -99,25 +101,33 @@ class XmlPlugin:
             attrib={"who": ("SP" + str(index)), "uID": "u{}".format(counter_temp)},
         )
 
-    # Adds a word to the sentence
     def apply_subelement_word(self, sentence, word):
+        """
+        Adds a word to the sentence
+        """
         word_elem = ET.SubElement(sentence, "w")
         word_elem.text = self.format_markers(word)
 
-    # xml formatting for terminating the sentence
     def apply_sentence_end(self, sentence):
+        """
+        xml formatting for terminating the sentence
+        """
         t_elem = ET.SubElement(sentence, "t", attrib={"type": "p"})
 
-    # Gets the index of a string in a a list of strings
     def get_string_index(self, strings, target):
+        """
+        Gets the index of a string in a a list of strings
+        """
         try:
             index = strings.index(target)
             return index
         except ValueError:
             return -1
 
-    # Formats the non-utterance markers
     def format_markers(self, curr):
+        """
+        Formats the non-utterance markers
+        """
         if curr == "overlap_end":
             return "[<] "
         elif curr == "overlap_start":

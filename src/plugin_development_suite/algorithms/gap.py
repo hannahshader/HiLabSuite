@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-27 12:16:07
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-06-28 14:42:22
+# @Last Modified time: 2023-06-28 14:46:52
 from typing import Dict, Any, List
 
 # TODO: Change all imports to this method.
@@ -26,15 +26,14 @@ logger = logging.getLogger(__name__)
 # TODO: Change logging in all files to this system.
 
 
-# TODO: GLobal vars. / constants should have a description.
-
 ############
 # GLOBALS
 ############
-MARKER = INTERNAL_MARKER
-""" the INTERNAL_MARKER """
-THRESHOLD = load_threshold()
 
+MARKER = INTERNAL_MARKER
+""" The format of the marker to be inserted into the list """
+THRESHOLD = load_threshold()
+""" The threshold for what length of time qualifies a 'gap' """
 
 ############
 # CLASS DEFINITIONS

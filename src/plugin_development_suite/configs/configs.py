@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-06-28 13:49:10
+# @Last Modified time: 2023-06-28 15:01:31
 # @Description: The class configurations for formats, labels and output files
 
 
@@ -16,18 +16,21 @@ from dict_to_dataclass import DataclassFromDict, field_from_dict
 # TODO: Docstrings for dataclasses.
 @dataclass
 class CON_FORMATTER:
+    """The format of each turn's label"""
     TURN = "{0}\t{1} {2}{4}_{3}{4}\n"
     TXT_SEP = " "
 
 
 @dataclass
 class CSV_FORMATTER:
+    """The format for the headers in CSV"""
     HEADER = ["SPEAKER LABEL", "TEXT", "START TIME", "END TIME"]
     TXT_SEP = " "
 
 
 @dataclass
 class INTERNAL_MARKER(DataclassFromDict):
+    """The internal names for all of the markers in the dictionary"""
     GAPS = "gaps"
     OVERLAPS = "overlaps"
     PAUSES = "pauses"
@@ -76,6 +79,7 @@ class INTERNAL_MARKER(DataclassFromDict):
 
 @dataclass
 class THRESHOLD(DataclassFromDict):
+    """The thresholds for gaps, overlaps and the types of pauses"""
     GAPS_LB: float = field_from_dict()
     OVERLAP_MARKERLIMIT: float = field_from_dict()
     LB_LATCH: float = field_from_dict()
@@ -90,6 +94,7 @@ class THRESHOLD(DataclassFromDict):
 
 @dataclass
 class LABEL(DataclassFromDict):
+    """The proper labels used for speakers, gaps, overlaps, and pauses"""
     SPEAKERLABEL: str = field_from_dict()
     GAPMARKER: str = field_from_dict()
     OVERLAPMARKER: str = field_from_dict()
@@ -102,6 +107,7 @@ class LABEL(DataclassFromDict):
 
 @dataclass
 class ALL_LABELS(DataclassFromDict):
+    """The labels of all of the plugins"""
     DEFAULT: LABEL = field_from_dict()
     TXT: LABEL = field_from_dict()
     XML: LABEL = field_from_dict()
@@ -111,6 +117,7 @@ class ALL_LABELS(DataclassFromDict):
 
 @dataclass
 class PLUGIN_NAME:
+    """The names of all of the plugins"""
     WordTree = "WordTreePlugin"
     ConvModel = "ConversationModelPlugin"
     ConvMap = "ConversationMapPlugin"
@@ -129,6 +136,7 @@ class PLUGIN_NAME:
 
 @dataclass
 class OUTPUT_FILE:
+    """The names for all of the output files, including error files"""
     CHAT = "conversation.cha"
     NATIVE_XML = "conversation.gailbot.xml"
     TB_XML = "conversation.talkbank.xml"
@@ -139,10 +147,12 @@ class OUTPUT_FILE:
 
 
 def load_label():
+    """loads a given label from the class of labels"""
     d = toml.load(os.path.join(os.path.dirname(__file__), "configData.toml"))
     return ALL_LABELS.from_dict(d["LABEL"])
 
 
 def load_threshold():
+    """loads a given threshold from the class of thresholds"""
     d = toml.load(os.path.join(os.path.dirname(__file__), "configData.toml"))
     return THRESHOLD.from_dict(d["THRESHOLD"])

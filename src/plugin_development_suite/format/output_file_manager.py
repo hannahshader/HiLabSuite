@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-06-28 13:53:35
+# @Last Modified time: 2023-06-28 15:12:35
 # @Description: Manages the output files created by our plugins
 
 import re
@@ -29,9 +29,13 @@ from plugin_development_suite.format.chat import ChatPlugin
 
 
 class OutputFileManager:
-    # Creates file objects and runs drivers
+    """
+    Creates file objects and runs drivers
+    """
     def __init__(self):
-        # Populate the data structure with plugins
+        """
+        Populate the data structure with plugins
+        """
         structure_interact_instance = StructureInteract()
         methods = GBPluginMethods()
         structure_interact_instance = structure_interact_instance.apply(methods)

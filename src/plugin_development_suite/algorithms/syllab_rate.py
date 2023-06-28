@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-06-28 13:48:56
+# @Last Modified time: 2023-06-28 15:10:10
 # @Description: Calculates the average syllable rate for all speakers
             #   Denotes any sections of especially fast or slow speech.
 
@@ -14,13 +14,19 @@ from scipy.stats import median_abs_deviation
 
 from plugin_development_suite.configs.configs import (
     INTERNAL_MARKER,
-    load_threshold,
 )
 from plugin_development_suite.data_structures.data_objects import UttObj
 
-MARKER = INTERNAL_MARKER
-THRESHOLD = load_threshold()
+############
+# GLOBALS
+############
 
+MARKER = INTERNAL_MARKER
+""" The format of the marker to be inserted into the list """
+
+############
+# CLASS DEFINITIONS
+############
 
 class SYLLAB_DICT(TypedDict):
     utt: List[UttObj]
@@ -41,14 +47,16 @@ LimitDeviations = 2
 
 
 class SyllableRatePlugin:
-    # Initializes the list of syllables
-    def __init__(self, structure_interact_instance):
+    def __init__(self, structure_interact_instance) -> None:
+        """ Initializes the list of syllables"""
         self.stats = None
         self.list_of_syllab_dict = []
         self.structure_interact_instance = structure_interact_instance
 
-    # Creates a syllable marker to get the overall syllable rate
-    def syllab_marker(self):
+    def syllab_marker(self) -> None:
+        """
+        Creates a syllable marker to get the overall syllable rate
+        """
         self.structure_interact_instance.apply_for_syllab_rate(
             self.get_utt_syllable_rate
         )
@@ -66,8 +74,12 @@ class SyllableRatePlugin:
                         marker2
                     )
 
-    # Gets the syllable rates for each utterance
-    def get_utt_syllable_rate(self, utt_list, sentence_start, sentence_end):
+    def get_utt_syllable_rate(
+            self, utt_list, sentence_start, sentence_end
+            ) -> None:
+        """
+        Gets the syllable rate for each utterance
+        """
         sentence_syllab_count = 0
         speaker = utt_list[0].speaker
         for curr_utt in utt_list:
@@ -79,13 +91,13 @@ class SyllableRatePlugin:
             sentence_syllab_count += syllables.estimate(curr_utt.text)
 
         time_diff = abs(sentence_start - sentence_end)
-        # no time difference
+        # No time difference
         if time_diff == 0:
             logging.warn(f"no time difference between sentence start and end")
             time_diff = 0.001
-        # compute syllable rate
+        # Compute syllable rate
         syllable_rate = round(sentence_syllab_count / time_diff, 2)
-        # create utterance syllable data and append to dictionary
+        # Create utterance syllable data and append to dictionary
         utt_syllable: SYLLAB_DICT = {
             "speaker": speaker,
             "sentence_start": sentence_start,
@@ -100,7 +112,6 @@ class SyllableRatePlugin:
         """
         Creates and returns a dictionary containing the statistics for all
         syllab stats for all utterances of a conversation
-
         """
         allRates = []
         # get all utterance syllable data
@@ -122,8 +133,10 @@ class SyllableRatePlugin:
         }
         return stats
 
-    # Adds syllable marker nodes
-    def syllab_markers(self, sentence):
+    def syllab_markers(self, sentence) -> UttObj:
+        """
+        Adds the syllable marker nodes to the list
+        """
         vowels = ["a", "e", "i", "o", "u"]
         fastCount = 0
         slowCount = 0
