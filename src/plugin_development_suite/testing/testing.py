@@ -1,15 +1,24 @@
+# -*- coding: utf-8 -*-
+# @Author: Hannah Shader, Jason Wu, Jacob Boyar
+# @Date:   2023-06-26 12:15:56
+# @Last Modified by:   Jacob Boyar
+# @Last Modified time: 2023-06-26 14:04:17
+# @Description: Testing file to assert that other functions are running properly
+
 from ..data_structures.marker_utterance_dict import MarkerUtteranceDict
 from ..data_structures.structure_interact import StructureInteract
-from plugin_development_suite.data_structures.marker_utterance_dict import MarkerUtteranceDict
+from plugin_development_suite.data_structures.marker_utterance_dict import ( 
+    MarkerUtteranceDict,
+)
 from plugin_development_suite.data_structures.data_objects import UttObj
 
 class TestMarkerUtteranceDict:
-    #Initializing MarkerUtteranceDict
+    # Initializing MarkerUtteranceDict
     def test_marker_utterance_dict_init_empty(self):
         marker_dict = MarkerUtteranceDict()
         assert len(marker_dict.list) == 0
 
-    #Initializing MarkerUtteranceDict and inserting a Marker
+    # Initializing MarkerUtteranceDict and inserting a Marker
     def test_marker_utterance_dict_insertMarker(self):
         marker_dict = MarkerUtteranceDict()
         marker = UttObj(0, 1, "Speaker 1", "Hello")
@@ -17,7 +26,7 @@ class TestMarkerUtteranceDict:
         assert len(marker_dict.list) == 1
         assert marker_dict.list[0] == marker
 
-    #Initializing MarkerUtteranceDict and inserting many Markers
+    # Initializing MarkerUtteranceDict and inserting many Markers
     def test_marker_utterance_dict_insertManyMarkers(self):
         marker_dict = MarkerUtteranceDict()
         marker = UttObj(2, 3, "Speaker 1", "Hello")
@@ -31,7 +40,7 @@ class TestMarkerUtteranceDict:
         assert marker_dict.list[1] == marker
         assert marker_dict.list[2] == marker3
 
-    #Initializing MarkerUtteranceDict and inserting many Markers
+    # Initializing MarkerUtteranceDict and inserting many Markers
     def test_marker_utterance_dict_getNextItem(self):
         marker_dict = MarkerUtteranceDict()
         marker = UttObj(2, 3, "Speaker 1", "Hello")
@@ -48,7 +57,7 @@ class TestMarkerUtteranceDict:
         assert marker_dict.get_next_item(marker) == marker3
         assert marker_dict.get_next_item(marker3) is False
 
-    #Initializing MarkerUtteranceDict and inserting many Markers
+    # Initializing MarkerUtteranceDict and inserting many Markers
     def test_marker_utterance_dict_getNextItem(self):
         marker_dict = MarkerUtteranceDict()
         marker = UttObj(2, 3, "Speaker 1", "Hello")
@@ -65,7 +74,7 @@ class TestMarkerUtteranceDict:
         assert marker_dict.get_next_item(marker) == marker3
         assert marker_dict.get_next_item(marker3) is False
 
-    #Initializing MarkerUtteranceDict and inserting many Markers
+    # Initializing MarkerUtteranceDict and inserting many Markers
     def test_marker_utterance_dict_getNextUtt(self):
         marker_dict = MarkerUtteranceDict()
         marker = UttObj(0, 1, "markerSpeaker", "Hello")
@@ -78,7 +87,7 @@ class TestMarkerUtteranceDict:
         assert marker_dict.get_next_item(marker) == marker2
         assert marker_dict.get_next_utt(marker) == marker3
 
-    #Checks that a marker can be correctly identified as a speaker or not
+    # Checks that a marker can be correctly identified as a speaker or not
     def test_marker_utterance_dict_isSpeakerUtt(self):
         marker_dict = MarkerUtteranceDict()
         # Test case with internal marker speaker

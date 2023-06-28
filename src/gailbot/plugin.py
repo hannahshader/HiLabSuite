@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # @Author: Muhammad Umair
 # @Date:   2023-01-08 13:22:45
-# @Last Modified by:   Muhammad Umair
-# @Last Modified time: 2023-06-27 12:26:59
+# @Last Modified by:   Jacob Boyar
+# @Last Modified time: 2023-06-28 13:44:06
+# @Description: Replicates the input from the Gailbot app for testing purposes
 
 from typing import Any, Dict, TypedDict
 
@@ -33,7 +34,6 @@ class Plugin:
     """
     Template superclass for any plugin.
     """
-
     def __init__(self) -> None:
         self.name = self.__class__
         self.successful = False
@@ -44,11 +44,8 @@ class Plugin:
         return self.successful
 
     def apply(
-        self,
-        dependency_outputs: Dict[str, Any],
-        methods: Methods,
-        *args,
-        **kwargs,
+        self, dependency_outputs: Dict[str, Any], 
+        methods: Methods, *args, **kwargs
     ) -> Any:
         """
         Wrapper for plugin algorithm that has access to dependencies =,

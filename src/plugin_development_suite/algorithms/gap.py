@@ -1,17 +1,12 @@
 # -*- coding: utf-8 -*-
-# @Author: Muhammad Umair
+# @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-27 12:16:07
-# @Last Modified by:   Muhammad Umair
-# @Last Modified time: 2023-06-27 12:49:19
+# @Last Modified by:   Jacob Boyar
+# @Last Modified time: 2023-06-28 13:47:09
 from typing import Dict, Any, List
 
 # TODO: Change all imports to this method.
 from plugin_development_suite.configs import (
-    INTERNAL_MARKER,
-    THRESHOLD,
-    load_threshold,
-)
-from plugin_development_suite.configs.configs import (
     INTERNAL_MARKER,
     THRESHOLD,
     load_threshold,
@@ -41,20 +36,17 @@ Return a gap marker to insert
 
 
 class GapPlugin:
-    def GapMarker(curr_utt, next_utt):
+    def gap_marker(curr_utt, next_utt):
         """
         Algorithm:
-        1.  takes in curr_node and get curr_next_node
-        2.  assert that the nodes are by different speakers. If they are by
+        1.  Takes in curr_node and get curr_next_node
+        2.  Assert that the nodes are by different speakers. If they are by
             the same speakers, return false
-        3.  subtract start time of curr_next_node from end time of curr_node
-            assert that there is "significant gap" between curr_node and curr_next_node
-            with given threshold
-        4.  if there is "significant gap," create and return a Gap Marker
-        logging.debug(f"current utterance {curr_utt}, next utterance {next_utt}")
+        3.  Subtract start time of curr_next_node from end time of curr_node
+            assert that there is "significant gap" between curr_node and 
+            curr_next_node with given threshold
+        4.  If there is "significant gap," create and return a Gap Marker
         """
-        # use existing algorithm to determine whether there is a gap between
-        # curr node and next node
         fto = round(next_utt.start - curr_utt.end, 2)
         logging.debug(f"get fto : {fto}")
         if fto >= THRESHOLD.GAPS_LB and curr_utt.speaker != next_utt.speaker:
@@ -63,10 +55,10 @@ class GapPlugin:
             markerText = MARKER.TYPE_INFO_SP.format(
                 MARKER.GAPS, str(round(fto, 1)), str(curr_utt.speaker)
             )
-            # create instance of marker
+            # Creates a marker instance
             return UttObj(
-                start=curr_utt.end,
-                end=next_utt.start,
-                speaker=MARKER.GAPS,
-                text=markerText,
+                start = curr_utt.end,
+                end = next_utt.start,
+                speaker = MARKER.GAPS,
+                text = markerText,
             )

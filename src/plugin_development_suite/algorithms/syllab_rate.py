@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
-# @Author: Muhammad Umair
-# @Date:   2023-06-27 12:16:07
-# @Last Modified by:   Muhammad Umair
-# @Last Modified time: 2023-06-27 12:46:27
-## ToDo: need additional installations for these imports
+# @Author: Hannah Shader, Jason Wu, Jacob Boyar
+# @Date:   2023-06-26 12:15:56
+# @Last Modified by:   Jacob Boyar
+# @Last Modified time: 2023-06-28 13:48:56
+# @Description: Calculates the average syllable rate for all speakers
+            #   Denotes any sections of especially fast or slow speech.
+
 import syllables
 import numpy
+import logging
 from typing import Dict, Any, List, TypedDict
 from scipy.stats import median_abs_deviation
-import logging
 
 from plugin_development_suite.configs.configs import (
     INTERNAL_MARKER,
@@ -39,11 +41,13 @@ LimitDeviations = 2
 
 
 class SyllableRatePlugin:
+    # Initializes the list of syllables
     def __init__(self, structure_interact_instance):
         self.stats = None
         self.list_of_syllab_dict = []
         self.structure_interact_instance = structure_interact_instance
 
+    # Creates a syllable marker to get the overall syllable rate
     def syllab_marker(self):
         self.structure_interact_instance.apply_for_syllab_rate(
             self.get_utt_syllable_rate
@@ -62,14 +66,14 @@ class SyllableRatePlugin:
                         marker2
                     )
 
-    # get syllab rates for each utt
+    # Gets the syllable rates for each utterance
     def get_utt_syllable_rate(self, utt_list, sentence_start, sentence_end):
         sentence_syllab_count = 0
         speaker = utt_list[0].speaker
         for curr_utt in utt_list:
-            ## doesn't include other paralinguistic markers data
-            ## in the speaker rate data
-            ## assumes all feature text starts with non numberic char
+            # Doesn't include other paralinguistic markers data
+            # in the speaker rate data
+            # Assumes all feature text starts with non numberic char
             if (curr_utt.text[0].isalpha()) == False:
                 continue
             sentence_syllab_count += syllables.estimate(curr_utt.text)
@@ -109,7 +113,7 @@ class SyllableRatePlugin:
         lowerLimit = median - (LimitDeviations * median_absolute_deviation)
         upperLimit = median + (LimitDeviations * median_absolute_deviation)
 
-        # create and return a dictionary for stats
+        # Creates a dictionary for stat fields
         stats: STAT_DICT = {
             "median": median,
             "medianAbsDev": median_absolute_deviation,
@@ -118,7 +122,7 @@ class SyllableRatePlugin:
         }
         return stats
 
-    # add markers
+    # Adds syllable marker nodes
     def syllab_markers(self, sentence):
         vowels = ["a", "e", "i", "o", "u"]
         fastCount = 0

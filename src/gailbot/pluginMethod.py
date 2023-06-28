@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
-# @Author: Muhammad Umair
-# @Date:   2023-06-27 12:16:07
-# @Last Modified by:   Muhammad Umair
-# @Last Modified time: 2023-06-27 12:26:32
+# @Author: Hannah Shader, Jason Wu, Jacob Boyar
+# @Date:   2023-06-26 12:15:56
+# @Last Modified by:   Jacob Boyar
+# @Last Modified time: 2023-06-28 13:44:53
+# @Description: Replicates the input from the Gailbot app for testing purposes
+
 import os
 from typing import Dict, Union, List, Any
 from pydantic import BaseModel
-from .plugin import Methods, Plugin
-
 
 class UttObj(BaseModel):
     start: float
@@ -91,7 +91,6 @@ class GBPluginMethods(Methods):
     def temp_work_path(self) -> str:
         """
         Accesses and returns the temporary workspace path
-
         Returns:
             String containing the temporary workspace path
         """

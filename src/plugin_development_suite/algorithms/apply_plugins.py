@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
-# @Author: Muhammad Umair
-# @Date:   2023-06-27 12:16:07
-# @Last Modified by:   Muhammad Umair
-# @Last Modified time: 2023-06-27 12:39:31
+# @Author: Hannah Shader, Jason Wu, Jacob Boyar
+# @Date:   2023-06-26 12:15:56
+# @Last Modified by:   Jacob Boyar
+# @Last Modified time: 2023-06-28 13:45:56
+# @Description: Checks which plugins are activated and uses them
 
+import toml
+from collections import OrderedDict
+from typing import OrderedDict as OrderedDictType, TypeVar
 
 from plugin_development_suite.algorithms.gap import GapPlugin
 from plugin_development_suite.algorithms.overlap import OverlapPlugin
 from plugin_development_suite.algorithms.pause import PausePlugin
 from plugin_development_suite.algorithms.syllab_rate import SyllableRatePlugin
-from collections import OrderedDict
-from typing import OrderedDict as OrderedDictType, TypeVar
-from typing import List, Dict, Any
-import toml
 
 
 # TODO: IMPORTANT - add type annotations.
@@ -55,22 +55,20 @@ class ApplyPlugins:
                     plugin_names.append(plugin["plugin_name"])
         return plugin_names
 
-    ## This function checks which word-dependent plugins are switched "on"
-    ## in the .toml file and adds them to a list
-    ## Function list defines the list of plugins that rely on individual
-    ## items from the list for their algorithm
-    ## Allows for list items to only be iterated over one time
+    # This function checks which word-dependent plugins are switched "on"
+    # in the .toml file and adds them to a list
+    # Function list defines the list of plugins that rely on individual
+    # items from the list for their algorithm
+    # Allows for list items to only be iterated over one time
     def function_list(self, config_file_path):
         result = []
         if "PausePlugin" in self.plugin_names:
-            result.append(PausePlugin.PauseMarker)
+            result.append(PausePlugin.pause_marker)
         if "GapPlugin" in self.plugin_names:
-            result.append(GapPlugin.GapMarker)
-        ##if "SyllableRatePlugin" in self.plugin_names:
-        ##result.append(syllab_rate.add_syllab_marker)
+            result.append(GapPlugin.gap_marker)
         return result
 
-    ## Applys the plugins to the instance of the data structure
+    # Applys the plugins to the instance of the data structure
     def apply_plugins(self, structure_interact_instance):
         ## Overlap plugin is seperated from the other plugins
         ## because it relies on speaker start and end time data
@@ -88,8 +86,8 @@ class ApplyPlugins:
 
         if "OverlapPlugin" in self.plugin_names:
             structure_interact_instance.apply_markers_overlap(
-                OverlapPlugin.OverlapMarker
+                OverlapPlugin.overlap_marker
             )
 
-        ## Applies function to the list that only rely on word data
+        # Applies function to the list that only rely on word data
         structure_interact_instance.apply_markers(self.plugins)

@@ -1,7 +1,15 @@
+# -*- coding: utf-8 -*-
+# @Author: Hannah Shader, Jason Wu, Jacob Boyar
+# @Date:   2023-06-26 12:15:56
+# @Last Modified by:   Jacob Boyar
+# @Last Modified time: 2023-06-28 13:48:05
+# @Description: Checks for pauses in speech when one speaker is speaking
+
 import logging
 import io
 from typing import Dict, Any, List
 from dataclasses import dataclass
+
 from plugin_development_suite.configs.configs import (
     INTERNAL_MARKER,
     THRESHOLD,
@@ -18,16 +26,16 @@ Return a pause marker to insert
 
 
 class PausePlugin:
-    def PauseMarker(curr_utt, next_utt):
+    def pause_marker(curr_utt, next_utt):
         """
         Algorithm:
-        1.  takes in curr_node and get curr_next_node
-        2.  assert that the nodes are by the same speaker. If they are by
+        1.  Takes in curr_node and get curr_next_node
+        2.  Assert that the nodes are by the same speaker. If they are by
             different speakers, return false
-        3.  subtract start time of curr_next_node from end time of curr_node
-            assert that there is "significant gap" between curr_node and curr_next_node
-            with given threshold
-        4.  if there is a "significant pause," return Pause Marker
+        3.  Subtract start time of curr_next_node from end time of curr_node
+            assert that there is "significant gap" between curr_node and 
+            curr_next_node with given threshold
+        4.  If there is a "significant pause," return Pause Marker
         """
         # pause if uttered by same speaker
         if curr_utt.speaker == next_utt.speaker:
@@ -48,7 +56,6 @@ class PausePlugin:
                     MARKER.PAUSES,
                     markerText,
                 )
-                ## logging.debug(f"latch marker ({markerText}) generated")
             # check for pause threshold
             elif THRESHOLD.LB_PAUSE <= fto <= THRESHOLD.UB_PAUSE:
                 logging.debug(f"pause detected with fto {fto}")

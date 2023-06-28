@@ -1,23 +1,20 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-# @Last Modified by:   Muhammad Umair
-# @Last Modified time: 2023-06-27 12:57:14
+# @Last Modified by:   Jacob Boyar
+# @Last Modified time: 2023-06-28 13:53:35
 # @Description: Manages the output files created by our plugins
 
-
-from typing import Dict, Any, List, Tuple
 import re
 import io
 import os
+from typing import Dict, Any, List, Tuple
 
-# Local imports
 from gailbot.plugin import Plugin
 from gailbot.pluginMethod import GBPluginMethods
 from plugin_development_suite.data_structures.structure_interact import (
     StructureInteract,
 )
-
 from plugin_development_suite.configs.configs import (
     INTERNAL_MARKER,
     load_label,
@@ -25,7 +22,6 @@ from plugin_development_suite.configs.configs import (
     OUTPUT_FILE,
     CON_FORMATTER,
 )
-
 from plugin_development_suite.format.csv import CSVPlugin
 from plugin_development_suite.format.text import TextPlugin
 from plugin_development_suite.format.xml import XmlPlugin
@@ -33,14 +29,14 @@ from plugin_development_suite.format.chat import ChatPlugin
 
 
 class OutputFileManager:
-    ## creates file objects and runs drivers
+    # Creates file objects and runs drivers
     def __init__(self):
-        # populate data structure with plugins
+        # Populate the data structure with plugins
         structure_interact_instance = StructureInteract()
         methods = GBPluginMethods()
         structure_interact_instance = structure_interact_instance.apply(methods)
 
-        ## creates all files
+        # Creates the CSV, text, and CHAT files
         csv_init = CSVPlugin()
         csv_init.run(structure_interact_instance)
 
