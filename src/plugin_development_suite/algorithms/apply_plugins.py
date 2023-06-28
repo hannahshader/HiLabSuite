@@ -2,12 +2,13 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-06-28 14:40:34
+# @Last Modified time: 2023-06-28 15:59:39
 # @Description: Checks which plugins are activated and uses them
 
 import toml
 from collections import OrderedDict
 from typing import OrderedDict as OrderedDictType, TypeVar
+from typing import List
 
 from plugin_development_suite.algorithms.gap import GapPlugin
 from plugin_development_suite.algorithms.overlap import OverlapPlugin

@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-06-28 15:10:10
+# @Last Modified time: 2023-06-28 15:58:22
 # @Description: Calculates the average syllable rate for all speakers
             #   Denotes any sections of especially fast or slow speech.
 
