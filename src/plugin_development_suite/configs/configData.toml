@@ -1,5 +1,3 @@
-# TODO: Comment for every variable. 
-
 [THRESHOLD]
 GAPS_LB = 0.3
 OVERLAP_MARKERLIMIT = 4.0
