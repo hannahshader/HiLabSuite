@@ -3,7 +3,7 @@ suite_name = "gb_hilab_suite"
 [metadata]
 Author = "hilab"
 Email = "hilab.tufts.edu"
-Version = "v.1.0"
+Version = "v.0.1a"
 
 [[plugins]]
 plugin_name = "WordTreePlugin"

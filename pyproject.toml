@@ -2,7 +2,7 @@
 name = "Plugin-Development"
 version = "0.0.1a"
 authors = [
-  { name="Muhammad Umair", email="umair.aarij@gmail.com" },
+  { name="Hannah Shader", email="hannahshader@gmail.com" },
 ]
 
 readme = "README.md"
@@ -16,8 +16,8 @@ dynamic = ["dependencies"]
 dependencies = {file = ["requirements.txt"]}
 
 [project.urls]
-"Homepage" = "https://github.com/mumair01/TRP-Detection"
-"Bug Tracker" = "https://github.com/mumair01/TRP-Detection/issues"
+"Homepage" = " "
+"Bug Tracker" = " "
 
 
 [build-system]

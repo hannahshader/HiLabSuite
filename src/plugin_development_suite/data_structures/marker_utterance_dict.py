@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-06-28 15:56:37
+# @Last Modified time: 2023-06-29 11:27:47
 # @Description: Creates a marker utterance dictionary
 
 import copy
@@ -10,7 +10,7 @@ import bisect
 import pickle
 import sys
 import threading
-from typing import Any, Dict, List
+from typing import Any, Dict, List, IO
 from collections import OrderedDict
 
 from plugin_development_suite.configs.configs import INTERNAL_MARKER
@@ -55,6 +55,14 @@ class MarkerUtteranceDict:
         One list is the data for individual words/markers spoken: their
         speaker, their start time, their end time, and their id
         One list holds data about the start times and end times of sentences
+
+        Parameters
+        ----------
+        utterance_map: a dictionary of strings and utterance objects
+            
+        Returns
+        -------
+        a dictionary of strings and utterance objects
         """
         self.lock = threading.Lock()
         self.pickle = Pickling()
@@ -121,16 +129,29 @@ class MarkerUtteranceDict:
             self.sentences = copy.deepcopy(sentence_data)
             self.pickle.save_sentences_to_disk(self.sentences)
 
-    def sort_list(self):
+    def sort_list(self) -> None:
         """
         Sorts the list by start times. 
-        Integreates all words from each file into the main data structure
+        Integrates all words from each file into the main data structure
+
+        Returns
+        -------
+        None
+        
         """
         self.list = sorted(self.list, key=lambda x: x.start)
 
-    def insert_marker(self, value: Any):
+    def insert_marker(self, value: Any) -> None:
         """
         Inserts a marker into the data structure while maintaining the order
+
+        Parameters
+        ----------
+        value: the marker to insert
+            
+        Returns
+        -------
+        none
         """
         with self.lock:
             self.pickle.load_list_from_disk(self.list)
@@ -142,10 +163,18 @@ class MarkerUtteranceDict:
             self.list.insert(index, value)
             self.pickle.save_list_to_disk(self.list)
 
-    def get_next_utt(self, current_item):
+    def get_next_utt(self, current_item) -> Any:
         """
         Given a current element in the list, gets the next element in the
         list that is not a marker, but is an utterance with corresponding text
+        
+        Parameters
+        ----------
+        current_item: the item from which to get the next following utterance 
+            
+        Returns
+        -------
+        the next utterance
         """
         self.pickle.load_list_from_disk(self.list)
         if current_item in self.list:
@@ -163,9 +192,18 @@ class MarkerUtteranceDict:
             self.pickle.save_list_to_disk(self.list)
             return False
 
-    def is_speaker_utt(self, string):
+    def is_speaker_utt(self, string) -> bool:
         """
-        Checks the speaker field of piece of data to see if utterance is a marker
+        Checks the speaker field of piece of data to see if utterance is 
+        a marker
+
+        Parameters
+        ----------
+        string: the string to check if it is a speaker utterance
+            
+        Returns
+        -------
+        a boolean of whether said string is a speaker utterance.
         """
         internal_marker_set = INTERNAL_MARKER.INTERNAL_MARKER_SET
         if string in internal_marker_set:
@@ -173,11 +211,19 @@ class MarkerUtteranceDict:
         else:
             return True
     
-    def apply_functions(self, apply_functions):
+    def apply_functions(self, apply_functions) -> list[any]:
         """
         Gets a list of functions. 
         Iterates through all items in the list and applies
         the list of functions to each item
+
+        Parameters
+        ----------
+        apply_functions: the list of functions to apply
+            
+        Returns
+        -------
+        a list of all of the results of the functions run
         """
         self.pickle.load_list_from_disk(self.list)
         result = []
@@ -187,11 +233,19 @@ class MarkerUtteranceDict:
         self.pickle.save_list_to_disk(self.list)
         return result
 
-    def apply_function(self, func):
+    def apply_function(self, func) -> list[any]:
         """
         Gets a single function.
         Iterates through all items in the list and applies 
         said function to each item
+
+        Parameters
+        ----------
+        func: the function to run
+            
+        Returns
+        -------
+        a list of the result of the function run
         """
         self.pickle.load_list_from_disk(self.list)
         result = []
@@ -200,10 +254,18 @@ class MarkerUtteranceDict:
         self.pickle.save_list_to_disk(self.list)
         return result
 
-    def apply_for_overlap(self, apply_function):
+    def apply_for_overlap(self, apply_function) -> None:
         """
         Iterates through list of sentence data and inserts markers
         Will always be used to add overlap plugin markers
+
+        Parameters
+        ----------
+        apply_function: the function to run for overlap purposes
+            
+        Returns
+        -------
+        none
         """
         self.pickle.load_sentences_from_disk(self.sentences)
 
@@ -222,10 +284,18 @@ class MarkerUtteranceDict:
                 self.pickle.save_sentences_to_disk(self.sentences)
                 return
 
-    def apply_for_syllab_rate(self, func):
+    def apply_for_syllab_rate(self, func) -> None:
         """
         Iterates through list of sentence data and inserts pairs of markers 
         for the start and end of fast/slow speech
+
+        Parameters
+        ----------
+        func: the function to run for syllable rate purposes
+            
+        Returns
+        -------
+        none
         """
         self.pickle.load_sentences_from_disk(self.sentences)
         self.pickle.load_list_from_disk(self.list)
@@ -261,12 +331,21 @@ class MarkerUtteranceDict:
         self.pickle.save_sentences_to_disk(self.sentences)
         self.pickle.save_list_to_disk(self.list)
 
-    def apply_insert_marker(self, apply_functions):
+    def apply_insert_marker(self, apply_functions) -> None:
         """
         Takes a list of functions to apply that have arguments as two utterances
         These functions return either one or four marker values
         These marker values are added one by one to the list in 
         MarkerUtteranceDict
+
+        Parameters
+        ----------
+        apply_functions: a list of functions to run and add their marker values
+        to the list in MarkerUtteranceDict
+            
+        Returns
+        -------
+        none
         """
         self.pickle.load_list_from_disk(self.list)
 
@@ -291,9 +370,22 @@ class MarkerUtteranceDict:
 
         self.pickle.save_list_to_disk(self.list)
 
-    def print_all_rows_text(self, format_markers, outfile, formatter):
+    def print_all_rows_text(self, format_markers, 
+                            outfile: IO[str], formatter) -> None:
         """
         Creates the text output for Gailbot
+
+        Parameters
+        ----------
+        format_markers: the function for marker formatting depending on
+        the type of output
+        outfile: the file to which gailbot will output
+        formatter: the format of the strings to write to said outfile
+            
+        Returns
+        -------
+        none
+        
         """
         # Format: speaker, text, start, end
         sentence_obj = ["", "", 0, 0]
@@ -328,9 +420,18 @@ class MarkerUtteranceDict:
                     if self.is_speaker_utt(self.list[index].speaker):
                         sentence_obj[0] = self.list[index].speaker
 
-    def print_all_rows_csv(self, print_func, format_markers):
+    def print_all_rows_csv(self, print_func, format_markers) -> None:
         """
         Creates the csv output for Gailbot, separating each line by its speaker
+
+        Parameters
+        ----------
+        print_func: the function for printing the csv output file
+        format_markers:
+            
+        Returns
+        -------
+        none
         """
         # Format: speaker, text, start, end
         sentence_obj = ["", "", 0, 0]

@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-06-28 15:12:18
+# @Last Modified time: 2023-06-29 10:50:38
 # @Description: Creates the csv output for our plugins
 
 import os
@@ -40,17 +40,35 @@ class CSVPlugin:
     """
     Generates a CSV file based on the given specifications 
     """
-    def run(self, structure_interact_instance):
+    def run(self, structure_interact_instance) -> None:
         """
         Runs the utterance level and word level analysis
+
+        Parameters
+        ----------
+        structure_interact_instance : 
+        An instance of the structure interact class
+            
+        Returns
+        -------
+        none
         """
         self._utterance_level(structure_interact_instance)
         self._word_level(structure_interact_instance)
 
-    def _word_level(self, structure_interact_instance):
+    def _word_level(self, structure_interact_instance) -> None:
         """
         Creates the path where the csv file will be created, and runs the 
         apply function, which prints all of the rows of said csv file
+
+        Parameters
+        ----------
+        structure_interact_instance : 
+        An instance of the structure interact class
+            
+        Returns
+        -------
+        none
         """
         path = os.path.join(
             structure_interact_instance.output_path, OUTPUT_FILE.WORD_CSV
@@ -67,9 +85,18 @@ class CSVPlugin:
             for item in result:
                 writer.writerow(item)
 
-    def word_level_helper(self, curr):
+    def word_level_helper(self, curr) -> list:
         """
         Appends the text of the current node to the end of the sentence
+
+        Parameters
+        ----------
+        curr: the current node.
+            
+        Returns
+        -------
+        A list which comprises the necessary node information: 
+        speaker, text, start, and end times.
         """
         l = []
         l.append(curr.text)
@@ -87,24 +114,19 @@ class CSVPlugin:
         result = [curr.speaker, txt, curr.start, curr.end]
         return result
 
-    def extract_marker_speaker_value(self, input_string):
-        """
-        Gets the speaker value from a specific marker and returns said value
-        """
-        marker_speaker_index = input_string.find("markerSpeaker=")
-        if marker_speaker_index == -1:
-            return None
-
-        start_index = marker_speaker_index + len("markerSpeaker=")
-        substring = input_string[start_index:]
-        value = substring[0] if len(substring) > 0 else None
-
-        return value
-
-    def format_markers(self, curr):
+    def format_markers(self, curr) -> str:
         """
         Formats the given markers appropriately given csv file conventions.
         Returns what we actually want to concatenate to the end of the string
+        
+        Parameters
+        ----------
+        curr: the current node.
+            
+        Returns
+        -------
+        A string with the appropriate format of pause/gap/overlap/syllable rate
+        to append to the csv output
         """
         # TODO: Do NOT hard code anything....
         if curr.speaker == "pauses":
@@ -126,9 +148,17 @@ class CSVPlugin:
         else:
             return " " + curr.text + " "
 
-    def _utterance_level(self, structure_interact_instance):
+    def _utterance_level(self, structure_interact_instance) -> None:
         """
         Determines the path for the utterance level
+        Parameters
+        ----------
+        structure_interact_instance : 
+        An instance of the structure interact class
+            
+        Returns
+        -------
+        None
         """
         path = os.path.join(
             structure_interact_instance.output_path, OUTPUT_FILE.UTT_CSV
@@ -141,17 +171,33 @@ class CSVPlugin:
                 writer.writerow, self.format_markers
             )
 
-    def is_speaker_utt(self, string):
+    def is_speaker_utt(self, string) -> bool:
         """
         Checks if the given input is a speaker marker. If not, returns False
+        
+        Parameters
+        ----------
+        string : The string to check whether it is a speaker utterance or not
+            
+        Returns
+        -------
+        A boolean on whether the given string is a speaker utterance
+        
         """
         internal_marker_set = INTERNAL_MARKER.INTERNAL_MARKER_SET
-        # TODO: Classic C++ mistake
-        return not string in internal_marker_set
+        return string not in internal_marker_set
 
-    def get_first_speaker(self, result):
+    def get_first_speaker(self, result) -> str:
         """
-        Returns whether or not the current node is pointing to the first speaker
+        Returns the first speaker, or false if none is found
+        
+        Parameters
+        ----------
+        result : The resulting output of this
+            
+        Returns
+        -------
+        str: a string of the first speaker or false.
         """
         for x, row in enumerate(result):
             for y, value in enumerate(result[x]):

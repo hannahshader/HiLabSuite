@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-06-28 16:11:27
+# @Last Modified time: 2023-06-29 11:07:08
 # @Description: Creates the xml output for our plugins
 
 from typing import Dict, Any
@@ -22,8 +22,19 @@ import xml.dom.minidom
 
 class XmlPlugin:
     """Creates the XML file"""
-    def run(self, structure_interact_instance):
-        """Gets the output file path and writes the xml header"""
+    def run(self, structure_interact_instance) -> None:
+        """
+        Gets the output file path and writes the xml header
+        
+        Parameters
+        ----------
+        structure_interact_instance : 
+        An instance of the structure interact class
+            
+        Returns
+        -------
+        none
+        """
         path = os.path.join(
             structure_interact_instance.output_path, OUTPUT_FILE.NATIVE_XML
         )
@@ -85,9 +96,17 @@ class XmlPlugin:
         with open(path, "w") as file:
             file.write(pretty_xml_str)
 
-    def apply_subelement_root(self, speaker):
+    def apply_subelement_root(self, speaker) -> ET.SubElement:
         """
         Creates xml formatting for the beginning of a sentence
+        
+        Parameters
+        ----------
+        speaker: the current speaker to format
+            
+        Returns
+        -------
+        ET.SubElement: the xml element for a sentence
         """
         # Get speaker index
         index = self.get_string_index(self.speaker_list, speaker)
@@ -101,22 +120,48 @@ class XmlPlugin:
             attrib={"who": ("SP" + str(index)), "uID": "u{}".format(counter_temp)},
         )
 
-    def apply_subelement_word(self, sentence, word):
+    def apply_subelement_word(self, sentence: str, word: str) -> None:
         """
         Adds a word to the sentence
+        
+        Parameters
+        ----------
+        sentence: the sentence to add a word to
+        word: the word to add to the sentence
+            
+        Returns
+        -------
+        none
         """
         word_elem = ET.SubElement(sentence, "w")
         word_elem.text = self.format_markers(word)
 
-    def apply_sentence_end(self, sentence):
+    def apply_sentence_end(self, sentence: str) -> None:
         """
         xml formatting for terminating the sentence
+
+        Parameters
+        ----------
+        sentence: the sentence to format
+            
+        Returns
+        -------
+        none
         """
         t_elem = ET.SubElement(sentence, "t", attrib={"type": "p"})
 
-    def get_string_index(self, strings, target):
+    def get_string_index(self, strings: list[str], target: str) -> int:
         """
         Gets the index of a string in a a list of strings
+
+        Parameters
+        ----------
+        strings: the string to analyze
+        target: the target within the string
+            
+        Returns
+        -------
+        an integer value of the index of the target within the string, or -1
         """
         try:
             index = strings.index(target)
@@ -124,9 +169,17 @@ class XmlPlugin:
         except ValueError:
             return -1
 
-    def format_markers(self, curr):
+    def format_markers(self, curr) -> str:
         """
         Formats the non-utterance markers
+        
+        Parameters
+        ----------
+        curr: the current node
+            
+        Returns
+        -------
+        a string of the properly formatted overlap, pause, or gap.
         """
         if curr == "overlap_end":
             return "[<] "
