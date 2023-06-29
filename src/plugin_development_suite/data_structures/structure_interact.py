@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-# @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-06-28 13:52:58
+# @Last Modified by:   Jason Y. Wu
+# @Last Modified time: 2023-06-28 16:31:06
 # @Description: Contains our structures for running our plugins and creating
-            #   their output.
+#   their output.
 
 
 import copy
@@ -30,6 +30,8 @@ config_file_path = (
     "/Users/hannahshader/Desktop/GailBot/"
     "Plugin-Development/plugin_development_suite/config.toml"
 )
+config_file_path = "/Users/jasonycwu/Documents/GitHub/Plugin-Development/src/plugin_development_suite/config.toml"
+
 
 # Outermost layer of our data structure, wraps around marker_utterance_obj
 class StructureInteract(Plugin):
@@ -44,8 +46,7 @@ class StructureInteract(Plugin):
     # The driver for structure_interact
     def apply(self, methods: GBPluginMethods):
         # Get the utterance data from gailbot in form Dict[str, List[UttObj]]
-        utterances_map: Dict[str, List[UttObj]] 
-            = methods.get_utterance_objects()
+        utterances_map: Dict[str, List[UttObj]] = methods.get_utterance_objects()
 
         # Gets the output path
         self.output_path = methods.output_path
@@ -92,9 +93,7 @@ class StructureInteract(Plugin):
 
     # An apply function to print all the rows for the text output
     def print_all_rows_text(self, format_markers, outfile, formatter):
-        self.data_structure.print_all_rows_text(
-            format_markers, outfile, formatter
-        )
+        self.data_structure.print_all_rows_text(format_markers, outfile, formatter)
 
     # An apply function to print all the rows for the csv output
     def print_all_rows_csv(self, print_func, format_markers):
@@ -108,11 +107,11 @@ class StructureInteract(Plugin):
             apply_subelement_root, apply_subelement_word, apply_sentence_end
         )
 
-    # Takes an instance of structure interact, which holds a MarkerUtterance 
+    # Takes an instance of structure interact, which holds a MarkerUtterance
     # object
-    # Takes a list of functions, which take two sequential utterances as 
+    # Takes a list of functions, which take two sequential utterances as
     # parameters
-    # Calls apply_insert_marker, which takes an instance of MarkerUtterance and 
+    # Calls apply_insert_marker, which takes an instance of MarkerUtterance and
     # a list of functions
     def apply_markers(self, apply_functions):
         self.data_structure.apply_insert_marker(apply_functions)
