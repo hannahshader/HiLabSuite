@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jason Y. Wu
-# @Last Modified time: 2023-06-28 15:57:02
+# @Last Modified time: 2023-06-30 15:20:18
 # @Description: Creates a marker utterance dictionary
 
 import copy
@@ -306,3 +306,21 @@ class MarkerUtteranceDict:
                     sentence_obj[1] += self.list[index].text + " "
                     if self.is_speaker_utt(self.list[index].speaker):
                         sentence_obj[0] = self.list[index].speaker
+
+    ## iterates through the list data structure creating the xml file,
+    ## which will later be used to generate the chat file
+    def print_all_rows_xml(
+        self, apply_subelement_root, apply_subelement_word, apply_sentence_end
+    ):
+        prev_speaker = ""
+        sentence = apply_subelement_root(self.list[0].speaker)
+        apply_subelement_word(sentence, self.list[0].text)
+        for index in range(len(self.list)):
+            if index != 0:
+                if self.list[index].speaker != self.list[index - 1].speaker:
+                    apply_sentence_end(sentence)
+                    sentence = apply_subelement_root(self.list[index].speaker)
+                    apply_subelement_word(sentence, self.list[index].text)
+                else:
+                    apply_subelement_word(sentence, self.list[index].text)
+        apply_sentence_end(sentence)
