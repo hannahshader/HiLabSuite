@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-# @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-06-29 11:41:03
+# @Last Modified by:   Jason Y. Wu
+# @Last Modified time: 2023-06-30 17:07:58
 # @Description: Contains our structures for running our plugins and creating
-            #   their output.
+#   their output.
 
 
 import copy
@@ -33,16 +33,14 @@ config_file_path = (
     "/Users/hannahshader/Desktop/GailBot/"
     "Plugin-Development/plugin_development_suite/config.toml"
 )
-"""config_file_path is dependent on the user's own computer setup"""
+config_file_path = "/Users/jasonycwu/Documents/GitHub/Plugin-Development/src/plugin_development_suite/config.toml"
 
-############
-# CLASSES
-############
 
 class StructureInteract(Plugin):
     """
     Outermost layer of our data structure, wraps around marker_utterance_obj
     """
+
     def __init__(self):
         """
         Initializes the Marker Utterance Dictionary and its output path
@@ -56,11 +54,11 @@ class StructureInteract(Plugin):
     def apply(self, methods: GBPluginMethods):
         """
         The driver for structure_interact
-        
+
         Parameters
         ----------
         methods: the GBPluginMethods to apply
-            
+
         Returns
         -------
         a version of itself
@@ -96,7 +94,7 @@ class StructureInteract(Plugin):
         Parameters
         ----------
         none
-            
+
         Returns
         -------
         none
@@ -110,7 +108,7 @@ class StructureInteract(Plugin):
         Parameters
         ----------
         none
-            
+
         Returns
         -------
         none
@@ -124,7 +122,7 @@ class StructureInteract(Plugin):
         Parameters
         ----------
         Item: the item to insert
-            
+
         Returns
         -------
         none
@@ -139,7 +137,7 @@ class StructureInteract(Plugin):
         Parameters
         ----------
         apply_functions_list: the list of functions to apply
-            
+
         Returns
         -------
         none
@@ -154,15 +152,14 @@ class StructureInteract(Plugin):
         Parameters
         ----------
         apply_function: the function to apply
-            
+
         Returns
         -------
         none
         """
         return self.data_structure.apply_function(apply_function)
 
-    def print_all_rows_text(self, format_markers, 
-                            outfile: IO[str], formatter) -> None:
+    def print_all_rows_text(self, format_markers, outfile: IO[str], formatter) -> None:
         """
         An apply function to print all the rows for the text output
 
@@ -171,14 +168,12 @@ class StructureInteract(Plugin):
         apply_function: the function to apply
         outfile: the file to write to
         formatter: the function to use for formatting the text
-            
+
         Returns
         -------
         none
         """
-        self.data_structure.print_all_rows_text(
-            format_markers, outfile, formatter
-        )
+        self.data_structure.print_all_rows_text(format_markers, outfile, formatter)
 
     def print_all_rows_csv(self, print_func, format_markers) -> None:
         """
@@ -188,7 +183,7 @@ class StructureInteract(Plugin):
         ----------
         print_func: the function to use for printing
         format_markers: the function to use for formatting the text
-            
+
         Returns
         -------
         none
@@ -206,7 +201,7 @@ class StructureInteract(Plugin):
         apply_subelement_root: a function to apply root subelements
         apply_subelement_word: a function to apply word subelements
         apply_sentence_end: a function to apply the end of sentences
-            
+
         Returns
         -------
         an instance of itself
@@ -217,20 +212,20 @@ class StructureInteract(Plugin):
 
     def apply_markers(self, apply_functions) -> None:
         """
-        Takes an instance of structure interact, which holds a MarkerUtterance 
-        object. 
-        Calls apply_insert_marker, which takes an instance of MarkerUtterance  
+        Takes an instance of structure interact, which holds a MarkerUtterance
+        object.
+        Calls apply_insert_marker, which takes an instance of MarkerUtterance
         and a list of functions
-        
+
         Parameters
         ----------
-        apply_functions: Takes a list of functions, which take two sequential 
-        utterances as parameters. 
-            
+        apply_functions: Takes a list of functions, which take two sequential
+        utterances as parameters.
+
         Returns
         -------
         none
-        
+
         """
         self.data_structure.apply_insert_marker(apply_functions)
 
@@ -241,7 +236,7 @@ class StructureInteract(Plugin):
         Parameters
         ----------
         apply_function: the overlap function to apply
-            
+
         Returns
         -------
         none
@@ -251,11 +246,11 @@ class StructureInteract(Plugin):
     def apply_for_syllab_rate(self, apply_function) -> None:
         """
         Applies the markers for the syllable rate plugin
-        
+
         Parameters
         ----------
         apply_function: the syllable rate function to apply
-            
+
         Returns
         -------
         none
@@ -265,11 +260,11 @@ class StructureInteract(Plugin):
     def is_speaker_utt(self, string: str) -> bool:
         """
         Returns whether or not the given marker is a speaker utterance
-        
+
         Parameters
         ----------
         string: the current string to check whether it is a speaker utterance
-            
+
         Returns
         -------
         a boolean

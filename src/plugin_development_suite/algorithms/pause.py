@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-# @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-06-28 14:49:51
+# @Last Modified by:   Jason Y. Wu
+# @Last Modified time: 2023-06-30 17:04:04
 # @Description: Checks for pauses in speech when one speaker is speaking
 
 import logging
@@ -31,17 +31,38 @@ THRESHOLD = load_threshold()
 # CLASS DEFINITIONS
 ############
 
+
+###############################################################################
+# CLASS DEFINITIONS                                                           #
+###############################################################################
 class PausePlugin:
-    def pause_marker(curr_utt, next_utt):
+    """
+    Wrapper class for the Pause plugin. Contains functionality that inserts
+    overlap markers
+    """
+
+    def pause_marker(curr_utt: UttObj, next_utt: UttObj) -> UttObj:
         """
+        Parameters
+        ----------
+        curr_utt : UttObj
+            Utterance object representing the current utterance
+        next_utt: UttObj
+            Utterance object representing the next utterance
+
+        Returns
+        -------
+        An utterance object representing a marker node
+
+
         Algorithm:
         ----------
         1.  Takes in curr_node and get curr_next_node
         2.  Assert that the nodes are by the same speaker. If they are by
-        different speakers, return false
-        3.  Subtract start time of curr_next_node from end time of curr_node.
-        Assert that there is "significant pause" between curr_node and 
-        curr_next_node with given threshold
+            different speakers, return false
+        3.  Subtract start time of curr_next_node from end time of curr_node
+            assert that there is "significant gap" between curr_node and
+            curr_next_node with given threshold
         4.  If there is a "significant pause," return Pause Marker
         """
         # Pause if uttered by same speaker

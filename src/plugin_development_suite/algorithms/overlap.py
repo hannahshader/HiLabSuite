@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-# @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-06-28 14:49:21
+# @Last Modified by:   Jason Y. Wu
+# @Last Modified time: 2023-06-30 17:02:54
 # @Description: Checks for overlaps between multiple speakers
 
 from typing import Dict, Any, List
@@ -13,9 +13,6 @@ from plugin_development_suite.configs.configs import (
 )
 from plugin_development_suite.data_structures.data_objects import UttObj
 
-############
-# GLOBALS
-############
 
 MARKER = INTERNAL_MARKER
 """ The format of the marker to be inserted into the list """
@@ -24,17 +21,42 @@ THRESHOLD = load_threshold()
 INVALID_OVERLAP = (-1, -1, -1, -1)
 """ A dummy format for an invalid overlap """
 
+###############################################################################
+# GLOBALS                                                                     #
+###############################################################################
 
-############
-# CLASS DEFINITIONS
-############
+MARKER = INTERNAL_MARKER  # gets class representing a marker node
+THRESHOLD = load_threshold()  # function to retrieve threshold data from config
+INVALID_OVERLAP = (-1, -1, -1, -1)  # markers for an invalid overlap
+
+
+###############################################################################
+# CLASS DEFINITIONS                                                           #
+###############################################################################
 
 
 class OverlapPlugin:
-    def overlap_marker(curr_sentence, next_sentence) -> List[str]:
+    """
+    Wrapper class for the Overlap plugin. Contains functionality that inserts
+    overlap markers
+    """
+
+    def overlap_marker(
+        curr_sentence: List[List], next_sentence: List[List]
+    ) -> List[str]:
         """
-        Algorithm:
+        Parameters
         ----------
+        curr_sentence : List[List[float]]
+            List of sentences represented in a list by start and end times
+        next_sentence: List[List[float]]
+            List of sentences represented in a list by start and end times
+
+        Returns
+        -------
+        Four overlap markers. Overlap start and end markers for each speaker
+
+        Algorithm: modified
         1. Given current sentence and next sentence
         2. Check if: next.start < curr.end
         3. If no, not an overlap

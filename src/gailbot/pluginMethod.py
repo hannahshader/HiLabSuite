@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-# @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-06-28 14:04:23
+# @Last Modified by:   Jason Y. Wu
+# @Last Modified time: 2023-06-28 16:36:23
 # @Description: Replicates the input from the Gailbot app for testing purposes
 
 import os
 from typing import Dict, Union, List, Any
 from pydantic import BaseModel
+from gailbot import Methods
+
 
 class UttObj(BaseModel):
     start: float
@@ -17,9 +19,8 @@ class UttObj(BaseModel):
 
 
 class GBPluginMethods(Methods):
-    '''
-    
-    '''
+    """ """
+
     def get_utterance_objects(self) -> Dict[str, List[UttObj]]:
         return {
             "test recording": [
@@ -88,6 +89,7 @@ class GBPluginMethods(Methods):
 
     @property
     def output_path(self) -> str:
+        return "/Users/jasonycwu/Documents/GitHub/Plugin-Development/Plugin-Development-Output"
         return "/Users/hannahshader/Desktop/Plugin-Development-Output"
 
     @property
@@ -97,9 +99,11 @@ class GBPluginMethods(Methods):
         Returns:
             String containing the temporary workspace path
         """
+        return "/Users/jasonycwu/Documents/GitHub/Plugin-Development/Temp_Workspace"
         return "/Users/hannahshader/Desktop/Temp_Workspace"
 
     # jar path
     @property
     def chatter_path(self) -> str:
+        return
         return "/Users/hannahshader/Desktop/chatter/chatter.jar"

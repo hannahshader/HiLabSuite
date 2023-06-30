@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-# @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-06-28 15:01:31
+# @Last Modified by:   Jason Y. Wu
+# @Last Modified time: 2023-06-30 17:06:06
 # @Description: The class configurations for formats, labels and output files
 
 
@@ -13,24 +13,33 @@ from typing import List
 from dict_to_dataclass import DataclassFromDict, field_from_dict
 
 
-# TODO: Docstrings for dataclasses.
 @dataclass
 class CON_FORMATTER:
-    """The format of each turn's label"""
+    """
+    Dataclass that defines string template for an utterance turn
+    """
+
     TURN = "{0}\t{1} {2}{4}_{3}{4}\n"
     TXT_SEP = " "
 
 
 @dataclass
 class CSV_FORMATTER:
-    """The format for the headers in CSV"""
+    """
+    Dataclass for header texts in a csv file
+    """
+
     HEADER = ["SPEAKER LABEL", "TEXT", "START TIME", "END TIME"]
     TXT_SEP = " "
 
 
 @dataclass
 class INTERNAL_MARKER(DataclassFromDict):
-    """The internal names for all of the markers in the dictionary"""
+    """
+    Class for an internal marker node. Contains appropriate attributes for gap,
+    overlap, pause, and syllable rate markers.
+    """
+
     GAPS = "gaps"
     OVERLAPS = "overlaps"
     PAUSES = "pauses"
@@ -79,7 +88,11 @@ class INTERNAL_MARKER(DataclassFromDict):
 
 @dataclass
 class THRESHOLD(DataclassFromDict):
-    """The thresholds for gaps, overlaps and the types of pauses"""
+    """
+    Dataclass defining thresholds (floats) for paralinguistic feature
+    identifications
+    """
+
     GAPS_LB: float = field_from_dict()
     OVERLAP_MARKERLIMIT: float = field_from_dict()
     LB_LATCH: float = field_from_dict()
@@ -94,7 +107,10 @@ class THRESHOLD(DataclassFromDict):
 
 @dataclass
 class LABEL(DataclassFromDict):
-    """The proper labels used for speakers, gaps, overlaps, and pauses"""
+    """
+    Dataclass for marker labels used in marker nodes
+    """
+
     SPEAKERLABEL: str = field_from_dict()
     GAPMARKER: str = field_from_dict()
     OVERLAPMARKER: str = field_from_dict()
@@ -107,7 +123,10 @@ class LABEL(DataclassFromDict):
 
 @dataclass
 class ALL_LABELS(DataclassFromDict):
-    """The labels of all of the plugins"""
+    """
+    Dataclass for labels used for file formats
+    """
+
     DEFAULT: LABEL = field_from_dict()
     TXT: LABEL = field_from_dict()
     XML: LABEL = field_from_dict()
@@ -117,7 +136,10 @@ class ALL_LABELS(DataclassFromDict):
 
 @dataclass
 class PLUGIN_NAME:
-    """The names of all of the plugins"""
+    """
+    Dataclass listing plugin names
+    """
+
     WordTree = "WordTreePlugin"
     ConvModel = "ConversationModelPlugin"
     ConvMap = "ConversationMapPlugin"
@@ -136,7 +158,10 @@ class PLUGIN_NAME:
 
 @dataclass
 class OUTPUT_FILE:
-    """The names for all of the output files, including error files"""
+    """
+    Dataclass defining filenames in different format
+    """
+
     CHAT = "conversation.cha"
     NATIVE_XML = "conversation.gailbot.xml"
     TB_XML = "conversation.talkbank.xml"
@@ -147,12 +172,16 @@ class OUTPUT_FILE:
 
 
 def load_label():
-    """loads a given label from the class of labels"""
+    """
+    Load label value from config.toml file
+    """
     d = toml.load(os.path.join(os.path.dirname(__file__), "configData.toml"))
     return ALL_LABELS.from_dict(d["LABEL"])
 
 
 def load_threshold():
-    """loads a given threshold from the class of thresholds"""
+    """
+    Load threshold values from config.toml
+    """
     d = toml.load(os.path.join(os.path.dirname(__file__), "configData.toml"))
     return THRESHOLD.from_dict(d["THRESHOLD"])

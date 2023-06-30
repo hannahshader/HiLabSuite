@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-# @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-06-28 15:58:22
+# @Last Modified by:   Jason Y. Wu
+# @Last Modified time: 2023-06-30 17:05:15
 # @Description: Calculates the average syllable rate for all speakers
-            #   Denotes any sections of especially fast or slow speech.
+#   Denotes any sections of especially fast or slow speech.
 
 import syllables
 import numpy
@@ -17,9 +17,13 @@ from plugin_development_suite.configs.configs import (
 )
 from plugin_development_suite.data_structures.data_objects import UttObj
 
-############
-# GLOBALS
-############
+
+###############################################################################
+# GLOBALS                                                                     #
+###############################################################################
+MARKER = INTERNAL_MARKER
+THRESHOLD = load_threshold()
+LimitDeviations = 2
 
 MARKER = INTERNAL_MARKER
 """ The format of the marker to be inserted into the list """
@@ -28,6 +32,10 @@ MARKER = INTERNAL_MARKER
 # CLASS DEFINITIONS
 ############
 
+
+###############################################################################
+# CLASS DEFINITIONS                                                           #
+###############################################################################
 class SYLLAB_DICT(TypedDict):
     utt: List[UttObj]
     syllableNum: int
@@ -43,19 +51,33 @@ class STAT_DICT(TypedDict):
     slowturncount: int
 
 
-LimitDeviations = 2
-
-
 class SyllableRatePlugin:
-    def __init__(self, structure_interact_instance) -> None:
-        """ Initializes the list of syllables"""
+    """
+    Wrapper class for the Pause plugin. Contains functionality that inserts
+    overlap markers
+    """
+
+    def __init__(self, structure_interact_instance):
+        """
+        Initializes the list of syllables
+
+        Parameters
+        ----------
+        custructure_interact_instancerr_utt : StructureInteract
+            structure
+
+        Returns
+        -------
+        None
+        """
         self.stats = None
         self.list_of_syllab_dict = []
         self.structure_interact_instance = structure_interact_instance
 
-    def syllab_marker(self) -> None:
+    def syllab_marker(self):
         """
         Creates a syllable marker to get the overall syllable rate
+
         """
         self.structure_interact_instance.apply_for_syllab_rate(
             self.get_utt_syllable_rate
@@ -67,18 +89,27 @@ class SyllableRatePlugin:
             if self.syllab_markers(sentence) is not None:
                 marker1, marker2 = self.syllab_markers(sentence)
                 if marker1 is not None and marker2 is not None:
-                    self.structure_interact_instance.interact_insert_marker(
-                        marker1
-                    )
-                    self.structure_interact_instance.interact_insert_marker(
-                        marker2
-                    )
+                    self.structure_interact_instance.interact_insert_marker(marker1)
+                    self.structure_interact_instance.interact_insert_marker(marker2)
 
     def get_utt_syllable_rate(
-            self, utt_list, sentence_start, sentence_end
-            ) -> None:
+        self, utt_list: List, sentence_start: float, sentence_end: float
+    ):
         """
-        Gets the syllable rate for each utterance
+        Gets the syllable rates for each utterance
+
+        Parameters
+        ----------
+        utt_list: List
+            a sentence, list of utterance of objects
+        sentence_start: float
+            start time of sentence
+        sentence_end: float
+            end time of sentence
+
+        Returns
+        -------
+        None
         """
         sentence_syllab_count = 0
         speaker = utt_list[0].speaker
@@ -108,10 +139,20 @@ class SyllableRatePlugin:
         }
         self.list_of_syllab_dict.append(utt_syllable)
 
-    def get_stats(self, utt_syll_dict) -> STAT_DICT:
+    def get_stats(self, utt_syll_dict: Dict) -> STAT_DICT:
         """
         Creates and returns a dictionary containing the statistics for all
         syllab stats for all utterances of a conversation
+
+        Parameters
+        ----------
+        utt_syll_dict: Dict
+            a dictionary of syllable rates for all utterances
+
+        Returns
+        -------
+        STAT_DICT
+
         """
         allRates = []
         # get all utterance syllable data
@@ -133,11 +174,19 @@ class SyllableRatePlugin:
         }
         return stats
 
-    def syllab_markers(self, sentence) -> UttObj:
+    def syllab_markers(self, sentence: SYLLAB_DICT) -> UttObj:
         """
-        Adds the syllable marker nodes to the list
+        Adds syllable marker nodes
+
+        Parameters
+        ----------
+        sentence: SYLLAB_DICT
+            a single syllable dictionary representing a sentence
+
+        Returns
+        -------
+        UttObj representing syllable markers. Returns two of them
         """
-        vowels = ["a", "e", "i", "o", "u"]
         fastCount = 0
         slowCount = 0
         if sentence["syllableRate"] <= self.stats["lowerLimit"]:
