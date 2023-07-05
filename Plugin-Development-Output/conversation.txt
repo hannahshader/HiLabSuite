@@ -1,9 +1,0 @@
-0	okay I've started talking (Pause=0.3)%HESITATION (Pause=0.23)yeah I was talking to sametime someone talk (Pause=0.9)yeah (Pause=0.39)all talk at the same time we're all talking  021_8.3121
-1	(Gap=0.81)(markerType=fastspeech_start:markerInfo=∆:markerSpeaker=1)please take my best buy the different speakers  8.0521_10.9721
-0	(Gap=0.76)(markerType=fastspeech_end:markerInfo=∆:markerSpeaker=1)and (Pause=0.03)now let's do some where we're just talking some of us  10.4421_15.3221
-1	(Gap=2.78)sure yeah (Pause=0.03)%HESITATION %HESITATION (Pause=0.08)overlap_startlet's  14.9821_24.1321
-0	hey  23.9221_24.1321
-1	see  23.9221_24.2621
-0	there  24.1321_25.0521
-1	if this works  24.1721_25.1221
-0	man overlap_end%HESITATION (Pause=0.95)hi Lester  24.5721_28.9921

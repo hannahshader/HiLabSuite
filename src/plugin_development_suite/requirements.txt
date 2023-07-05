@@ -1,7 +1,0 @@
-# TODO: This does not work. - use pipdeptree to generate the requirment.txt file. 
-# https://pypi.org/project/pipdeptree
-
-dict-to-dataclass 0.0.8
-syllables 1.0.7
-pydantic 
-toml

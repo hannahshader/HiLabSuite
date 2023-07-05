@@ -1,0 +1,12 @@
+suite_name = "Plugin_Development"
+
+[metadata]
+Author = "hilab"
+Email = "hilab.tufts.edu"
+Version = "v.0.1a"
+
+[[plugins]]
+plugin_name = "OutputFileManager"
+dependencies = []
+rel_path = "src/format/output_file_manager.py"
+module_name = "output_file_manager"
