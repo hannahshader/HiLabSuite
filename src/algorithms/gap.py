@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-27 12:16:07
-# @Last Modified by:   Jason Y. Wu
-# @Last Modified time: 2023-06-29 10:55:44
+# @Last Modified by:   Jacob Boyar
+# @Last Modified time: 2023-07-06 10:43:24
 from typing import Dict, Any, List
-from Plugin_Development.src.configs.configs import (
+from src.configs.configs import (
     INTERNAL_MARKER,
     THRESHOLD,
     load_threshold,
 )
-from Plugin_Development.src.data_structures.data_objects import UttObj
+from src.data_structures.data_objects import UttObj
 
 import logging
 

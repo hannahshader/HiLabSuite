@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-06 10:36:12
+# @Last Modified time: 2023-07-06 10:44:47
 # @Description: Creates a marker utterance dictionary
 
 import copy
@@ -16,10 +16,10 @@ from typing import OrderedDict as OrderedDictType, TypeVar
 from pydantic import BaseModel
 from collections import OrderedDict
 
-from Plugin_Development.src.data_structures.pickling import Pickling
-from Plugin_Development.src.data_structures.data_objects import UttObj
-from Plugin_Development.src.algorithms.apply_plugins import ApplyPlugins
-from Plugin_Development.src.configs.configs import INTERNAL_MARKER
+from src.data_structures.pickling import Pickling
+from src.data_structures.data_objects import UttObj
+from src.algorithms.apply_plugins import ApplyPlugins
+from src.configs.configs import INTERNAL_MARKER
 
 from gailbot import Plugin
 from gailbot import GBPluginMethods

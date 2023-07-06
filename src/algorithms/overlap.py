@@ -2,16 +2,16 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-06 10:19:47
+# @Last Modified time: 2023-07-06 10:43:29
 # @Description: Checks for overlaps between multiple speakers
 
 from typing import Dict, Any, List
 
-from Plugin_Development.src.configs.configs import (
+from src.configs.configs import (
     INTERNAL_MARKER,
     load_threshold,
 )
-from Plugin_Development.src.data_structures.data_objects import UttObj
+from src.data_structures.data_objects import UttObj
 
 
 MARKER = INTERNAL_MARKER
