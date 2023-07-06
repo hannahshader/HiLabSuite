@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-06 11:46:29
+# @Last Modified time: 2023-06-29 10:34:51
 # @Description: Creates the CHAT output for our plugins based on TalkBank format
 
 import subprocess
@@ -16,6 +16,7 @@ from Plugin_Development.src.configs.configs import (
     OUTPUT_FILE,
     CSV_FORMATTER,
 )
+
 
 class ChatPlugin:
     """Generates a chat file as an output"""
