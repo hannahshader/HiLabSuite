@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-# @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-06-29 10:50:38
+# @Last Modified by:   Your name
+# @Last Modified time: 2023-07-05 16:17:29
 # @Description: Creates the csv output for our plugins
 
 import os
@@ -99,6 +99,7 @@ class CSVPlugin:
         speaker, text, start, and end times.
         """
         l = []
+        l.append(curr.text)
         txt = CSV_FORMATTER.TXT_SEP.join(l)
 
         speaker = ""
