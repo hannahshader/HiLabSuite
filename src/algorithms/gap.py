@@ -65,11 +65,11 @@ class GapPlugin:
         logging.debug(f"get fto : {fto}")
         if fto >= THRESHOLD.GAPS_LB and curr_utt.speaker != next_utt.speaker:
             logging.debug(f"get fto : {fto}")
-            # format marker text
+            # Format marker text
             markerText = MARKER.TYPE_INFO_SP.format(
                 MARKER.GAPS, str(round(fto, 1)), str(curr_utt.speaker)
             )
-            # create instance of marker
+            # Create instance of marker
             return UttObj(
                 start=curr_utt.end,
                 end=next_utt.start,
