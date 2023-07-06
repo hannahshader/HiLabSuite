@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-06 10:54:29
+# @Last Modified time: 2023-06-29 10:58:28
 # @Description: Creates the text output for our plugins
 
 import re
@@ -23,9 +23,9 @@ from Plugin_Development.src.configs.configs import (
     CON_FORMATTER,
 )
 
-###############################################################################
-# GLOBALS                                                                     #
-###############################################################################
+############
+# GLOBALS
+############
 
 MARKER = INTERNAL_MARKER
 """ The format of the marker to be inserted into the list """
@@ -41,9 +41,9 @@ GAPS_CAPS = "GAPS"
 """Variable name for gaps but in all caps"""
 
 
-###############################################################################
-# CLASS DEFINITIONS                                                           #
-###############################################################################
+############
+# CLASS DEFINITIONS
+############
 
 
 class TextPlugin(Plugin):

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-# @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-06 10:54:15
+# @Last Modified by:   Jason Y. Wu
+# @Last Modified time: 2023-06-30 17:07:58
 # @Description: Contains our structures for running our plugins and creating
 #   their output.
 
@@ -22,9 +22,9 @@ from Plugin_Development.src.algorithms.apply_plugins import ApplyPlugins
 from gailbot import Plugin
 from gailbot import GBPluginMethods
 
-###############################################################################
-# GLOBALS                                                                     #
-###############################################################################
+############
+# GLOBALS
+############
 
 OUT_PATH = "Temporary"
 

@@ -1,15 +1,17 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-# @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-06 10:21:53
+# @Last Modified by:   Jason Y. Wu
+# @Last Modified time: 2023-06-30 17:06:06
 # @Description: The class configurations for formats, labels and output files
+
 
 import os
 import toml
 from dataclasses import dataclass
 from typing import List
 from dict_to_dataclass import DataclassFromDict, field_from_dict
+
 
 @dataclass
 class CON_FORMATTER:

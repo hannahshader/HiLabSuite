@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-# @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-06 10:32:36
+# @Last Modified by:   Your name
+# @Last Modified time: 2023-07-05 16:17:29
 # @Description: Creates the csv output for our plugins
 
 import os
@@ -22,9 +22,9 @@ from Plugin_Development.src.data_structures.structure_interact import (
     StructureInteract,
 )
 
-###############################################################################
-# GLOBALS                                                                     #
-###############################################################################
+############
+# GLOBALS
+############
 
 PAUSES = "pauses"
 """Variable name for pauses"""
@@ -32,9 +32,9 @@ GAPS = "gaps"
 """Variable name for gaps"""
 
 
-###############################################################################
-# CLASS DEFINITIONS                                                           #
-###############################################################################
+############
+# CLASS DEFINITIONS
+############
 
 
 class CSVPlugin:
@@ -129,12 +129,12 @@ class CSVPlugin:
         to append to the csv output
         """
         # TODO: Do NOT hard code anything....
-        if curr.text == PAUSES:
-            # print("get here")
+        if curr.text == "pauses":
+            print("get here")
             return " (Pause=" + str(round((curr.end - curr.start), 2)) + ") "
-        elif curr.text == GAPS:
+        elif curr.text == "gaps":
             return " (Gap=" + str(round((curr.end - curr.start), 2)) + ") "
-        elif curr.text == OVERLAP_SECOND_START or curr.text == OVERLAP_FIRST_START:
+        elif curr.text == "overlap-secondStart" or curr.text == "overlap-firstStart":
             return " (Overlap Start) "
         elif curr.text == "overlap-firstEnd" or curr.text == "overlap-secondEnd":
             return " (Overlap End) "

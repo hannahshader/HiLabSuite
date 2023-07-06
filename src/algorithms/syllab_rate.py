@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-# @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-06 10:53:55
+# @Last Modified by:   Jason Y. Wu
+# @Last Modified time: 2023-06-30 17:05:15
 # @Description: Calculates the average syllable rate for all speakers
 #   Denotes any sections of especially fast or slow speech.
 
@@ -17,16 +17,21 @@ from Plugin_Development.src.configs.configs import (
 )
 from Plugin_Development.src.data_structures.data_objects import UttObj
 
+
 ###############################################################################
 # GLOBALS                                                                     #
 ###############################################################################
+MARKER = INTERNAL_MARKER
+# THRESHOLD = load_threshold()
+LimitDeviations = 2
 
 MARKER = INTERNAL_MARKER
 """ The format of the marker to be inserted into the list """
-LimitDeviations = 2
-""" The amount of deviations allowed, currently 2 """
-MARKER = INTERNAL_MARKER
-""" The format of the marker to be inserted into the list """
+
+############
+# CLASS DEFINITIONS
+############
+
 
 ###############################################################################
 # CLASS DEFINITIONS                                                           #
@@ -150,10 +155,10 @@ class SyllableRatePlugin:
 
         """
         allRates = []
-        # Get all utterance syllable data
+        # get all utterance syllable data
         for dic in utt_syll_dict:
             allRates.append(dic["syllableRate"])
-        # Compute median, median absolute deviation, and limits
+        # compute median, median absolute deviation, and limits
         allRates = numpy.sort(numpy.array(allRates))
         median = numpy.median(allRates)
         median_absolute_deviation = round(median_abs_deviation(allRates), 2)
