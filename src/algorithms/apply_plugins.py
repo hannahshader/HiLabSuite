@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-06 10:43:15
+# @Last Modified time: 2023-07-06 10:53:44
 # @Description: Checks which plugins are activated and uses them
 
 
@@ -10,10 +10,10 @@ import toml
 from collections import OrderedDict
 from typing import OrderedDict as OrderedDictType, TypeVar
 from typing import Dict, Any, List
-from src.algorithms.gap import GapPlugin
-from src.algorithms.overlap import OverlapPlugin
-from src.algorithms.pause import PausePlugin
 from algorithms.syllab_rate import SyllableRatePlugin
+from Plugin_Development.src.algorithms.gap import GapPlugin
+from Plugin_Development.src.algorithms.overlap import OverlapPlugin
+from Plugin_Development.src.algorithms.pause import PausePlugin
 
 
 class ApplyPlugins:

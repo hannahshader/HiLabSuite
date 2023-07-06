@@ -2,16 +2,16 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-06 10:43:29
+# @Last Modified time: 2023-07-06 10:53:00
 # @Description: Checks for overlaps between multiple speakers
 
 from typing import Dict, Any, List
 
-from src.configs.configs import (
+from Plugin_Development.src.configs.configs import (
     INTERNAL_MARKER,
     load_threshold,
 )
-from src.data_structures.data_objects import UttObj
+from Plugin_Development.src.data_structures.data_objects import UttObj
 
 
 MARKER = INTERNAL_MARKER
@@ -148,7 +148,7 @@ class OverlapPlugin:
                 if utt.end == curr_end:
                     curr_speaker = utt.speaker
 
-            # Set overlap start marker
+            # set overlap start marker
             overlap_start_time = next_start
             overlap_start_one = UttObj(
                 overlap_start_time,
@@ -162,7 +162,7 @@ class OverlapPlugin:
                 next_speaker,
                 INTERNAL_MARKER.OVERLAP_SECOND_START,
             )
-            # Set overlap end marker
+            # set overlap end marker
             overlap_end_time = min(curr_end, next_end)
             overlap_end_one = UttObj(
                 overlap_end_time,

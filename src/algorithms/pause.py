@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-06 10:44:12
+# @Last Modified time: 2023-07-06 10:53:12
 # @Description: Checks for pauses in speech when one speaker is speaking
 
 import logging
@@ -10,12 +10,12 @@ import io
 from typing import Dict, Any, List
 from dataclasses import dataclass
 
-from src.configs.configs import (
+from Plugin_Development.src.configs.configs import (
     INTERNAL_MARKER,
     THRESHOLD,
     load_threshold,
 )
-from src.data_structures.data_objects import UttObj
+from Plugin_Development.src.data_structures.data_objects import UttObj
 
 ###############################################################################
 # GLOBALS                                                                     #

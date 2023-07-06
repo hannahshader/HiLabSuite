@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-06 10:45:26
+# @Last Modified time: 2023-07-06 10:54:26
 # @Description: Manages the output files created by our plugins
 
 import re
@@ -13,20 +13,20 @@ from typing import Dict, Any, List, Tuple
 
 from gailbot import Plugin
 from gailbot import GBPluginMethods
-from src.data_structures.structure_interact import (
+from Plugin_Development.src.data_structures.structure_interact import (
     StructureInteract,
 )
-from src.configs.configs import (
+from Plugin_Development.src.configs.configs import (
     INTERNAL_MARKER,
     load_label,
     PLUGIN_NAME,
     OUTPUT_FILE,
     CON_FORMATTER,
 )
-from src.format.csv import CSVPlugin
-from src.format.text import TextPlugin
-from src.format.xml import XmlPlugin
-from src.format.chat import ChatPlugin
+from Plugin_Development.src.format.csv import CSVPlugin
+from Plugin_Development.src.format.text import TextPlugin
+from Plugin_Development.src.format.xml import XmlPlugin
+from Plugin_Development.src.format.chat import ChatPlugin
 
 
 class OutputFileManager(Plugin):

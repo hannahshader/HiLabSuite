@@ -2,14 +2,14 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-06 10:45:10
+# @Last Modified time: 2023-07-06 10:54:38
 # @Description: Creates the CHAT output for our plugins based on TalkBank format
 
 import subprocess
 from typing import Dict, Any
 import os
 import io
-from src.configs.configs import (
+from Plugin_Development.src.configs.configs import (
     INTERNAL_MARKER,
     load_label,
     PLUGIN_NAME,

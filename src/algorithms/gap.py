@@ -2,14 +2,14 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-27 12:16:07
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-06 10:43:24
+# @Last Modified time: 2023-07-06 10:53:23
 from typing import Dict, Any, List
-from src.configs.configs import (
+from Plugin_Development.src.configs.configs import (
     INTERNAL_MARKER,
     THRESHOLD,
     load_threshold,
 )
-from src.data_structures.data_objects import UttObj
+from Plugin_Development.src.data_structures.data_objects import UttObj
 
 import logging
 
@@ -20,14 +20,6 @@ logging.basicConfig(
     handlers=[logging.StreamHandler()],
 )
 logger = logging.getLogger(__name__)
-
-
-###############################################################################
-# GLOBALS                                                                     #
-###############################################################################
-MARKER = INTERNAL_MARKER  # gets class representing a marker node
-THRESHOLD = load_threshold()  # function to retrieve threshold data from config
-
 
 ###############################################################################
 # CLASS DEFINITIONS                                                           #
@@ -63,11 +55,11 @@ class GapPlugin:
         """
         fto = round(next_utt.start - curr_utt.end, 2)
         logging.debug(f"get fto : {fto}")
-        if fto >= THRESHOLD.GAPS_LB and curr_utt.speaker != next_utt.speaker:
+        if fto >= load_threshold().GAPS_LB and curr_utt.speaker != next_utt.speaker:
             logging.debug(f"get fto : {fto}")
             # Format marker text
-            markerText = MARKER.TYPE_INFO_SP.format(
-                MARKER.GAPS, str(round(fto, 1)), str(curr_utt.speaker)
+            markerText = INTERNAL_MARKER.TYPE_INFO_SP.format(
+                INTERNAL_MARKER.GAPS, str(round(fto, 1)), str(curr_utt.speaker)
             )
             # Create instance of marker
             return UttObj(

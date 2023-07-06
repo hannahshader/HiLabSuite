@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-06 10:44:19
+# @Last Modified time: 2023-07-06 10:53:55
 # @Description: Calculates the average syllable rate for all speakers
 #   Denotes any sections of especially fast or slow speech.
 
@@ -12,10 +12,10 @@ import logging
 from typing import Dict, Any, List, TypedDict
 from scipy.stats import median_abs_deviation
 
-from src.configs.configs import (
+from Plugin_Development.src.configs.configs import (
     INTERNAL_MARKER,
 )
-from src.data_structures.data_objects import UttObj
+from Plugin_Development.src.data_structures.data_objects import UttObj
 
 ###############################################################################
 # GLOBALS                                                                     #

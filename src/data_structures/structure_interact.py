@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-06 10:45:04
+# @Last Modified time: 2023-07-06 10:54:15
 # @Description: Contains our structures for running our plugins and creating
 #   their output.
 
@@ -14,11 +14,11 @@ from typing import OrderedDict as OrderedDictType, TypeVar
 from pydantic import BaseModel
 from collections import OrderedDict
 
-from src.data_structures.marker_utterance_dict import (
+from Plugin_Development.src.data_structures.marker_utterance_dict import (
     MarkerUtteranceDict,
 )
-from src.data_structures.data_objects import UttObj
-from src.algorithms.apply_plugins import ApplyPlugins
+from Plugin_Development.src.data_structures.data_objects import UttObj
+from Plugin_Development.src.algorithms.apply_plugins import ApplyPlugins
 from gailbot import Plugin
 from gailbot import GBPluginMethods
 
