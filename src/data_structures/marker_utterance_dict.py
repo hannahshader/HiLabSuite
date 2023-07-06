@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-06 10:54:08
+# @Last Modified time: 2023-07-06 11:09:32
 # @Description: Creates a marker utterance dictionary
 
 import copy
@@ -47,8 +47,8 @@ class MarkerUtteranceDict:
         -------
         a dictionary of strings and utterance objects
         """
-        print("unqiuesequence")
-        print("utterance map is")
+        # print("unqiuesequence")
+        # print("utterance map is")
         print(utterance_map)
 
         self.lock = threading.Lock()
@@ -77,9 +77,9 @@ class MarkerUtteranceDict:
             self.overlaps = len(utterance_map) > 1
             speaker_counter = 0
             if self.overlaps == True:
-                print("accurate overlaps bool")
+                # print("accurate overlaps bool")
             else:
-                print("inaccurate overlaps bool")
+                # print("inaccurate overlaps bool")
 
             # Loop through files provided by Gailbot
             for key, value in utterance_map.items():

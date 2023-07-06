@@ -2,9 +2,8 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-06 10:53:44
+# @Last Modified time: 2023-07-06 10:58:24
 # @Description: Checks which plugins are activated and uses them
-
 
 import toml
 from collections import OrderedDict
@@ -15,6 +14,10 @@ from Plugin_Development.src.algorithms.gap import GapPlugin
 from Plugin_Development.src.algorithms.overlap import OverlapPlugin
 from Plugin_Development.src.algorithms.pause import PausePlugin
 
+
+###############################################################################
+# CLASS DEFINITIONS                                                           #
+###############################################################################
 
 class ApplyPlugins:
     """

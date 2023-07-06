@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-06 10:21:53
+# @Last Modified time: 2023-07-06 11:33:29
 # @Description: The class configurations for formats, labels and output files
 
 import os
@@ -24,11 +24,53 @@ class CON_FORMATTER:
 @dataclass
 class CSV_FORMATTER:
     """
-    Dataclass for header texts in a csv file
+    Dataclass for texts in a csv file
     """
 
     HEADER = ["SPEAKER LABEL", "TEXT", "START TIME", "END TIME"]
     TXT_SEP = " "
+    PAUSES = " (Pause="
+    GAPS = " (Gap="
+    OVERLAP_START = " (Overlap Start) "
+    OVERLAP_END = " (Overlap Start) "
+    SLOWSPEECH_START = " (Slowspeech Start) "
+    SLOWSPEECH_END = " (Slowspeech End) "
+    FASTSPEECH_START = " (Fastspeech start) "
+    FASTSPEECH_END = " (Fastspeech end) "
+
+
+@dataclass
+class TEXT_FORMATTER:
+    """
+    Dataclass for header texts in a text file
+    """
+    PAUSES = "(Pause="
+    GAPS = "(Gap="
+    PAUSES_CAPS = "PAUSES"
+    GAPS_CAPS = "GAPS"
+
+
+@dataclass
+class XML_FORMATTER:
+    """
+    Dataclass for header texts in a text file
+    """
+    OVERLAP_START = "[<]"
+    OVERLAP_END = "[>]"
+    
+
+
+
+
+@dataclass
+class SYLLAB_RATE_VARS:
+    """
+    Dataclass that defines global variables for syllable rate
+    """
+
+    LIMIT_DEVIATIONS = 2
+
+
 
 
 @dataclass

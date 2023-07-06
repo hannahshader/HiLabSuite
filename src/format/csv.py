@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-06 10:32:36
+# @Last Modified time: 2023-07-06 11:22:47
 # @Description: Creates the csv output for our plugins
 
 import os
@@ -129,23 +129,23 @@ class CSVPlugin:
         to append to the csv output
         """
         # TODO: Do NOT hard code anything....
-        if curr.text == PAUSES:
+        if curr.text == INTERNAL_MARKER.PAUSES:
             # print("get here")
-            return " (Pause=" + str(round((curr.end - curr.start), 2)) + ") "
-        elif curr.text == GAPS:
-            return " (Gap=" + str(round((curr.end - curr.start), 2)) + ") "
-        elif curr.text == OVERLAP_SECOND_START or curr.text == OVERLAP_FIRST_START:
-            return " (Overlap Start) "
-        elif curr.text == "overlap-firstEnd" or curr.text == "overlap-secondEnd":
-            return " (Overlap End) "
-        elif curr.text == "slowspeech_start":
-            return " (Slowspeech Start) "
-        elif curr.text == "slowspeech_end":
-            return " (Slowspeech End) "
-        elif curr.text == "fastspeech_start":
-            return " (Fastspeech start) "
-        elif curr.text == "fastspeech_end":
-            return " (Fastspeech end) "
+            return CSV_FORMATTER.PAUSES + str(round((curr.end - curr.start), 2)) + ") "
+        elif curr.text == INTERNAL_MARKER.GAPS:
+            return CSV_FORMATTER.GAPS + str(round((curr.end - curr.start), 2)) + ") "
+        elif curr.text == INTERNAL_MARKER.OVERLAP_SECOND_START or curr.text == INTERNAL_MARKER.OVERLAP_FIRST_START:
+            return CSV_FORMATTER.OVERLAP_START
+        elif curr.text == INTERNAL_MARKER.OVERLAP_FIRST_END or curr.text == INTERNAL_MARKER.OVERLAP_SECOND_END:
+            return CSV_FORMATTER.OVERLAP_END
+        elif curr.text == INTERNAL_MARKER.SLOWSPEECH_START:
+            return CSV_FORMATTER.SLOWSPEECH_START
+        elif curr.text == INTERNAL_MARKER.SLOWSPEECH_END:
+            return CSV_FORMATTER.SLOWSPEECH_END
+        elif curr.text == INTERNAL_MARKER.FASTSPEECH_START:
+            return CSV_FORMATTER.FASTSPEECH_START
+        elif curr.text == INTERNAL_MARKER.FASTSPEECH_END:
+            return CSV_FORMATTER.FASTSPEECH_END
         else:
             return " " + curr.text + " "
 

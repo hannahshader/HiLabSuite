@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-06 10:53:55
+# @Last Modified time: 2023-07-06 11:09:03
 # @Description: Calculates the average syllable rate for all speakers
 #   Denotes any sections of especially fast or slow speech.
 
@@ -14,19 +14,9 @@ from scipy.stats import median_abs_deviation
 
 from Plugin_Development.src.configs.configs import (
     INTERNAL_MARKER,
+    SYLLAB_RATE_VARS,
 )
 from Plugin_Development.src.data_structures.data_objects import UttObj
-
-###############################################################################
-# GLOBALS                                                                     #
-###############################################################################
-
-MARKER = INTERNAL_MARKER
-""" The format of the marker to be inserted into the list """
-LimitDeviations = 2
-""" The amount of deviations allowed, currently 2 """
-MARKER = INTERNAL_MARKER
-""" The format of the marker to be inserted into the list """
 
 ###############################################################################
 # CLASS DEFINITIONS                                                           #
@@ -157,8 +147,8 @@ class SyllableRatePlugin:
         allRates = numpy.sort(numpy.array(allRates))
         median = numpy.median(allRates)
         median_absolute_deviation = round(median_abs_deviation(allRates), 2)
-        lowerLimit = median - (LimitDeviations * median_absolute_deviation)
-        upperLimit = median + (LimitDeviations * median_absolute_deviation)
+        lowerLimit = median - (SYLLAB_RATE_VARS.LIMIT_DEVIATIONS * median_absolute_deviation)
+        upperLimit = median + (SYLLAB_RATE_VARS.LIMIT_DEVIATIONS * median_absolute_deviation)
 
         # Creates a dictionary for stat fields
         stats: STAT_DICT = {

@@ -2,16 +2,17 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-27 12:16:07
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-06 10:53:23
+# @Last Modified time: 2023-07-06 10:58:30
+
 from typing import Dict, Any, List
+import logging
+
 from Plugin_Development.src.configs.configs import (
     INTERNAL_MARKER,
     THRESHOLD,
     load_threshold,
 )
 from Plugin_Development.src.data_structures.data_objects import UttObj
-
-import logging
 
 # For logging to STDOUT. Additional handlers can be added for log file outputs.
 logging.basicConfig(
