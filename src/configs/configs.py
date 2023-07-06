@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-06 11:39:49
+# @Last Modified time: 2023-07-06 11:44:00
 # @Description: The class configurations for formats, labels and output files
 
 
@@ -18,7 +18,6 @@ class CON_FORMATTER:
     """
     Dataclass that defines string template for an utterance turn
     """
-
     TURN = "{0}\t{1} {2}{4}_{3}{4}\n"
     TXT_SEP = " "
 
@@ -28,7 +27,6 @@ class CSV_FORMATTER:
     """
     Dataclass for texts in a csv file
     """
-
     HEADER = ["SPEAKER LABEL", "TEXT", "START TIME", "END TIME"]
     TXT_SEP = " "
     PAUSES = " (Pause="
@@ -40,7 +38,6 @@ class CSV_FORMATTER:
     FASTSPEECH_START = " (Fastspeech start) "
     FASTSPEECH_END = " (Fastspeech end) "
 
-
 @dataclass
 class TEXT_FORMATTER:
     """
@@ -51,7 +48,6 @@ class TEXT_FORMATTER:
     PAUSES_CAPS = "PAUSES"
     GAPS_CAPS = "GAPS"
 
-
 @dataclass
 class XML_FORMATTER:
     """
@@ -59,20 +55,13 @@ class XML_FORMATTER:
     """
     OVERLAP_START = "[<]"
     OVERLAP_END = "[>]"
-    
-
-
-
 
 @dataclass
 class SYLLAB_RATE_VARS:
     """
     Dataclass that defines global variables for syllable rate
     """
-
     LIMIT_DEVIATIONS = 2
-
-
 
 
 @dataclass

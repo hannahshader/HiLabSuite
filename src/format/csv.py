@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-06 11:41:51
+# @Last Modified time: 2023-07-06 11:46:48
 # @Description: Creates the csv output for our plugins
 
 import os
@@ -134,9 +134,11 @@ class CSVPlugin:
             return CSV_FORMATTER.PAUSES + str(round((curr.end - curr.start), 2)) + ") "
         elif curr.text == INTERNAL_MARKER.GAPS:
             return CSV_FORMATTER.GAPS + str(round((curr.end - curr.start), 2)) + ") "
-        elif curr.text == INTERNAL_MARKER.OVERLAP_SECOND_START or curr.text == INTERNAL_MARKER.OVERLAP_FIRST_START:
+        elif (curr.text == INTERNAL_MARKER.OVERLAP_SECOND_START 
+              or curr.text == INTERNAL_MARKER.OVERLAP_FIRST_START):
             return CSV_FORMATTER.OVERLAP_START
-        elif curr.text == INTERNAL_MARKER.OVERLAP_FIRST_END or curr.text == INTERNAL_MARKER.OVERLAP_SECOND_END:
+        elif (curr.text == INTERNAL_MARKER.OVERLAP_FIRST_END 
+              or curr.text == INTERNAL_MARKER.OVERLAP_SECOND_END):
             return CSV_FORMATTER.OVERLAP_END
         elif curr.text == INTERNAL_MARKER.SLOWSPEECH_START:
             return CSV_FORMATTER.SLOWSPEECH_START
