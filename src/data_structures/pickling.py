@@ -11,7 +11,6 @@ import os
 from gailbot import GBPluginMethods
 import threading
 
-
 class Pickling:
     def __init__(self):
         """
