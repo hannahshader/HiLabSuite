@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-06-29 10:34:51
+# @Last Modified time: 2023-07-07 13:57:45
 # @Description: Creates the CHAT output for our plugins based on TalkBank format
 
 import subprocess
@@ -14,9 +14,11 @@ from Plugin_Development.src.configs.configs import (
     load_label,
     PLUGIN_NAME,
     OUTPUT_FILE,
-    CSV_FORMATTER,
 )
 
+###############################################################################
+# CLASS DEFINITIONS                                                           #
+###############################################################################
 
 class ChatPlugin:
     """Generates a chat file as an output"""
@@ -34,7 +36,7 @@ class ChatPlugin:
         -------
         none
         """
-        ## get filepaths
+        # Get filepaths
         input_path = os.path.join(
             structure_interact_instance.output_path, OUTPUT_FILE.NATIVE_XML
         )
@@ -43,8 +45,8 @@ class ChatPlugin:
             structure_interact_instance.output_path, OUTPUT_FILE.CHAT
         )
 
-        ## NOTE: need to integrate chatter path into Gailbot because this was
-        ## not operational beforehand
+        # NOTE: need to integrate chatter path into Gailbot because this was
+        # not operational beforehand
         current_file_path = os.path.abspath(__file__)
         jar_path = current_file_path.replace("/chat.py", "/chatter.jar")
 
