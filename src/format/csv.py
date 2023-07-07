@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-# @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-07 13:59:08
+# @Last Modified by:   Hannah Shader
+# @Last Modified time: 2023-07-07 15:04:43
 # @Description: Creates the csv output for our plugins
 
 import os
@@ -16,15 +16,26 @@ from Plugin_Development.src.configs.configs import (
     OUTPUT_FILE,
     CSV_FORMATTER,
 )
-from gailbot import Plugin
+from gailbot import plugin
 from gailbot import GBPluginMethods
 from Plugin_Development.src.data_structures.structure_interact import (
     StructureInteract,
 )
 
-###############################################################################
-# CLASS DEFINITIONS                                                           #
-###############################################################################
+############
+# GLOBALS
+############
+
+PAUSES = "pauses"
+"""Variable name for pauses"""
+GAPS = "gaps"
+"""Variable name for gaps"""
+
+
+############
+# CLASS DEFINITIONS
+############
+
 
 class CSVPlugin:
     """
@@ -118,24 +129,23 @@ class CSVPlugin:
         to append to the csv output
         """
         # TODO: Do NOT hard code anything....
-        if curr.text == INTERNAL_MARKER.PAUSES:
-            # print("get here")
-            return CSV_FORMATTER.PAUSES + str(round((curr.end - curr.start), 2)) + ") "
-        elif curr.text == INTERNAL_MARKER.GAPS:
-            return CSV_FORMATTER.GAPS + str(round((curr.end - curr.start), 2)) + ") "
-        elif (curr.text == INTERNAL_MARKER.OVERLAP_FIRST_START 
-              or curr.text == INTERNAL_MARKER.OVERLAP_SECOND_START):
-            return CSV_FORMATTER.OVERLAP_START
-        elif (curr.text == INTERNAL_MARKER.OVERLAP_FIRST_END or INTERNAL_MARKER.OVERLAP_SECOND_END):
-            return CSV_FORMATTER.OVERLAP_END
-        elif curr.text == INTERNAL_MARKER.SLOWSPEECH_START:
-            return CSV_FORMATTER.SLOWSPEECH_START
-        elif curr.text == INTERNAL_MARKER.SLOWSPEECH_END:
-            return CSV_FORMATTER.SLOWSPEECH_END
-        elif curr.text == INTERNAL_MARKER.FASTSPEECH_START:
-            return CSV_FORMATTER.FASTSPEECH_START
-        elif curr.text == INTERNAL_MARKER.FASTSPEECH_END:
-            return CSV_FORMATTER.FASTSPEECH_END
+        if curr.text == "pauses":
+            print("get here")
+            return " (Pause=" + str(round((curr.end - curr.start), 2)) + ") "
+        elif curr.text == "gaps":
+            return " (Gap=" + str(round((curr.end - curr.start), 2)) + ") "
+        elif curr.text == "overlap-secondStart" or curr.text == "overlap-firstStart":
+            return " (Overlap Start) "
+        elif curr.text == "overlap-firstEnd" or curr.text == "overlap-secondEnd":
+            return " (Overlap End) "
+        elif curr.text == "slowspeech_start":
+            return " (Slowspeech Start) "
+        elif curr.text == "slowspeech_end":
+            return " (Slowspeech End) "
+        elif curr.text == "fastspeech_start":
+            return " (Fastspeech start) "
+        elif curr.text == "fastspeech_end":
+            return " (Fastspeech end) "
         else:
             return " " + curr.text + " "
 

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-# @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-07 14:10:51
+# @Last Modified by:   Hannah Shader
+# @Last Modified time: 2023-07-07 14:04:35
 # @Description: Creates the text output for our plugins
 
 import re
@@ -17,15 +17,34 @@ from Plugin_Development.src.data_structures.structure_interact import (
 )
 from Plugin_Development.src.configs.configs import (
     INTERNAL_MARKER,
+    load_label,
     PLUGIN_NAME,
     OUTPUT_FILE,
     CON_FORMATTER,
-    TEXT_FORMATTER,
 )
 
-###############################################################################
-# CLASS DEFINITIONS                                                           #
-###############################################################################
+############
+# GLOBALS
+############
+
+MARKER = INTERNAL_MARKER
+""" The format of the marker to be inserted into the list """
+LABEL = load_label().TXT
+""" The threshold for what length of time qualifies an 'overlap' """
+PAUSES = "pauses"
+"""Variable name for pauses"""
+GAPS = "gaps"
+"""Variable name for gaps"""
+PAUSES_CAPS = "PAUSES"
+"""Variable name for pauses but in all caps"""
+GAPS_CAPS = "GAPS"
+"""Variable name for gaps but in all caps"""
+
+
+############
+# CLASS DEFINITIONS
+############
+
 
 class TextPlugin(Plugin):
     """
@@ -49,7 +68,7 @@ class TextPlugin(Plugin):
             structure_interact_instance.output_path, OUTPUT_FILE.CON_TXT
         )
 
-        # Creates the path where the text file will be written
+        ## Creates the path where the text file will be written
         with io.open(path, "w", encoding="utf-8") as outfile:
             structure_interact_instance.print_all_rows_text(
                 self.format_markers, outfile, self.formatter
@@ -104,10 +123,10 @@ class TextPlugin(Plugin):
         -------
         A string of the properly formatted pause or gap
         """
-        if curr.speaker == INTERNAL_MARKER.PAUSES:
-            return TEXT_FORMATTER.PAUSES + str(round((curr.end - curr.start), 2)) + ") "
-        elif curr.speaker == INTERNAL_MARKER.GAPS:
-            return TEXT_FORMATTER.GAPS + str(round((curr.end - curr.start), 2)) + ") "
+        if curr.speaker == "pauses":
+            return "(Pause=" + str(round((curr.end - curr.start), 2)) + ") "
+        elif curr.speaker == "gaps":
+            return "(Gap=" + str(round((curr.end - curr.start), 2)) + ") "
         else:
             return self.add_trailing_whitespace(curr.text)
 
@@ -130,8 +149,7 @@ class TextPlugin(Plugin):
 
         speaker = ""
         result = []
-        if (curr.speaker != TEXT_FORMATTER.PAUSES_CAPS 
-            and curr.speaker != TEXT_FORMATTER.GAPS_CAPS):
+        if curr.speaker != "PAUSES" and curr.speaker != "GAPS":
             result = [
                 curr.speaker,
                 txt,

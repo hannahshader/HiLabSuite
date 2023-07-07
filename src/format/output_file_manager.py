@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-# @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-07 13:59:41
+# @Last Modified by:   Hannah Shader
+# @Last Modified time: 2023-07-07 14:05:09
 # @Description: Manages the output files created by our plugins
 
 import re
@@ -28,9 +28,6 @@ from Plugin_Development.src.format.text import TextPlugin
 from Plugin_Development.src.format.xml import XmlPlugin
 from Plugin_Development.src.format.chat import ChatPlugin
 
-###############################################################################
-# CLASS DEFINITIONS                                                           #
-###############################################################################
 
 class OutputFileManager(Plugin):
     """
@@ -44,12 +41,11 @@ class OutputFileManager(Plugin):
         """
         Populate the data structure with plugins
         """
-        # Populate data structure with plugins
+        # populate data structure with plugins
         structure_interact_instance = StructureInteract()
-        # methods = GBPluginMethods()
         structure_interact_instance = structure_interact_instance.apply(methods)
 
-        # Creates all files
+        ## creates all files
         csv_init = CSVPlugin()
         csv_init.run(structure_interact_instance)
 

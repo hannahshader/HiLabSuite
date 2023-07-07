@@ -1,21 +1,39 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-# @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-07 13:36:21
+# @Last Modified by:   Hannah Shader
+# @Last Modified time: 2023-07-07 15:12:20
 # @Description: Checks for overlaps between multiple speakers
 
 from typing import Dict, Any, List
 
 from Plugin_Development.src.configs.configs import (
     INTERNAL_MARKER,
+    load_threshold,
 )
 from Plugin_Development.src.data_structures.data_objects import UttObj
+
+
+MARKER = INTERNAL_MARKER
+""" The format of the marker to be inserted into the list """
+THRESHOLD = load_threshold()
+""" The threshold for what length of time qualifies an 'overlap' """
+INVALID_OVERLAP = (-1, -1, -1, -1)
+""" A dummy format for an invalid overlap """
+
+###############################################################################
+# GLOBALS                                                                     #
+###############################################################################
+
+MARKER = INTERNAL_MARKER  # gets class representing a marker node
+THRESHOLD = load_threshold()  # function to retrieve threshold data from config
+INVALID_OVERLAP = (-1, -1, -1, -1)  # markers for an invalid overlap
 
 
 ###############################################################################
 # CLASS DEFINITIONS                                                           #
 ###############################################################################
+
 
 class OverlapPlugin:
     """
@@ -36,50 +54,56 @@ class OverlapPlugin:
 
         """
 
-        # Define markers
+        # define markers
         curr_start, curr_end = curr_sentence[0], curr_sentence[1]
         next_start, next_end = next_sentence[0], next_sentence[1]
 
-        # Overlap exist when next_start < curr_end
+        # overlap exist when next_start < curr_end
         if next_start < curr_end:
-            # Get the speaker for the current sentence
+            # get the speaker for the current sentence
 
             curr_speaker = ""
             next_speaker = ""
             for utt in list:
                 if utt.start == next_start:
                     next_speaker = utt.speaker
+                    next_flexible_info = utt.flexible_info
 
                 if utt.end == curr_end:
                     curr_speaker = utt.speaker
+                    curr_flexible_info = utt.flexible_info
 
-            # Set overlap start marker
+            # set overlap start marker
             overlap_start_time = next_start
             overlap_start_one = UttObj(
                 overlap_start_time,
                 overlap_start_time,
                 curr_speaker,
                 INTERNAL_MARKER.OVERLAP_FIRST_START,
+                curr_flexible_info,
             )
             overlap_start_two = UttObj(
                 overlap_start_time,
                 overlap_start_time,
                 next_speaker,
                 INTERNAL_MARKER.OVERLAP_SECOND_START,
+                next_flexible_info,
             )
-            # Set overlap end marker
+            # set overlap end marker
             overlap_end_time = min(curr_end, next_end)
             overlap_end_one = UttObj(
                 overlap_end_time,
                 overlap_end_time,
                 curr_speaker,
                 INTERNAL_MARKER.OVERLAP_FIRST_END,
+                curr_flexible_info,
             )
             overlap_end_two = UttObj(
                 overlap_end_time,
                 overlap_end_time,
                 next_speaker,
                 INTERNAL_MARKER.OVERLAP_SECOND_END,
+                next_flexible_info,
             )
 
             return [
@@ -118,9 +142,9 @@ class OverlapPlugin:
         curr_start, curr_end = curr_sentence[0], curr_sentence[1]
         next_start, next_end = next_sentence[0], next_sentence[1]
 
-        # Overlap exist when next_start < curr_end
+        # overlap exist when next_start < curr_end
         if next_start < curr_end:
-            # Get the speaker for the current sentence
+            # get the speaker for the current sentence
 
             curr_speaker = ""
             next_speaker = ""
@@ -131,7 +155,7 @@ class OverlapPlugin:
                 if utt.end == curr_end:
                     curr_speaker = utt.speaker
 
-            # Set overlap start marker
+            # set overlap start marker
             overlap_start_time = next_start
             overlap_start_one = UttObj(
                 overlap_start_time,
@@ -145,7 +169,7 @@ class OverlapPlugin:
                 next_speaker,
                 INTERNAL_MARKER.OVERLAP_SECOND_START,
             )
-            # Set overlap end marker
+            # set overlap end marker
             overlap_end_time = min(curr_end, next_end)
             overlap_end_one = UttObj(
                 overlap_end_time,

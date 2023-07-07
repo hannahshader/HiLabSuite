@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-# @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-07 13:20:52
+# @Last Modified by:   Jason Y. Wu
+# @Last Modified time: 2023-06-30 17:06:06
 # @Description: The class configurations for formats, labels and output files
 
 
@@ -18,6 +18,7 @@ class CON_FORMATTER:
     """
     Dataclass that defines string template for an utterance turn
     """
+
     TURN = "{0}\t{1} {2}{4}_{3}{4}\n"
     TXT_SEP = " "
 
@@ -25,43 +26,11 @@ class CON_FORMATTER:
 @dataclass
 class CSV_FORMATTER:
     """
-    Dataclass for texts in a csv file
+    Dataclass for header texts in a csv file
     """
+
     HEADER = ["SPEAKER LABEL", "TEXT", "START TIME", "END TIME"]
     TXT_SEP = " "
-    PAUSES = " (Pause="
-    GAPS = " (Gap="
-    OVERLAP_START = " (Overlap Start) "
-    OVERLAP_END = " (Overlap Start) "
-    SLOWSPEECH_START = " (Slowspeech Start) "
-    SLOWSPEECH_END = " (Slowspeech End) "
-    FASTSPEECH_START = " (Fastspeech start) "
-    FASTSPEECH_END = " (Fastspeech end) "
-
-@dataclass
-class TEXT_FORMATTER:
-    """
-    Dataclass for header texts in a text file
-    """
-    PAUSES = "(Pause="
-    GAPS = "(Gap="
-    PAUSES_CAPS = "PAUSES"
-    GAPS_CAPS = "GAPS"
-
-@dataclass
-class XML_FORMATTER:
-    """
-    Dataclass for header texts in a text file
-    """
-    OVERLAP_START = "[<]"
-    OVERLAP_END = "[>]"
-
-@dataclass
-class SYLLAB_RATE_VARS:
-    """
-    Dataclass that defines global variables for syllable rate
-    """
-    LIMIT_DEVIATIONS = 2
 
 
 @dataclass
