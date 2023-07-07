@@ -523,6 +523,7 @@ class MarkerUtteranceDict:
             format_markers(self.list[0]),
             self.list[0].start,
             self.list[0].end,
+            self.list[0].flexible_info
         ]
 
         turn_change = False
