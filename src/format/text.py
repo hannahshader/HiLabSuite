@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-07 14:10:51
+# @Last Modified time: 2023-07-07 15:00:49
 # @Description: Creates the text output for our plugins
 
 import re
@@ -45,6 +45,8 @@ class TextPlugin(Plugin):
         -------
         none
         """
+        logging.info("creating Text output")
+        
         path = os.path.join(
             structure_interact_instance.output_path, OUTPUT_FILE.CON_TXT
         )

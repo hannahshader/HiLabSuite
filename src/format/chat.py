@@ -2,13 +2,14 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-07 13:57:45
+# @Last Modified time: 2023-07-07 15:00:18
 # @Description: Creates the CHAT output for our plugins based on TalkBank format
 
 import subprocess
 from typing import Dict, Any
 import os
 import io
+import logging
 from Plugin_Development.src.configs.configs import (
     INTERNAL_MARKER,
     load_label,
@@ -36,6 +37,8 @@ class ChatPlugin:
         -------
         none
         """
+        logging.info("creating CHAT output")
+
         # Get filepaths
         input_path = os.path.join(
             structure_interact_instance.output_path, OUTPUT_FILE.NATIVE_XML
@@ -77,6 +80,8 @@ class ChatPlugin:
         -------
         none
         """
+        logging.warn("ERROR: CANNOT CONVERT TO CHAT FILE")
+        
         path = os.path.join(
             structure_interact_instance.output_path, OUTPUT_FILE.CHAT_ERROR
         )

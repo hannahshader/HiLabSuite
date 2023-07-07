@@ -2,10 +2,11 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-07 13:36:21
+# @Last Modified time: 2023-07-07 14:46:40
 # @Description: Checks for overlaps between multiple speakers
 
 from typing import Dict, Any, List
+import logging
 
 from Plugin_Development.src.configs.configs import (
     INTERNAL_MARKER,
@@ -35,7 +36,7 @@ class OverlapPlugin:
         5. return two markers
 
         """
-
+        logging.info("start overlap analysis")
         # Define markers
         curr_start, curr_end = curr_sentence[0], curr_sentence[1]
         next_start, next_end = next_sentence[0], next_sentence[1]
@@ -114,6 +115,8 @@ class OverlapPlugin:
         5. Return two markers
 
         """
+
+        logging.info("overlap marker creation")
         # Define markers
         curr_start, curr_end = curr_sentence[0], curr_sentence[1]
         next_start, next_end = next_sentence[0], next_sentence[1]

@@ -2,11 +2,15 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-07 14:08:23
+# @Last Modified time: 2023-07-07 15:15:18
 # @Description: Creates the xml output for our plugins
 
-from typing import Dict, Any
+import logging
 import os
+from typing import Dict, Any
+import xml.etree.ElementTree as ET
+import xml.dom.minidom
+
 from Plugin_Development.src.configs.configs import (
     INTERNAL_MARKER,
     load_label,
@@ -17,8 +21,6 @@ from Plugin_Development.src.configs.configs import (
 )
 from gailbot import Plugin
 from gailbot import GBPluginMethods
-import xml.etree.ElementTree as ET
-import xml.dom.minidom
 
 ###############################################################################
 # CLASS DEFINITIONS                                                           #
@@ -40,6 +42,8 @@ class XmlPlugin:
         -------
         none
         """
+        logging.info("creating XML output")
+        
         # Gets filepath
         path = os.path.join(
             structure_interact_instance.output_path, OUTPUT_FILE.NATIVE_XML

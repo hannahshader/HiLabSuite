@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-07 14:10:55
+# @Last Modified time: 2023-07-07 14:59:19
 # @Description: Creates a marker utterance dictionary
 
 import copy
@@ -10,6 +10,7 @@ import bisect
 import pickle
 import sys
 import threading
+import logging
 import os
 from typing import Any, Dict, List, IO
 from typing import OrderedDict as OrderedDictType, TypeVar
@@ -53,6 +54,9 @@ class MarkerUtteranceDict:
         """
         # print("unqiuesequence")
         # print("utterance map is")
+
+        logging.info("initializing the marker utterance dictionary")
+        
         print(utterance_map)
 
         self.lock = threading.Lock()
@@ -74,8 +78,10 @@ class MarkerUtteranceDict:
             speaker = ""
             prev_utt = None
 
-            # Create a boolean that stores whether or not there's a folder for overlaps
-            # Create a variable that creates different speaker ids for each file if there are overlaps
+            # Create a boolean that stores whether or not there's a folder for 
+            # overlaps
+            # Create a variable that creates different speaker ids for each file
+            # if there are overlaps
             self.overlaps = len(utterance_map) > 1
             speaker_counter = 0
             if self.overlaps == True:
@@ -166,6 +172,8 @@ class MarkerUtteranceDict:
         -------
         none
         """
+        logging.info("marker insertion")
+        
         with self.lock:
             self.pickle.load_list_from_disk(self.list)
             if value == None:
@@ -236,6 +244,8 @@ class MarkerUtteranceDict:
         -------
         a list of all of the results of the functions run
         """
+        logging.info("applying functions")
+        
         self.pickle.load_list_from_disk(self.list)
         result = []
         for item in self.list:
@@ -258,6 +268,8 @@ class MarkerUtteranceDict:
         -------
         a list of the result of the function run
         """
+        logging.info("applying a single function")
+
         self.pickle.load_list_from_disk(self.list)
         result = []
         for item in self.list:
@@ -278,6 +290,8 @@ class MarkerUtteranceDict:
         -------
         none
         """
+        logging.info("running apply functions for overlap")
+
         self.pickle.load_sentences_from_disk(self.sentences)
 
         sorted_sentences = sorted(self.sentences, key=lambda x: x[0])
@@ -311,6 +325,8 @@ class MarkerUtteranceDict:
         -------
         none
         """
+        logging.info("running apply functions for syllable rate")
+
         self.pickle.load_sentences_from_disk(self.sentences)
         self.pickle.load_list_from_disk(self.list)
 
@@ -361,6 +377,8 @@ class MarkerUtteranceDict:
         -------
         none
         """
+        logging.info("running apply functions for marker insertion")
+        
         self.pickle.load_list_from_disk(self.list)
 
         # Deep copies the list so no infinite insertions/checks
@@ -400,6 +418,7 @@ class MarkerUtteranceDict:
         none
 
         """
+        logging.info("printing text output")
         # Format: speaker, text, start, end
         # Sentence object holds speaker, text, start, end
         # Initialize a sentence object to hold bank fields
@@ -451,6 +470,7 @@ class MarkerUtteranceDict:
         -------
         none
         """
+        logging.info("printing csv output")
         # Format: speaker, text, start, end
         if self.overlaps:
             self.list = sorted(self.list, key=lambda x: x.speaker)
@@ -490,7 +510,23 @@ class MarkerUtteranceDict:
     # Which will later be used to generate the chat file
     def print_all_rows_xml(
         self, apply_subelement_root, apply_subelement_word, apply_sentence_end
-    ):
+    ) -> None:
+        """
+        Creates the xml output for Gailbot, separating each line by its speaker
+
+        Parameters
+        ----------
+        print_func: the function for printing the csv output file
+        apply_subelement_root: the function for root subelements
+        apply_subelement_word: the function for word subelements
+        apply_sentence_end: the function for the end of sentences
+
+        Returns
+        -------
+        none
+        """
+        logging.info("printing xml output")
+    
         self.pickle.load_list_from_disk(self.list)
         prev_speaker = ""
         sentence = apply_subelement_root(self.list[0].speaker)
@@ -511,7 +547,20 @@ class MarkerUtteranceDict:
         apply_sentence_end(sentence, sentence_start, sentence_end)
         self.pickle.save_list_to_disk(self.list)
 
-    def order_overlap(self):
+    def order_overlap(self) -> None:
+        """
+        Reorders markers for overlap
+
+        Parameters
+        ----------
+        none
+
+        Returns
+        -------
+        none
+        """
+        logging.info("Reordering markers for overlap")
+        
         self.pickle.load_list_from_disk(self.list)
         new_list = []
         list_to_sort = []
@@ -539,7 +588,20 @@ class MarkerUtteranceDict:
         self.list = new_list
         self.pickle.save_list_to_disk(self.list)
 
-    def sort(self, list_to_sort):
+    def sort(self, list_to_sort: List[any]) -> List[any]:
+        """
+        Sorts a given list
+
+        Parameters
+        ----------
+        list_to_sort: the list to sort
+
+        Returns
+        -------
+        the sorted list
+        """
+        logging.info("sorting a list")
+        
         unique_speakers = []
         for obj in list_to_sort:
             if obj.speaker not in unique_speakers:
@@ -554,13 +616,39 @@ class MarkerUtteranceDict:
         )
         return sorted_list
 
-    def is_marker_overlap_start(self, curr):
+    def is_marker_overlap_start(self, curr) -> bool:
+        """
+        Checks that a given marker is the start of an overlap marker
+
+        Parameters
+        ----------
+        curr: the marker to check
+
+        Returns
+        -------
+        a boolean
+        """
+        logging.info("asserting a marker is overlap_start")
+        
         return (
             curr.text == INTERNAL_MARKER.OVERLAP_FIRST_START
             or curr.text == INTERNAL_MARKER.OVERLAP_SECOND_START
         )
 
-    def is_marker_overlap_end(self, curr):
+    def is_marker_overlap_end(self, curr) -> bool:
+        """
+        Checks that a given marker is the end of an overlap marker
+
+        Parameters
+        ----------
+        curr: the marker to check
+
+        Returns
+        -------
+        a boolean
+        """
+        logging.info("asserting a marker is overlap_end")
+        
         return (
             curr.text == INTERNAL_MARKER.OVERLAP_FIRST_END
             or curr.text == INTERNAL_MARKER.OVERLAP_SECOND_END

@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-07 13:40:24
+# @Last Modified time: 2023-07-07 14:49:32
 # @Description: Calculates the average syllable rate for all speakers
 #   Denotes any sections of especially fast or slow speech.
 
@@ -97,6 +97,8 @@ class SyllableRatePlugin:
         -------
         None
         """
+        logging.info("getting the utterance syllable rate")
+        
         sentence_syllab_count = 0
         speaker = utt_list[0].speaker
         for curr_utt in utt_list:
@@ -140,6 +142,9 @@ class SyllableRatePlugin:
         STAT_DICT
 
         """
+
+        logging.info("getting the syllable data statistics")
+        
         allRates = []
         # Get all utterance syllable data
         for dic in utt_syll_dict:
@@ -173,6 +178,9 @@ class SyllableRatePlugin:
         -------
         UttObj representing syllable markers. Returns two of them
         """
+
+        logging.info("creating the syllable markers")
+        
         fastCount = 0
         slowCount = 0
         if sentence["syllableRate"] <= self.stats["lowerLimit"]:

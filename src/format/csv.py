@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-07 13:59:08
+# @Last Modified time: 2023-07-07 15:00:42
 # @Description: Creates the csv output for our plugins
 
 import os
@@ -44,6 +44,8 @@ class CSVPlugin:
         -------
         none
         """
+        logging.info("creating CSV output")
+
         self._utterance_level(structure_interact_instance)
         self._word_level(structure_interact_instance)
 

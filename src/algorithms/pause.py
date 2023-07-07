@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-07 14:10:46
+# @Last Modified time: 2023-07-07 14:45:23
 # @Description: Checks for pauses in speech when one speaker is speaking
 
 import logging
@@ -16,7 +16,6 @@ from Plugin_Development.src.configs.configs import (
     load_threshold,
 )
 from Plugin_Development.src.data_structures.data_objects import UttObj
-
 
 ###############################################################################
 # CLASS DEFINITIONS                                                           #
@@ -53,13 +52,17 @@ class PausePlugin:
         4.  If there is a "significant pause," return Pause Marker
         """
         # Pause if uttered by same speaker
+
         if curr_utt.speaker == next_utt.speaker:
+
+            # Returned to the console
             logging.info("start pause analysis")
             fto = round(next_utt.start - curr_utt.end, 2)
             markerText = ""
             # Check for latch threshold
             if ((load_threshold().LB_LATCH <= fto) 
                 and (fto <= load_threshold().UB_LATCH)):
+                # Returned to the debug output. Not accessible in GUI
                 logging.debug(f"latch detected with fto {fto}")
                 # Format marker text
                 markerText = INTERNAL_MARKER.TYPE_INFO_SP.format(
@@ -102,7 +105,7 @@ class PausePlugin:
                     curr_utt.speaker,
                     INTERNAL_MARKER.PAUSES,
                 )
-                logging.debug(f"micro pause marker ({markerText}) generated")
+                logging.info(f"micro pause marker ({markerText}) generated")
             # Check for large pause threshold
             elif fto >= load_threshold().LB_LARGE_PAUSE:
                 logging.debug(f"large pause detected with fto {fto}")

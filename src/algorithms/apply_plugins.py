@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-07 13:40:36
+# @Last Modified time: 2023-07-07 14:41:03
 # @Description: Checks which plugins are activated and uses them
 
 import toml
@@ -50,7 +50,7 @@ class ApplyPlugins:
         -------
             A list of plugin names.
         """
-        ##TODO: Fix this
+        # TODO: Fix this
         """
         with open(file_path, "r") as file:
             config_data = toml.load(file)

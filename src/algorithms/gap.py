@@ -2,8 +2,10 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-27 12:16:07
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-07 13:36:24
+# @Last Modified time: 2023-07-07 14:46:19
+
 from typing import Dict, Any, List
+import logging
 from Plugin_Development.src.configs.configs import (
     INTERNAL_MARKER,
     THRESHOLD,
@@ -11,7 +13,6 @@ from Plugin_Development.src.configs.configs import (
 )
 from Plugin_Development.src.data_structures.data_objects import UttObj
 
-import logging
 
 # For logging to STDOUT. Additional handlers can be added for log file outputs.
 logging.basicConfig(
@@ -58,11 +59,11 @@ class GapPlugin:
         logging.debug(f"get fto : {fto}")
         if fto >= load_threshold().GAPS_LB and curr_utt.speaker != next_utt.speaker:
             logging.debug(f"get fto : {fto}")
-            # format marker text
+            # Format marker text
             markerText = INTERNAL_MARKER.TYPE_INFO_SP.format(
                 INTERNAL_MARKER.GAPS, str(round(fto, 1)), str(curr_utt.speaker)
             )
-            # create instance of marker
+            # Create instance of marker
             return UttObj(
                 start=curr_utt.end,
                 end=next_utt.start,
