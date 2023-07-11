@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Hannah Shader
-# @Last Modified time: 2023-07-11 10:40:15
+# @Last Modified time: 2023-07-11 16:38:26
 # @Description: Checks for overlaps between multiple speakers
 
 from typing import Dict, Any, List
@@ -66,13 +66,8 @@ class OverlapPlugin:
             next_sentence[2],
         )
 
-        # print("next start is " + str(next_start))
-        # print("next flex info is " + str(next_id))
-
         # overlap exist when next_start < curr_end
         if next_start < curr_end:
-            # get the speaker for the current sentence
-
             curr_speaker = ""
             next_speaker = ""
             for utt in list:
@@ -85,7 +80,7 @@ class OverlapPlugin:
                     curr_flexible_info = utt.flexible_info
 
             # set overlap start marker
-            overlap_start_time = min(curr_start, next_start)
+            overlap_start_time = max(curr_start, next_start)
             overlap_start_one = UttObj(
                 overlap_start_time,
                 overlap_start_time,

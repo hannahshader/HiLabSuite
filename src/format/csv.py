@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Hannah Shader
-# @Last Modified time: 2023-07-11 10:43:44
+# @Last Modified time: 2023-07-11 16:50:41
 # @Description: Creates the csv output for our plugins
 
 import os
@@ -16,7 +16,7 @@ from Plugin_Development.src.configs.configs import (
     OUTPUT_FILE,
     CSV_FORMATTER,
 )
-from gailbot import plugin
+from gailbot import Plugin
 from gailbot import GBPluginMethods
 from Plugin_Development.src.data_structures.structure_interact import (
     StructureInteract,
@@ -56,6 +56,7 @@ class CSVPlugin:
         none
         """
 
+        """
         print("self.list is")
         for item in structure_interact_instance.data_structure.list:
             print(
@@ -64,6 +65,7 @@ class CSVPlugin:
                 + ", flex info is "
                 + str(item.flexible_info)
             )
+        """
 
         self._utterance_level(structure_interact_instance)
         self._word_level(structure_interact_instance)

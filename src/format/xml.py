@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Hannah Shader
-# @Last Modified time: 2023-07-07 13:56:51
+# @Last Modified time: 2023-07-11 16:52:00
 # @Description: Creates the xml output for our plugins
 
 from typing import Dict, Any
@@ -14,7 +14,7 @@ from Plugin_Development.src.configs.configs import (
     OUTPUT_FILE,
     CSV_FORMATTER,
 )
-from gailbot import plugin
+from gailbot import Plugin
 from gailbot import GBPluginMethods
 import xml.etree.ElementTree as ET
 import xml.dom.minidom
@@ -58,6 +58,8 @@ class XmlPlugin:
 
         ## gets a list of the speaker names
         self.speaker_list = structure_interact_instance.get_speakers()
+
+        print("self.speaker_list is: " + str(self.speaker_list))
 
         ## generate a dictionary that has the speaker names and attributes
         ## filled out needed for the xml file
