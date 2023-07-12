@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Hannah Shader
-# @Last Modified time: 2023-07-11 16:50:41
+# @Last Modified time: 2023-07-11 22:50:10
 # @Description: Creates the csv output for our plugins
 
 import os
@@ -140,7 +140,21 @@ class CSVPlugin:
         A string with the appropriate format of pause/gap/overlap/syllable rate
         to append to the csv output
         """
-        return " " + curr.text + " "
+        if (
+            curr.text == "pauses"
+            or curr.text == "gaps"
+            or curr.text == "overlap-secondStart"
+            or curr.text == "overlap-firstStart"
+            or curr.text == "overlap-firstEnd"
+            or curr.text == "overlap-secondEnd"
+            or curr.text == "slowspeech_start"
+            or curr.text == "slowspeech_end"
+            or curr.text == "fastspeech_start"
+            or curr.text == "fastspeech_end"
+        ):
+            return " (" + curr.text + ") "
+        else:
+            return " " + curr.text + " "
 
     def _utterance_level(self, structure_interact_instance) -> None:
         """

@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Hannah Shader
-# @Last Modified time: 2023-07-11 16:52:00
+# @Last Modified time: 2023-07-11 23:03:41
 # @Description: Creates the xml output for our plugins
 
 from typing import Dict, Any
@@ -58,8 +58,6 @@ class XmlPlugin:
 
         ## gets a list of the speaker names
         self.speaker_list = structure_interact_instance.get_speakers()
-
-        print("self.speaker_list is: " + str(self.speaker_list))
 
         ## generate a dictionary that has the speaker names and attributes
         ## filled out needed for the xml file
@@ -201,9 +199,11 @@ class XmlPlugin:
         a string of the properly formatted overlap, pause, or gap.
         """
         if curr.text == "overlap-secondStart" or curr.text == "overlap-firstStart":
-            return "[<]"
-        elif curr.text == "overlap-firstEnd" or curr.text == "overlap-secondEnd":
-            return "[>]"
+            return " < "
+        elif curr.text == "overlap-firstEnd":
+            return " > [<]"
+        elif curr.text == "overlap-secondEnd":
+            return " > [>]"
         elif curr.text == "pauses" or curr.text == "gaps":
             time_difference = "{:.2f}".format(curr.end - curr.start)
             return "(" + time_difference + ")"
