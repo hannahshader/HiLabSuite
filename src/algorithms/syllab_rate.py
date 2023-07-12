@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-12 14:42:15
+# @Last Modified time: 2023-07-12 14:58:37
 # @Description: Calculates the average syllable rate for all speakers
 #   Denotes any sections of especially fast or slow speech.
 
@@ -18,25 +18,10 @@ from Plugin_Development.src.configs.configs import (
 )
 from Plugin_Development.src.data_structures.data_objects import UttObj
 
-
-###############################################################################
-# GLOBALS                                                                     #
-###############################################################################
-MARKER = INTERNAL_MARKER
-# THRESHOLD = load_threshold()
-LimitDeviations = 2
-
-MARKER = INTERNAL_MARKER
-""" The format of the marker to be inserted into the list """
-
-############
-# CLASS DEFINITIONS
-############
-
-
 ###############################################################################
 # CLASS DEFINITIONS                                                           #
 ###############################################################################
+
 class SYLLAB_DICT(TypedDict):
     utt: List[UttObj]
     syllableNum: int
