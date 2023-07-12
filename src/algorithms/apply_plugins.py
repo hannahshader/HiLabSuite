@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-12 14:31:52
+# @Last Modified time: 2023-07-12 14:41:28
 # @Description: Checks which plugins are activated and uses them
 
 import toml
@@ -14,6 +14,10 @@ from Plugin_Development.src.algorithms.overlap import OverlapPlugin
 from Plugin_Development.src.algorithms.pause import PausePlugin
 from Plugin_Development.src.algorithms.syllab_rate import SyllableRatePlugin
 
+
+###############################################################################
+# CLASS DEFINITIONS                                                           #
+###############################################################################
 
 class ApplyPlugins:
     """
@@ -47,6 +51,7 @@ class ApplyPlugins:
         -------
             A list of plugin names.
         """
+        
         # TODO: Fix this
         """
         with open(file_path, "r") as file:
@@ -108,11 +113,11 @@ class ApplyPlugins:
             syllab_rate_instance = SyllableRatePlugin(structure_interact_instance)
             syllab_rate_instance.syllab_marker()
 
-        ## after data from individual setences in seperate files have
-        ## been analyzed, the sentences from different files can be integrated
+        # After data from individual setences in seperate files have
+        # been analyzed, the sentences from different files can be integrated
         structure_interact_instance.sort_list()
 
-        ## Applies function to the list that only rely on word data
+        # Applies function to the list that only rely on word data
         structure_interact_instance.apply_markers(self.plugins)
 
         if "OverlapPlugin" in self.plugin_names:

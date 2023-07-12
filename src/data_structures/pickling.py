@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-# @Last Modified by:   Hannah Shader
-# @Last Modified time: 2023-07-06 11:03:29
+# @Last Modified by:   Jacob Boyar
+# @Last Modified time: 2023-07-12 14:48:17
 # @Description: Writes data to disk our list of words and list of sentences
 
 import pickle
@@ -11,6 +11,9 @@ import os
 from gailbot import GBPluginMethods
 import threading
 
+###############################################################################
+# CLASS DEFINITIONS                                                           #
+###############################################################################
 
 class Pickling:
     def __init__(self):
@@ -55,7 +58,7 @@ class Pickling:
         with self.lock:
             try:
                 with open(str(self.filepath), "rb") as file:
-                    # new file length checking version
+                    # New file length checking version
                     file_info = os.fstat(file.fileno())
                     file_size = file_info.st_size
                     if file_size > 0:  # Check if the file is not empty
@@ -63,7 +66,7 @@ class Pickling:
 
                     # commented out: original version
                     # my_list = pickle.load(file)
-            ## case for if file already open
+            # Case for if file already open
             except IOError:
                 pass
         return my_list

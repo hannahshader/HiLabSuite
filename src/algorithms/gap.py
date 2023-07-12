@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-27 12:16:07
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-12 14:32:03
+# @Last Modified time: 2023-07-12 14:36:13
 
 from typing import Dict, Any, List
 import logging
@@ -22,17 +22,10 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-
-###############################################################################
-# GLOBALS                                                                     #
-###############################################################################
-MARKER = INTERNAL_MARKER  # gets class representing a marker node
-THRESHOLD = load_threshold()  # function to retrieve threshold data from config
-
-
 ###############################################################################
 # CLASS DEFINITIONS                                                           #
 ###############################################################################
+
 class GapPlugin:
     """
     Wrapper class for the Gaps plugin. Contains functionality that inserts

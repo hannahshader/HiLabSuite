@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-12 14:34:48
+# @Last Modified time: 2023-07-12 14:52:32
 # @Description: Creates the text output for our plugins
 
 import re
@@ -21,30 +21,12 @@ from Plugin_Development.src.configs.configs import (
     PLUGIN_NAME,
     OUTPUT_FILE,
     CON_FORMATTER,
+    TEXT_FORMATTER,
 )
 
-############
-# GLOBALS
-############
-
-MARKER = INTERNAL_MARKER
-""" The format of the marker to be inserted into the list """
-LABEL = load_label().TXT
-""" The threshold for what length of time qualifies an 'overlap' """
-PAUSES = "pauses"
-"""Variable name for pauses"""
-GAPS = "gaps"
-"""Variable name for gaps"""
-PAUSES_CAPS = "PAUSES"
-"""Variable name for pauses but in all caps"""
-GAPS_CAPS = "GAPS"
-"""Variable name for gaps but in all caps"""
-
-
-############
-# CLASS DEFINITIONS
-############
-
+###############################################################################
+# CLASS DEFINITIONS                                                           #
+###############################################################################
 
 class TextPlugin(Plugin):
     """
@@ -125,10 +107,10 @@ class TextPlugin(Plugin):
         -------
         A string of the properly formatted pause or gap
         """
-        if curr.speaker == "pauses":
-            return "(Pause=" + str(round((curr.end - curr.start), 2)) + ") "
-        elif curr.speaker == "gaps":
-            return "(Gap=" + str(round((curr.end - curr.start), 2)) + ") "
+        if curr.speaker == INTERNAL_MARKER.PAUSES:
+            return TEXT_FORMATTER.PAUSES + str(round((curr.end - curr.start), 2)) + ") "
+        elif curr.speaker == INTERNAL_MARKER.GAPS:
+            return TEXT_FORMATTER.GAPS + str(round((curr.end - curr.start), 2)) + ") "
         else:
             return self.add_trailing_whitespace(curr.text)
 
@@ -151,7 +133,8 @@ class TextPlugin(Plugin):
 
         speaker = ""
         result = []
-        if curr.speaker != "PAUSES" and curr.speaker != "GAPS":
+        if (curr.speaker != TEXT_FORMATTER.PAUSES_CAPS 
+            and curr.speaker != TEXT_FORMATTER.GAPS_CAPS):
             result = [
                 curr.speaker,
                 txt,

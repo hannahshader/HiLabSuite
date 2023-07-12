@@ -214,3 +214,10 @@ PLUGIN_NAME: the name of each plugin
 THRESHOLD: stores the threshold data 
 LABEL: stores the label data for CSV, XML, CHAT, and TXT plugin in format 
        module
+
+
+## Edge cases:
+empty overlaps: occur when one word completely envelops another word in
+overlap, causing the envelopping word to not appear inside the overlap markers.
+Due to a limitation with our current implementation of overlaps, which works
+at a word level and not a character level.

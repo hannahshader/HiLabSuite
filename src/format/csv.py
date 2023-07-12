@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-12 14:34:41
+# @Last Modified time: 2023-07-12 14:49:30
 # @Description: Creates the csv output for our plugins
 
 import os
@@ -22,20 +22,9 @@ from Plugin_Development.src.data_structures.structure_interact import (
     StructureInteract,
 )
 
-############
-# GLOBALS
-############
-
-PAUSES = "pauses"
-"""Variable name for pauses"""
-GAPS = "gaps"
-"""Variable name for gaps"""
-
-
-############
-# CLASS DEFINITIONS
-############
-
+###############################################################################
+# CLASS DEFINITIONS                                                           #
+###############################################################################
 
 class CSVPlugin:
     """
