@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-# @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-07 13:50:11
+# @Last Modified by:   Hannah Shader
+# @Last Modified time: 2023-07-07 14:03:08
 # @Description: Contains our structures for running our plugins and creating
 #   their output.
 
@@ -22,9 +22,12 @@ from Plugin_Development.src.algorithms.apply_plugins import ApplyPlugins
 from gailbot import Plugin
 from gailbot import GBPluginMethods
 
-###############################################################################
-# CLASS DEFINITIONS                                                           #
-###############################################################################
+############
+# GLOBALS
+############
+
+OUT_PATH = "Temporary"
+
 
 class StructureInteract(Plugin):
     """

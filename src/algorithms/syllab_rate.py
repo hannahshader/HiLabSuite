@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-07 14:49:32
+# @Last Modified time: 2023-07-12 14:33:10
 # @Description: Calculates the average syllable rate for all speakers
 #   Denotes any sections of especially fast or slow speech.
 
@@ -14,14 +14,28 @@ from scipy.stats import median_abs_deviation
 
 from Plugin_Development.src.configs.configs import (
     INTERNAL_MARKER,
-    SYLLAB_RATE_VARS,
 )
 from Plugin_Development.src.data_structures.data_objects import UttObj
+
+
+###############################################################################
+# GLOBALS                                                                     #
+###############################################################################
+MARKER = INTERNAL_MARKER
+# THRESHOLD = load_threshold()
+LimitDeviations = 2
+
+MARKER = INTERNAL_MARKER
+""" The format of the marker to be inserted into the list """
+
+############
+# CLASS DEFINITIONS
+############
+
 
 ###############################################################################
 # CLASS DEFINITIONS                                                           #
 ###############################################################################
-
 class SYLLAB_DICT(TypedDict):
     utt: List[UttObj]
     syllableNum: int
@@ -101,6 +115,7 @@ class SyllableRatePlugin:
         
         sentence_syllab_count = 0
         speaker = utt_list[0].speaker
+        flexible_info = utt_list[0].flexible_info
         for curr_utt in utt_list:
             # Doesn't include other paralinguistic markers data
             # in the speaker rate data
@@ -121,6 +136,7 @@ class SyllableRatePlugin:
             "speaker": speaker,
             "sentence_start": sentence_start,
             "sentence_end": sentence_end,
+            "flexible_info": flexible_info,
             "utt": utt_list,
             "syllableNum": sentence_syllab_count,
             "syllableRate": syllable_rate,
@@ -146,15 +162,15 @@ class SyllableRatePlugin:
         logging.info("getting the syllable data statistics")
         
         allRates = []
-        # Get all utterance syllable data
+        # get all utterance syllable data
         for dic in utt_syll_dict:
             allRates.append(dic["syllableRate"])
-        # Compute median, median absolute deviation, and limits
+        # compute median, median absolute deviation, and limits
         allRates = numpy.sort(numpy.array(allRates))
         median = numpy.median(allRates)
         median_absolute_deviation = round(median_abs_deviation(allRates), 2)
-        lowerLimit = median - (SYLLAB_RATE_VARS.LIMIT_DEVIATIONS * median_absolute_deviation)
-        upperLimit = median + (SYLLAB_RATE_VARS.LIMIT_DEVIATIONS * median_absolute_deviation)
+        lowerLimit = median - (LimitDeviations * median_absolute_deviation)
+        upperLimit = median + (LimitDeviations * median_absolute_deviation)
 
         # Creates a dictionary for stat fields
         stats: STAT_DICT = {
@@ -189,6 +205,7 @@ class SyllableRatePlugin:
                 sentence["sentence_start"],
                 sentence["speaker"],
                 INTERNAL_MARKER.SLOWSPEECH_START,
+                sentence["flexible_info"],
             )
 
             slowEndMarker = UttObj(
@@ -196,6 +213,7 @@ class SyllableRatePlugin:
                 sentence["sentence_end"],
                 sentence["speaker"],
                 INTERNAL_MARKER.SLOWSPEECH_END,
+                sentence["flexible_info"],
             )
 
             slowCount += 1
@@ -206,12 +224,14 @@ class SyllableRatePlugin:
                 sentence["sentence_start"],
                 sentence["speaker"],
                 INTERNAL_MARKER.FASTSPEECH_START,
+                sentence["flexible_info"],
             )
             fastEndMarker = UttObj(
                 sentence["sentence_end"],
                 sentence["sentence_end"],
                 sentence["speaker"],
                 INTERNAL_MARKER.FASTSPEECH_END,
+                sentence["flexible_info"],
             )
             fastCount += 1
             return fastStartMarker, fastEndMarker

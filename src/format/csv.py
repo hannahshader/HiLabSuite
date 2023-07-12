@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-07 15:45:49
+# @Last Modified time: 2023-07-12 14:34:41
 # @Description: Creates the csv output for our plugins
 
 import os
@@ -22,9 +22,20 @@ from Plugin_Development.src.data_structures.structure_interact import (
     StructureInteract,
 )
 
-###############################################################################
-# CLASS DEFINITIONS                                                           #
-###############################################################################
+############
+# GLOBALS
+############
+
+PAUSES = "pauses"
+"""Variable name for pauses"""
+GAPS = "gaps"
+"""Variable name for gaps"""
+
+
+############
+# CLASS DEFINITIONS
+############
+
 
 class CSVPlugin:
     """
@@ -119,24 +130,19 @@ class CSVPlugin:
         A string with the appropriate format of pause/gap/overlap/syllable rate
         to append to the csv output
         """
-         # TODO: Do NOT hard code anything....
-        if curr.text == "pauses":
-            print("get here")
-            return " (Pause=" + str(round((curr.end - curr.start), 2)) + ") "
-        elif curr.text == "gaps":
-            return " (Gap=" + str(round((curr.end - curr.start), 2)) + ") "
-        elif curr.text == "overlap-secondStart" or curr.text == "overlap-firstStart":
-            return " (Overlap Start) "
-        elif curr.text == "overlap-firstEnd" or curr.text == "overlap-secondEnd":
-            return " (Overlap End) "
-        elif curr.text == "slowspeech_start":
-            return " (Slowspeech Start) "
-        elif curr.text == "slowspeech_end":
-            return " (Slowspeech End) "
-        elif curr.text == "fastspeech_start":
-            return " (Fastspeech start) "
-        elif curr.text == "fastspeech_end":
-            return " (Fastspeech end) "
+        if (
+            curr.text == "pauses"
+            or curr.text == "gaps"
+            or curr.text == "overlap-secondStart"
+            or curr.text == "overlap-firstStart"
+            or curr.text == "overlap-firstEnd"
+            or curr.text == "overlap-secondEnd"
+            or curr.text == "slowspeech_start"
+            or curr.text == "slowspeech_end"
+            or curr.text == "fastspeech_start"
+            or curr.text == "fastspeech_end"
+        ):
+            return " (" + curr.text + ") "
         else:
             return " " + curr.text + " "
 

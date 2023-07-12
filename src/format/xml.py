@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-07 15:15:18
+# @Last Modified time: 2023-07-12 14:34:55
 # @Description: Creates the xml output for our plugins
 
 import logging
@@ -17,14 +17,10 @@ from Plugin_Development.src.configs.configs import (
     PLUGIN_NAME,
     OUTPUT_FILE,
     CSV_FORMATTER,
-    XML_FORMATTER,
 )
 from gailbot import Plugin
 from gailbot import GBPluginMethods
 
-###############################################################################
-# CLASS DEFINITIONS                                                           #
-###############################################################################
 
 class XmlPlugin:
     """Creates the XML file"""
@@ -49,7 +45,7 @@ class XmlPlugin:
             structure_interact_instance.output_path, OUTPUT_FILE.NATIVE_XML
         )
 
-        # Writes xml header
+        ## writes xml header
         self.root = ET.Element(
             "CHAT",
             attrib={
@@ -64,11 +60,11 @@ class XmlPlugin:
             },
         )
 
-        # Gets a list of the speaker names
+        ## gets a list of the speaker names
         self.speaker_list = structure_interact_instance.get_speakers()
 
-        # Generate a dictionary that has the speaker names and attributes
-        # Filled out needed for the xml file
+        ## generate a dictionary that has the speaker names and attributes
+        ## filled out needed for the xml file
         speaker_data = []
         for i, speaker in enumerate(self.speaker_list):
             speaker_data.append({})
@@ -79,17 +75,17 @@ class XmlPlugin:
 
         root_elem = ET.SubElement(self.root, "Participants")
 
-        # Counter for setting utterance ids
+        ## counter for setting utterance ids
         self.counter = 0
 
-        # Initializes participants section of xml file
+        ## intializes participants section of xml file
         for speaker_data_elem in speaker_data:
             speaker_elem = ET.SubElement(
                 root_elem, "participant", attrib=speaker_data_elem
             )
 
-        # Fill out speaker fields in the xml files
-        # Iterate through speaker names
+        ## fill out speaker fields in the xml files
+        ## iterate through speaker names
         structure_interact_instance.print_all_rows_xml(
             self.apply_subelement_root,
             self.apply_subelement_word,
@@ -100,9 +96,9 @@ class XmlPlugin:
         dom = xml.dom.minidom.parseString(xml_str)  ## parse the XML string
         pretty_xml_str = dom.toprettyxml(
             indent="\t"
-        )  # Generate a pretty-printed version with indentation
+        )  ## generate a pretty-printed version with indentation
 
-        # Opens and writes the xml file
+        ## Opens and writes the xml file
         with open(path, "w") as file:
             file.write(pretty_xml_str)
 
@@ -118,10 +114,10 @@ class XmlPlugin:
         -------
         ET.SubElement: the xml element for a sentence
         """
-        # Get speaker index
+        ## get speaker index
         index = self.get_string_index(self.speaker_list, speaker)
 
-        # Creates the xml element for a sentence
+        ## creates the xml element for a sentence
         counter_temp = self.counter
         self.counter = self.counter + 1
         return ET.SubElement(
@@ -206,13 +202,13 @@ class XmlPlugin:
         -------
         a string of the properly formatted overlap, pause, or gap.
         """
-        if (curr.text == INTERNAL_MARKER.OVERLAP_FIRST_START or curr.text == INTERNAL_MARKER.OVERLAP_SECOND_START):
-            return XML_FORMATTER.OVERLAP_START
-        elif (curr.text == INTERNAL_MARKER.OVERLAP_FIRST_END 
-              or curr.text == INTERNAL_MARKER.OVERLAP_SECOND_END):
-            return XML_FORMATTER.OVERLAP_END
-        elif (curr.text == INTERNAL_MARKER.PAUSES 
-              or curr.text == INTERNAL_MARKER.GAPS):
+        if curr.text == "overlap-secondStart" or curr.text == "overlap-firstStart":
+            return " < "
+        elif curr.text == "overlap-firstEnd":
+            return " > [<]"
+        elif curr.text == "overlap-secondEnd":
+            return " > [>]"
+        elif curr.text == "pauses" or curr.text == "gaps":
             time_difference = "{:.2f}".format(curr.end - curr.start)
             return "(" + time_difference + ")"
         else:
