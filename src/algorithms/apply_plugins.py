@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-13 11:49:25
+# @Last Modified time: 2023-07-13 12:11:07
 # @Description: Checks which plugins are activated and uses them
 
 import toml
@@ -14,6 +14,9 @@ from Plugin_Development.src.algorithms.overlap import OverlapPlugin
 from Plugin_Development.src.algorithms.pause import PausePlugin
 from Plugin_Development.src.algorithms.syllab_rate import SyllableRatePlugin
 
+###############################################################################
+# CLASS DEFINITIONS                                                           #
+###############################################################################
 
 class ApplyPlugins:
     """

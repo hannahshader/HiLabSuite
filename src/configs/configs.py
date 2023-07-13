@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-# @Last Modified by:   Jason Y. Wu
-# @Last Modified time: 2023-06-30 17:06:06
+# @Last Modified by:   Jacob Boyar
+# @Last Modified time: 2023-07-13 12:15:29
 # @Description: The class configurations for formats, labels and output files
 
 
@@ -31,6 +31,15 @@ class CSV_FORMATTER:
 
     HEADER = ["SPEAKER LABEL", "TEXT", "START TIME", "END TIME"]
     TXT_SEP = " "
+
+
+@dataclass
+class SYLL_VARS:
+    """
+    Dataclass for syllable variables in a csv file
+    """
+    LIMIT_DEVIATIONS = 2
+    
 
 
 @dataclass

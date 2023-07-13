@@ -2,35 +2,17 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-13 11:49:16
+# @Last Modified time: 2023-07-13 12:11:41
 # @Description: Checks for overlaps between multiple speakers
 
 from typing import Dict, Any, List
 
 from Plugin_Development.src.configs.configs import (
     INTERNAL_MARKER,
-    load_threshold,
 )
 from Plugin_Development.src.data_structures.data_objects import UttObj
 from gailbot import Plugin
 from gailbot import GBPluginMethods
-
-
-MARKER = INTERNAL_MARKER
-""" The format of the marker to be inserted into the list """
-THRESHOLD = load_threshold()
-""" The threshold for what length of time qualifies an 'overlap' """
-INVALID_OVERLAP = (-1, -1, -1, -1)
-""" A dummy format for an invalid overlap """
-
-###############################################################################
-# GLOBALS                                                                     #
-###############################################################################
-
-MARKER = INTERNAL_MARKER  # gets class representing a marker node
-THRESHOLD = load_threshold()  # function to retrieve threshold data from config
-INVALID_OVERLAP = (-1, -1, -1, -1)  # markers for an invalid overlap
-
 
 ###############################################################################
 # CLASS DEFINITIONS                                                           #

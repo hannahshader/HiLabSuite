@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-27 12:16:07
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-13 11:54:09
+# @Last Modified time: 2023-07-13 12:11:01
 from typing import Dict, Any, List
 from Plugin_Development.src.configs.configs import (
     INTERNAL_MARKER,
@@ -23,17 +23,10 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-
-###############################################################################
-# GLOBALS                                                                     #
-###############################################################################
-MARKER = INTERNAL_MARKER  # gets class representing a marker node
-THRESHOLD = load_threshold()  # function to retrieve threshold data from config
-
-
 ###############################################################################
 # CLASS DEFINITIONS                                                           #
 ###############################################################################
+
 class GapPlugin(Plugin):
     """
     Wrapper class for the Gaps plugin. Contains functionality that inserts
@@ -81,8 +74,8 @@ class GapPlugin(Plugin):
         if fto >= load_threshold().GAPS_LB and curr_utt.speaker != next_utt.speaker:
             logging.debug(f"get fto : {fto}")
             # format marker text
-            markerText = MARKER.TYPE_INFO_SP.format(
-                MARKER.GAPS, str(round(fto, 1)), str(curr_utt.speaker)
+            markerText = INTERNAL_MARKER.TYPE_INFO_SP.format(
+                INTERNAL_MARKER.GAPS, str(round(fto, 1)), str(curr_utt.speaker)
             )
             # create instance of marker
             return UttObj(
