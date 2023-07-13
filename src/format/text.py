@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-13 11:47:54
+# @Last Modified time: 2023-07-13 12:39:09
 # @Description: Creates the text output for our plugins
 
 import re
@@ -23,27 +23,9 @@ from Plugin_Development.src.configs.configs import (
     CON_FORMATTER,
 )
 
-############
-# GLOBALS
-############
-
-MARKER = INTERNAL_MARKER
-""" The format of the marker to be inserted into the list """
-LABEL = load_label().TXT
-""" The threshold for what length of time qualifies an 'overlap' """
-PAUSES = "pauses"
-"""Variable name for pauses"""
-GAPS = "gaps"
-"""Variable name for gaps"""
-PAUSES_CAPS = "PAUSES"
-"""Variable name for pauses but in all caps"""
-GAPS_CAPS = "GAPS"
-"""Variable name for gaps but in all caps"""
-
-
-############
-# CLASS DEFINITIONS
-############
+###############################################################################
+# CLASS DEFINITIONS                                                           #
+###############################################################################
 
 
 class TextPlugin(Plugin):

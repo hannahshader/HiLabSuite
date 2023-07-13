@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-# @Last Modified by:   Hannah Shader
-# @Last Modified time: 2023-07-06 11:03:29
+# @Last Modified by:   Jacob Boyar
+# @Last Modified time: 2023-07-13 12:33:10
 # @Description: Writes data to disk our list of words and list of sentences
 
 import pickle
@@ -11,6 +11,9 @@ import os
 from gailbot import GBPluginMethods
 import threading
 
+###############################################################################
+# CLASS DEFINITIONS                                                           #
+###############################################################################
 
 class Pickling:
     def __init__(self):

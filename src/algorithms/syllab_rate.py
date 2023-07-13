@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-13 12:17:32
+# @Last Modified time: 2023-07-13 12:20:55
 # @Description: Calculates the average syllable rate for all speakers
 #   Denotes any sections of especially fast or slow speech.
 
@@ -23,6 +23,7 @@ from gailbot import GBPluginMethods
 ###############################################################################
 # CLASS DEFINITIONS                                                           #
 ###############################################################################
+
 class SYLLAB_DICT(TypedDict):
     utt: List[UttObj]
     syllableNum: int

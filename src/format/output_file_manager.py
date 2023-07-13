@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-13 11:47:50
+# @Last Modified time: 2023-07-13 12:38:33
 # @Description: Manages the output files created by our plugins
 
 import re
@@ -29,6 +29,10 @@ from Plugin_Development.src.format.xml import XmlPlugin
 from Plugin_Development.src.format.chat import ChatPlugin
 
 
+###############################################################################
+# CLASS DEFINITIONS                                                           #
+###############################################################################
+
 class OutputFileManager(Plugin):
     """
     Creates file objects and runs drivers
@@ -48,7 +52,7 @@ class OutputFileManager(Plugin):
         self.successful = True
         return structure_interact_instance
 
-        ## creates all files
+        # creates all files
         """
         csv_init = CSVPlugin()
         csv_init.run(structure_interact_instance)

@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-12 20:00:42
+# @Last Modified time: 2023-07-13 12:38:19
 # @Description: Creates the csv output for our plugins
 
 import os
@@ -22,20 +22,9 @@ from Plugin_Development.src.data_structures.structure_interact import (
     StructureInteract,
 )
 
-############
-# GLOBALS
-############
-
-PAUSES = "pauses"
-"""Variable name for pauses"""
-GAPS = "gaps"
-"""Variable name for gaps"""
-
-
-############
-# CLASS DEFINITIONS
-############
-
+###############################################################################
+# CLASS DEFINITIONS                                                           #
+###############################################################################
 
 class CSVPlugin(Plugin):
     """
@@ -102,7 +91,7 @@ class CSVPlugin(Plugin):
             writer = csv.writer(outfile)
             writer.writerow(CSV_FORMATTER.HEADER)
 
-            # calls apply function to get results of each row and outputs it
+            # Calls apply function to get results of each row and outputs it
             result = structure_interact_instance.apply_function(self.word_level_helper)
             for item in result:
                 writer.writerow(item)
