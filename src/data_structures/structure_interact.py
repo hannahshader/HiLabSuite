@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-12 14:48:29
+# @Last Modified time: 2023-07-12 15:12:29
 # @Description: Contains our structures for running our plugins and creating
 #   their output.
 
@@ -13,6 +13,7 @@ from typing import Any, Dict, List, IO
 from typing import OrderedDict as OrderedDictType, TypeVar
 from pydantic import BaseModel
 from collections import OrderedDict
+import threading
 
 from Plugin_Development.src.data_structures.marker_utterance_dict import (
     MarkerUtteranceDict,
@@ -22,6 +23,7 @@ from Plugin_Development.src.algorithms.apply_plugins import ApplyPlugins
 from gailbot import Plugin
 from gailbot import GBPluginMethods
 
+lock = threading.lock()
 
 ###############################################################################
 # CLASS DEFINITIONS                                                           #
@@ -93,7 +95,8 @@ class StructureInteract(Plugin):
         -------
         none
         """
-        self.data_structure.sort_list()
+        with lock:
+            self.data_structure.sort_list()
 
     def get_speakers(self):
         """
@@ -211,7 +214,8 @@ class StructureInteract(Plugin):
         none
 
         """
-        self.data_structure.apply_insert_marker(apply_functions)
+        with lock:
+            self.data_structure.apply_insert_marker(apply_functions)
 
     def apply_markers_overlap(self, apply_function) -> None:
         """
@@ -225,7 +229,8 @@ class StructureInteract(Plugin):
         -------
         none
         """
-        self.data_structure.apply_for_overlap(apply_function)
+        with lock:
+            self.data_structure.apply_for_overlap(apply_function)
 
     def apply_for_syllab_rate(self, apply_function) -> None:
         """
@@ -239,7 +244,8 @@ class StructureInteract(Plugin):
         -------
         none
         """
-        self.data_structure.apply_for_syllab_rate(apply_function)
+        with lock:
+            self.data_structure.apply_for_syllab_rate(apply_function)
 
     def is_speaker_utt(self, curr) -> bool:
         """

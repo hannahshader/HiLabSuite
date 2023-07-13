@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-12 14:48:09
+# @Last Modified time: 2023-07-12 15:16:54
 # @Description: Creates a marker utterance dictionary
 
 import copy
@@ -16,6 +16,7 @@ from typing import Any, Dict, List, IO
 from typing import OrderedDict as OrderedDictType, TypeVar
 from pydantic import BaseModel
 from collections import OrderedDict
+import threading
 
 from Plugin_Development.src.configs.configs import INTERNAL_MARKER
 from Plugin_Development.src.data_structures.data_objects import UttObj
@@ -26,6 +27,8 @@ from Plugin_Development.src.configs.configs import load_threshold
 
 from gailbot import Plugin
 from gailbot import GBPluginMethods
+
+lock = threading.Lock()
 
 
 ###############################################################################
@@ -60,7 +63,6 @@ class MarkerUtteranceDict:
         
         print(utterance_map)
 
-        self.lock = threading.Lock()
         self.pickle = Pickling()
         if utterance_map is None:
             # Holds data about words spoken by each speaker
@@ -210,7 +212,7 @@ class MarkerUtteranceDict:
         """
         logging.info("marker insertion")
         
-        with self.lock:
+        with lock:
             self.pickle.load_list_from_disk(self.list)
             if value == None:
                 return

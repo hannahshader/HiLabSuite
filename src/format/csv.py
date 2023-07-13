@@ -2,12 +2,13 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-12 14:49:30
+# @Last Modified time: 2023-07-13 08:58:04
 # @Description: Creates the csv output for our plugins
 
 import os
 import csv
 from typing import Dict, Any
+import threading
 
 from Plugin_Development.src.configs.configs import (
     INTERNAL_MARKER,
@@ -21,6 +22,8 @@ from gailbot import GBPluginMethods
 from Plugin_Development.src.data_structures.structure_interact import (
     StructureInteract,
 )
+
+lock = threading.Lock()
 
 ###############################################################################
 # CLASS DEFINITIONS                                                           #
@@ -90,7 +93,8 @@ class CSVPlugin:
         speaker, text, start, and end times.
         """
         l = []
-        l.append(curr.text)
+        with lock:
+            l.append(curr.text)
         txt = CSV_FORMATTER.TXT_SEP.join(l)
 
         speaker = ""
@@ -119,21 +123,22 @@ class CSVPlugin:
         A string with the appropriate format of pause/gap/overlap/syllable rate
         to append to the csv output
         """
-        if (
-            curr.text == "pauses"
-            or curr.text == "gaps"
-            or curr.text == "overlap-secondStart"
-            or curr.text == "overlap-firstStart"
-            or curr.text == "overlap-firstEnd"
-            or curr.text == "overlap-secondEnd"
-            or curr.text == "slowspeech_start"
-            or curr.text == "slowspeech_end"
-            or curr.text == "fastspeech_start"
-            or curr.text == "fastspeech_end"
-        ):
-            return " (" + curr.text + ") "
-        else:
-            return " " + curr.text + " "
+        with lock:
+            if (
+                curr.text == "pauses"
+                or curr.text == "gaps"
+                or curr.text == "overlap-secondStart"
+                or curr.text == "overlap-firstStart"
+                or curr.text == "overlap-firstEnd"
+                or curr.text == "overlap-secondEnd"
+                or curr.text == "slowspeech_start"
+                or curr.text == "slowspeech_end"
+                or curr.text == "fastspeech_start"
+                or curr.text == "fastspeech_end"
+            ):
+                return " (" + curr.text + ") "
+            else:
+                return " " + curr.text + " "
 
     def _utterance_level(self, structure_interact_instance) -> None:
         """

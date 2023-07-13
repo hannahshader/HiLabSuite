@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-12 14:58:37
+# @Last Modified time: 2023-07-12 15:17:02
 # @Description: Calculates the average syllable rate for all speakers
 #   Denotes any sections of especially fast or slow speech.
 
@@ -11,12 +11,16 @@ import numpy
 import logging
 from typing import Dict, Any, List, TypedDict
 from scipy.stats import median_abs_deviation
+import threading
 
 from Plugin_Development.src.configs.configs import (
     INTERNAL_MARKER,
     SYLLAB_RATE_VARS,
 )
 from Plugin_Development.src.data_structures.data_objects import UttObj
+
+lock = threading.Lock()
+
 
 ###############################################################################
 # CLASS DEFINITIONS                                                           #
@@ -102,13 +106,14 @@ class SyllableRatePlugin:
         sentence_syllab_count = 0
         speaker = utt_list[0].speaker
         flexible_info = utt_list[0].flexible_info
-        for curr_utt in utt_list:
-            # Doesn't include other paralinguistic markers data
-            # in the speaker rate data
-            # Assumes all feature text starts with non numberic char
-            if (curr_utt.text[0].isalpha()) == False:
-                continue
-            sentence_syllab_count += syllables.estimate(curr_utt.text)
+        with lock:
+            for curr_utt in utt_list:
+                # Doesn't include other paralinguistic markers data
+                # in the speaker rate data
+                # Assumes all feature text starts with non numberic char
+                if (curr_utt.text[0].isalpha()) == False:
+                    continue
+                sentence_syllab_count += syllables.estimate(curr_utt.text)
 
         time_diff = abs(sentence_start - sentence_end)
         # No time difference
@@ -127,7 +132,8 @@ class SyllableRatePlugin:
             "syllableNum": sentence_syllab_count,
             "syllableRate": syllable_rate,
         }
-        self.list_of_syllab_dict.append(utt_syllable)
+        with lock:
+            self.list_of_syllab_dict.append(utt_syllable)
 
     def get_stats(self, utt_syll_dict: Dict) -> STAT_DICT:
         """

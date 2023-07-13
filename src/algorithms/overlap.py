@@ -2,16 +2,19 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-12 14:36:46
+# @Last Modified time: 2023-07-12 15:17:07
 # @Description: Checks for overlaps between multiple speakers
 
 from typing import Dict, Any, List
 import logging
+import threading
 
 from Plugin_Development.src.configs.configs import (
     INTERNAL_MARKER,
 )
 from Plugin_Development.src.data_structures.data_objects import UttObj
+
+lock = threading.Lock()
 
 ###############################################################################
 # CLASS DEFINITIONS                                                           #
@@ -52,14 +55,15 @@ class OverlapPlugin:
         if next_start < curr_end:
             curr_speaker = ""
             next_speaker = ""
-            for utt in list:
-                if utt.start == next_start and utt.flexible_info == next_id:
-                    next_speaker = utt.speaker
-                    next_flexible_info = utt.flexible_info
+            with lock:
+                for utt in list:
+                    if utt.start == next_start and utt.flexible_info == next_id:
+                        next_speaker = utt.speaker
+                        next_flexible_info = utt.flexible_info
 
-                if utt.end == curr_end and utt.flexible_info == curr_id:
-                    curr_speaker = utt.speaker
-                    curr_flexible_info = utt.flexible_info
+                    if utt.end == curr_end and utt.flexible_info == curr_id:
+                        curr_speaker = utt.speaker
+                        curr_flexible_info = utt.flexible_info
 
             # set overlap start marker
             overlap_start_time = max(curr_start, next_start)

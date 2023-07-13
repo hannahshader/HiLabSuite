@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-12 14:56:46
+# @Last Modified time: 2023-07-13 08:56:39
 # @Description: Creates the xml output for our plugins
 
 import logging
@@ -10,6 +10,7 @@ import os
 from typing import Dict, Any
 import xml.etree.ElementTree as ET
 import xml.dom.minidom
+import threading
 
 from Plugin_Development.src.configs.configs import (
     INTERNAL_MARKER,
@@ -20,6 +21,8 @@ from Plugin_Development.src.configs.configs import (
 )
 from gailbot import Plugin
 from gailbot import GBPluginMethods
+
+lock = threading.Lock()
 
 ###############################################################################
 # CLASS DEFINITIONS                                                           #
@@ -64,17 +67,19 @@ class XmlPlugin:
         )
 
         # Gets a list of the speaker names
-        self.speaker_list = structure_interact_instance.get_speakers()
+        with lock:
+            self.speaker_list = structure_interact_instance.get_speakers()
 
         # Generate a dictionary that has the speaker names and attributes
         # filled out that are needed for the xml file
         speaker_data = []
-        for i, speaker in enumerate(self.speaker_list):
-            speaker_data.append({})
-            speaker_data[i]["id"] = "SP" + str(i)
-            speaker_data[i]["name"] = self.speaker_list[i]
-            speaker_data[i]["role"] = "Adult"
-            speaker_data[i]["language"] = "eng"
+        with lock:
+            for i, speaker in enumerate(self.speaker_list):
+                speaker_data.append({})
+                speaker_data[i]["id"] = "SP" + str(i)
+                speaker_data[i]["name"] = self.speaker_list[i]
+                speaker_data[i]["role"] = "Adult"
+                speaker_data[i]["language"] = "eng"
 
         root_elem = ET.SubElement(self.root, "Participants")
 
@@ -82,18 +87,20 @@ class XmlPlugin:
         self.counter = 0
 
         # Initializes participants section of xml file
-        for speaker_data_elem in speaker_data:
-            speaker_elem = ET.SubElement(
-                root_elem, "participant", attrib=speaker_data_elem
-            )
+        with lock:
+            for speaker_data_elem in speaker_data:
+                speaker_elem = ET.SubElement(
+                    root_elem, "participant", attrib=speaker_data_elem
+                )
 
         # Fill out speaker fields in the xml files
         # Iterate through speaker names
-        structure_interact_instance.print_all_rows_xml(
-            self.apply_subelement_root,
-            self.apply_subelement_word,
-            self.apply_sentence_end,
-        )
+        with lock:
+            structure_interact_instance.print_all_rows_xml(
+                self.apply_subelement_root,
+                self.apply_subelement_word,
+                self.apply_sentence_end,
+            )
 
         xml_str = ET.tostring(self.root, encoding="utf-8")
         dom = xml.dom.minidom.parseString(xml_str)  ## parse the XML string
@@ -118,7 +125,8 @@ class XmlPlugin:
         ET.SubElement: the xml element for a sentence
         """
         # Get speaker index
-        index = self.get_string_index(self.speaker_list, speaker)
+        with lock:
+            index = self.get_string_index(self.speaker_list, speaker)
 
         # Creates the xml element for a sentence
         counter_temp = self.counter
