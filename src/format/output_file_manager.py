@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-13 12:38:33
+# @Last Modified time: 2023-07-13 12:45:34
 # @Description: Manages the output files created by our plugins
 
 import re
@@ -43,9 +43,17 @@ class OutputFileManager(Plugin):
 
     def apply(self, dependency_outputs: Dict[str, Any], methods: GBPluginMethods):
         """
-        Populate the data structure with plugins
+        Populates the data structure with plugins
+
+        Parameters
+        ----------
+        dependency_outputs : a dictionary of dependency outputs
+        methods: the methods being used, currently GBPluginMethods
+
+        Returns
+        -------
+        none
         """
-        # populate data structure with plugins
         structure_interact_instance = StructureInteract()
         structure_interact_instance = structure_interact_instance.apply(methods)
 

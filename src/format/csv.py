@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-13 12:38:19
+# @Last Modified time: 2023-07-13 12:45:10
 # @Description: Creates the csv output for our plugins
 
 import os
@@ -35,8 +35,18 @@ class CSVPlugin(Plugin):
         super().__init__()
 
     def apply(self, dependency_outputs: Dict[str, Any], methods: GBPluginMethods):
-        # overlap plugin has the most dependencies, i.e. the version of the data
-        # structure with the most and all of the markers
+        """
+        Applies the structure of most of the markers
+
+        Parameters
+        ----------
+        dependency_outputs : a dictionary of dependency outputs
+        methods: the methods being used, currently GBPluginMethods
+
+        Returns
+        -------
+        none
+        """
         structure_interact_instance = dependency_outputs["OverlapPlugin"]
         self.run(structure_interact_instance)
         self.successful = True
