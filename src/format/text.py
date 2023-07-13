@@ -1,12 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-# @Last Modified by:   Hannah Shader
-<<<<<<< Updated upstream
-# @Last Modified time: 2023-07-07 14:04:35
-=======
-# @Last Modified time: 2023-07-12 20:13:15
->>>>>>> Stashed changes
+# @Last Modified by:   Jacob Boyar
+# @Last Modified time: 2023-07-13 11:47:54
 # @Description: Creates the text output for our plugins
 
 import re

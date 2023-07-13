@@ -1,12 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-# @Last Modified by:   Hannah Shader
-<<<<<<< Updated upstream
-# @Last Modified time: 2023-07-11 16:29:03
-=======
-# @Last Modified time: 2023-07-12 15:35:06
->>>>>>> Stashed changes
+# @Last Modified by:   Jacob Boyar
+# @Last Modified time: 2023-07-13 11:49:25
 # @Description: Checks which plugins are activated and uses them
 
 import toml

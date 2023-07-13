@@ -1,12 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-27 12:16:07
-# @Last Modified by:   Hannah Shader
-<<<<<<< Updated upstream
-# @Last Modified time: 2023-07-07 15:09:43
-=======
-# @Last Modified time: 2023-07-13 11:07:31
->>>>>>> Stashed changes
+# @Last Modified by:   Jacob Boyar
+# @Last Modified time: 2023-07-13 11:54:09
 from typing import Dict, Any, List
 from Plugin_Development.src.configs.configs import (
     INTERNAL_MARKER,
@@ -16,11 +12,8 @@ from Plugin_Development.src.configs.configs import (
 from Plugin_Development.src.data_structures.data_objects import UttObj
 
 import logging
-<<<<<<< Updated upstream
-=======
 from gailbot import Plugin
 from gailbot import GBPluginMethods
->>>>>>> Stashed changes
 
 # For logging to STDOUT. Additional handlers can be added for log file outputs.
 logging.basicConfig(
@@ -41,11 +34,7 @@ THRESHOLD = load_threshold()  # function to retrieve threshold data from config
 ###############################################################################
 # CLASS DEFINITIONS                                                           #
 ###############################################################################
-<<<<<<< Updated upstream
-class GapPlugin:
-=======
 class GapPlugin(Plugin):
->>>>>>> Stashed changes
     """
     Wrapper class for the Gaps plugin. Contains functionality that inserts
     gap markers
@@ -89,7 +78,7 @@ class GapPlugin(Plugin):
         """
         fto = round(next_utt.start - curr_utt.end, 2)
         logging.debug(f"get fto : {fto}")
-        if fto >= THRESHOLD.GAPS_LB and curr_utt.speaker != next_utt.speaker:
+        if fto >= load_threshold().GAPS_LB and curr_utt.speaker != next_utt.speaker:
             logging.debug(f"get fto : {fto}")
             # format marker text
             markerText = MARKER.TYPE_INFO_SP.format(

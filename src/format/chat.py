@@ -1,13 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-<<<<<<< Updated upstream
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-06-29 10:34:51
-=======
-# @Last Modified by:   Hannah Shader
-# @Last Modified time: 2023-07-13 10:55:45
->>>>>>> Stashed changes
+# @Last Modified time: 2023-07-13 11:47:59
 # @Description: Creates the CHAT output for our plugins based on TalkBank format
 
 import subprocess

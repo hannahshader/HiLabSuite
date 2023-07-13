@@ -1,12 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-# @Last Modified by:   Hannah Shader
-<<<<<<< Updated upstream
-# @Last Modified time: 2023-07-11 23:03:41
-=======
-# @Last Modified time: 2023-07-13 10:55:54
->>>>>>> Stashed changes
+# @Last Modified by:   Jacob Boyar
+# @Last Modified time: 2023-07-13 11:52:29
 # @Description: Creates the xml output for our plugins
 
 from typing import Dict, Any
@@ -24,11 +20,7 @@ import xml.etree.ElementTree as ET
 import xml.dom.minidom
 
 
-<<<<<<< Updated upstream
-class XmlPlugin:
-=======
 class XmlPlugin(Plugin):
->>>>>>> Stashed changes
     """Creates the XML file"""
 
     def __init__(self) -> None:

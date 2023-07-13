@@ -1,12 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-# @Last Modified by:   Hannah Shader
-<<<<<<< Updated upstream
-# @Last Modified time: 2023-07-11 22:50:10
-=======
+# @Last Modified by:   Jacob Boyar
 # @Last Modified time: 2023-07-12 20:00:42
->>>>>>> Stashed changes
 # @Description: Creates the csv output for our plugins
 
 import os
@@ -29,25 +25,11 @@ from Plugin_Development.src.data_structures.structure_interact import (
 ############
 # GLOBALS
 ############
-<<<<<<< Updated upstream
 
 PAUSES = "pauses"
 """Variable name for pauses"""
 GAPS = "gaps"
 """Variable name for gaps"""
-
-
-############
-# CLASS DEFINITIONS
-############
-
-=======
-
-PAUSES = "pauses"
-"""Variable name for pauses"""
-GAPS = "gaps"
-"""Variable name for gaps"""
->>>>>>> Stashed changes
 
 
 ############
