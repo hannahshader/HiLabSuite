@@ -2,7 +2,11 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Hannah Shader
+<<<<<<< Updated upstream
 # @Last Modified time: 2023-07-07 14:05:09
+=======
+# @Last Modified time: 2023-07-12 14:59:03
+>>>>>>> Stashed changes
 # @Description: Manages the output files created by our plugins
 
 import re
@@ -45,7 +49,15 @@ class OutputFileManager(Plugin):
         structure_interact_instance = StructureInteract()
         structure_interact_instance = structure_interact_instance.apply(methods)
 
+<<<<<<< Updated upstream
         ## creates all files
+=======
+        self.successful = True
+        return structure_interact_instance
+
+        ## creates all files
+        """
+>>>>>>> Stashed changes
         csv_init = CSVPlugin()
         csv_init.run(structure_interact_instance)
 
@@ -64,3 +76,4 @@ class OutputFileManager(Plugin):
         shutil.copy2(audio_file_path, methods.output_path)
 
         self.successful = True
+        """

@@ -10,3 +10,55 @@ plugin_name = "OutputFileManager"
 dependencies = []
 rel_path = "src/format/output_file_manager.py"
 module_name = "output_file_manager"
+
+[[plugins]]
+plugin_name = "SyllableRatePlugin"
+dependencies = [ "OutputFileManager",]
+rel_path = "src/algorithms/syllab_rate.py"
+module_name = "syllab_rate"
+
+[[plugins]]
+plugin_name = "GapPlugin"
+dependencies = [ "OutputFileManager", "SyllableRatePlugin",]
+rel_path = "src/algorithms/gap.py"
+module_name = "gap"
+
+[[plugins]]
+plugin_name = "PausePlugin"
+dependencies = [ "OutputFileManager", "SyllableRatePlugin", "GapPlugin",]
+rel_path = "src/algorithms/pause.py"
+module_name = "pause"
+
+[[plugins]]
+plugin_name = "OverlapPlugin"
+dependencies = [ "OutputFileManager", "SyllableRatePlugin", "GapPlugin", "PausePlugin",]
+rel_path = "src/algorithms/overlap.py"
+module_name = "overlap"
+
+[[plugins]]
+plugin_name = "CSVPlugin"
+dependencies = [ "OutputFileManager", "SyllableRatePlugin", "GapPlugin", "PausePlugin", "OverlapPlugin",]
+rel_path = "src/format/csv.py"
+module_name = "csv"
+
+[[plugins]]
+plugin_name = "TextPlugin"
+dependencies = [ "OutputFileManager", "SyllableRatePlugin", "GapPlugin", "PausePlugin", "OverlapPlugin",]
+rel_path = "src/format/text.py"
+module_name = "text"
+
+[[plugins]]
+plugin_name = "XmlPlugin"
+dependencies = [ "OutputFileManager", "SyllableRatePlugin", "GapPlugin", "PausePlugin", "OverlapPlugin",]
+rel_path = "src/format/xml.py"
+module_name = "xml"
+
+[[plugins]]
+plugin_name = "ChatPlugin"
+dependencies = [ "OutputFileManager", "SyllableRatePlugin", "GapPlugin", "PausePlugin", "OverlapPlugin", "XmlPlugin",]
+rel_path = "src/format/chat.py"
+module_name = "chat"
+
+
+
+

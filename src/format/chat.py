@@ -1,8 +1,13 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
+<<<<<<< Updated upstream
 # @Last Modified by:   Jacob Boyar
 # @Last Modified time: 2023-06-29 10:34:51
+=======
+# @Last Modified by:   Hannah Shader
+# @Last Modified time: 2023-07-13 10:55:45
+>>>>>>> Stashed changes
 # @Description: Creates the CHAT output for our plugins based on TalkBank format
 
 import subprocess
@@ -16,10 +21,22 @@ from Plugin_Development.src.configs.configs import (
     OUTPUT_FILE,
     CSV_FORMATTER,
 )
+from gailbot import Plugin
+from gailbot import GBPluginMethods
 
 
-class ChatPlugin:
+class ChatPlugin(Plugin):
     """Generates a chat file as an output"""
+
+    def __init__(self) -> None:
+        super().__init__()
+
+    def apply(self, dependency_outputs: Dict[str, Any], methods: GBPluginMethods):
+        # overlap plugin has the most dependencies, i.e. the version of the data
+        # structure with the most and all of the markers
+        structure_interact_instance = dependency_outputs["XmlPlugin"]
+        self.run(structure_interact_instance)
+        self.successful = True
 
     def run(self, structure_interact_instance) -> None:
         """
@@ -59,8 +76,6 @@ class ChatPlugin:
         )
 
         subprocess.run(command, shell=True)
-
-
 
     def error_file(self, structure_interact_instance) -> None:
         """

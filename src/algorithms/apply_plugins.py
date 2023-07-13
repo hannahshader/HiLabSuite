@@ -2,7 +2,11 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Hannah Shader
+<<<<<<< Updated upstream
 # @Last Modified time: 2023-07-11 16:29:03
+=======
+# @Last Modified time: 2023-07-12 15:35:06
+>>>>>>> Stashed changes
 # @Description: Checks which plugins are activated and uses them
 
 import toml
@@ -104,9 +108,9 @@ class ApplyPlugins:
         -------
             A list of plugin names.
         """
-        if "SyllableRatePlugin" in self.plugin_names:
-            syllab_rate_instance = SyllableRatePlugin(structure_interact_instance)
-            syllab_rate_instance.syllab_marker()
+        # if "SyllableRatePlugin" in self.plugin_names:
+        #    syllab_rate_instance = SyllableRatePlugin(structure_interact_instance)
+        #    syllab_rate_instance.syllab_marker()
 
         ## after data from individual setences in seperate files have
         ## been analyzed, the sentences from different files can be integrated

@@ -2,7 +2,11 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Hannah Shader
+<<<<<<< Updated upstream
 # @Last Modified time: 2023-07-11 22:50:10
+=======
+# @Last Modified time: 2023-07-12 20:00:42
+>>>>>>> Stashed changes
 # @Description: Creates the csv output for our plugins
 
 import os
@@ -25,6 +29,7 @@ from Plugin_Development.src.data_structures.structure_interact import (
 ############
 # GLOBALS
 ############
+<<<<<<< Updated upstream
 
 PAUSES = "pauses"
 """Variable name for pauses"""
@@ -36,11 +41,34 @@ GAPS = "gaps"
 # CLASS DEFINITIONS
 ############
 
+=======
 
-class CSVPlugin:
+PAUSES = "pauses"
+"""Variable name for pauses"""
+GAPS = "gaps"
+"""Variable name for gaps"""
+>>>>>>> Stashed changes
+
+
+############
+# CLASS DEFINITIONS
+############
+
+
+class CSVPlugin(Plugin):
     """
     Generates a CSV file based on the given specifications
     """
+
+    def __init__(self) -> None:
+        super().__init__()
+
+    def apply(self, dependency_outputs: Dict[str, Any], methods: GBPluginMethods):
+        # overlap plugin has the most dependencies, i.e. the version of the data
+        # structure with the most and all of the markers
+        structure_interact_instance = dependency_outputs["OverlapPlugin"]
+        self.run(structure_interact_instance)
+        self.successful = True
 
     def run(self, structure_interact_instance) -> None:
         """

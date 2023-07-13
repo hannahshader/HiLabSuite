@@ -2,7 +2,11 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Hannah Shader
+<<<<<<< Updated upstream
 # @Last Modified time: 2023-07-07 15:12:42
+=======
+# @Last Modified time: 2023-07-12 19:51:11
+>>>>>>> Stashed changes
 # @Description: Checks for pauses in speech when one speaker is speaking
 
 import logging
@@ -17,6 +21,12 @@ from Plugin_Development.src.configs.configs import (
 )
 from Plugin_Development.src.data_structures.data_objects import UttObj
 
+<<<<<<< Updated upstream
+=======
+from gailbot import Plugin
+from gailbot import GBPluginMethods
+
+>>>>>>> Stashed changes
 ############
 # GLOBALS
 ############
@@ -35,11 +45,28 @@ THRESHOLD = load_threshold()
 ###############################################################################
 # CLASS DEFINITIONS                                                           #
 ###############################################################################
+<<<<<<< Updated upstream
 class PausePlugin:
+=======
+class PausePlugin(Plugin):
+>>>>>>> Stashed changes
     """
     Wrapper class for the Pause plugin. Contains functionality that inserts
     overlap markers
     """
+
+    def __init__(self) -> None:
+        super().__init__()
+
+    def apply(self, dependency_outputs: Dict[str, Any], methods: GBPluginMethods):
+        self.structure_interact_instance = dependency_outputs["GapPlugin"]
+
+        #TODO fix apply marker so you don't need to pass through a list
+        functions_list = [PausePlugin.pause_marker]
+        self.structure_interact_instance.apply_markers(functions_list)
+
+        self.successful = True
+        return self.structure_interact_instance
 
     def pause_marker(curr_utt: UttObj, next_utt: UttObj) -> UttObj:
         """

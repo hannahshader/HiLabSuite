@@ -2,7 +2,11 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Hannah Shader
+<<<<<<< Updated upstream
 # @Last Modified time: 2023-07-07 14:03:08
+=======
+# @Last Modified time: 2023-07-12 15:49:08
+>>>>>>> Stashed changes
 # @Description: Contains our structures for running our plugins and creating
 #   their output.
 
@@ -75,11 +79,14 @@ class StructureInteract(Plugin):
         self.sentence_data = marker_utterance_obj.sentences
 
         # Applies plugins
-        apply_plugins_instance = ApplyPlugins()
-        apply_plugins_instance.apply_plugins(self)
+        # apply_plugins_instance = ApplyPlugins()
+        # apply_plugins_instance.apply_plugins(self)
 
         # Returns a version of itself
         return self
+
+    def testing_print(self):
+        self.data_structure.testing_print()
 
     def sort_list(self) -> None:
         """

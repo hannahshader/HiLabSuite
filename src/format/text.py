@@ -2,7 +2,11 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Hannah Shader
+<<<<<<< Updated upstream
 # @Last Modified time: 2023-07-07 14:04:35
+=======
+# @Last Modified time: 2023-07-12 20:13:15
+>>>>>>> Stashed changes
 # @Description: Creates the text output for our plugins
 
 import re
@@ -50,6 +54,16 @@ class TextPlugin(Plugin):
     """
     Calls the functions to print our output to a text file
     """
+
+    def __init__(self) -> None:
+        super().__init__()
+
+    def apply(self, dependency_outputs: Dict[str, Any], methods: GBPluginMethods):
+        # overlap plugin has the most dependencies, i.e. the version of the data
+        # structure with the most and all of the markers
+        structure_interact_instance = dependency_outputs["OverlapPlugin"]
+        self.run(structure_interact_instance)
+        self.successful = True
 
     def run(self, structure_interact_instance) -> None:
         """

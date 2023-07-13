@@ -2,7 +2,11 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Hannah Shader
+<<<<<<< Updated upstream
 # @Last Modified time: 2023-07-11 16:38:26
+=======
+# @Last Modified time: 2023-07-13 11:11:06
+>>>>>>> Stashed changes
 # @Description: Checks for overlaps between multiple speakers
 
 from typing import Dict, Any, List
@@ -12,6 +16,8 @@ from Plugin_Development.src.configs.configs import (
     load_threshold,
 )
 from Plugin_Development.src.data_structures.data_objects import UttObj
+from gailbot import Plugin
+from gailbot import GBPluginMethods
 
 
 MARKER = INTERNAL_MARKER
@@ -29,17 +35,55 @@ MARKER = INTERNAL_MARKER  # gets class representing a marker node
 THRESHOLD = load_threshold()  # function to retrieve threshold data from config
 INVALID_OVERLAP = (-1, -1, -1, -1)  # markers for an invalid overlap
 
+<<<<<<< Updated upstream
+
+MARKER = INTERNAL_MARKER
+""" The format of the marker to be inserted into the list """
+THRESHOLD = load_threshold()
+""" The threshold for what length of time qualifies an 'overlap' """
+INVALID_OVERLAP = (-1, -1, -1, -1)
+""" A dummy format for an invalid overlap """
+
+###############################################################################
+# GLOBALS                                                                     #
+###############################################################################
+
+MARKER = INTERNAL_MARKER  # gets class representing a marker node
+THRESHOLD = load_threshold()  # function to retrieve threshold data from config
+INVALID_OVERLAP = (-1, -1, -1, -1)  # markers for an invalid overlap
+
+=======
+>>>>>>> Stashed changes
 
 ###############################################################################
 # CLASS DEFINITIONS                                                           #
 ###############################################################################
 
 
+<<<<<<< Updated upstream
 class OverlapPlugin:
+=======
+class OverlapPlugin(Plugin):
+>>>>>>> Stashed changes
     """
     Wrapper class for the Overlap plugin. Contains functionality that inserts
     overlap markers
     """
+
+    def __init__(self) -> None:
+        super().__init__()
+
+    def apply(self, dependency_outputs: Dict[str, Any], methods: GBPluginMethods):
+        self.structure_interact_instance = dependency_outputs["PausePlugin"]
+
+        self.structure_interact_instance.apply_markers_overlap(
+            OverlapPlugin.OverlapMarker
+        )
+        self.structure_interact_instance.group_overlapping_sentences()
+
+        self.successful = True
+
+        return self.structure_interact_instance
 
     def OverlapMarker(curr_sentence, next_sentence, list) -> List[str]:
         """

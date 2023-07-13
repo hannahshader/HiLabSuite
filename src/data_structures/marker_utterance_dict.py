@@ -2,7 +2,11 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Hannah Shader
+<<<<<<< Updated upstream
 # @Last Modified time: 2023-07-11 16:37:47
+=======
+# @Last Modified time: 2023-07-13 11:26:48
+>>>>>>> Stashed changes
 # @Description: Creates a marker utterance dictionary
 
 import copy
@@ -178,6 +182,14 @@ class MarkerUtteranceDict:
     # def turn_criteria_no_overlaps(self, utt_dict, speaker):
     #    return utt_dict.speaker != speaker
 
+<<<<<<< Updated upstream
+=======
+    def testing_print(self):
+        with self.lock:
+            for item in self.list:
+                print(item.text)
+
+>>>>>>> Stashed changes
     def turn_criteria_overlaps(self, utt_dict, prev_utt):
         if prev_utt == None:
             return False
@@ -193,6 +205,7 @@ class MarkerUtteranceDict:
         None
 
         """
+        # with self.lock:
         self.list = sorted(self.list, key=lambda x: x.start)
 
     def insert_marker(self, value: Any) -> None:
@@ -207,6 +220,7 @@ class MarkerUtteranceDict:
         -------
         none
         """
+<<<<<<< Updated upstream
         with self.lock:
             self.pickle.load_list_from_disk(self.list)
             if value == None:
@@ -214,6 +228,15 @@ class MarkerUtteranceDict:
             index = bisect.bisect_left([obj.start for obj in self.list], value.start)
             self.list.insert(index, value)
             self.pickle.save_list_to_disk(self.list)
+=======
+        # with self.lock:
+        self.pickle.load_list_from_disk(self.list)
+        if value == None:
+            return
+        index = bisect.bisect_left([obj.start for obj in self.list], value.start)
+        self.list.insert(index, value)
+        self.pickle.save_list_to_disk(self.list)
+>>>>>>> Stashed changes
 
     def get_next_utt(self, current_item) -> Any:
         """
@@ -228,6 +251,7 @@ class MarkerUtteranceDict:
         -------
         the next utterance
         """
+        # with self.lock:
         self.pickle.load_list_from_disk(self.list)
         if current_item in self.list:
             current_index = self.list.index(current_item)
@@ -277,6 +301,10 @@ class MarkerUtteranceDict:
         -------
         a list of all of the results of the functions run
         """
+<<<<<<< Updated upstream
+=======
+        # with self.lock:
+>>>>>>> Stashed changes
         self.pickle.load_list_from_disk(self.list)
         result = []
         for item in self.list:
@@ -299,6 +327,10 @@ class MarkerUtteranceDict:
         -------
         a list of the result of the function run
         """
+<<<<<<< Updated upstream
+=======
+        # with self.lock:
+>>>>>>> Stashed changes
         self.pickle.load_list_from_disk(self.list)
         result = []
         for item in self.list:
@@ -319,6 +351,10 @@ class MarkerUtteranceDict:
         -------
         none
         """
+<<<<<<< Updated upstream
+=======
+        # with self.lock:
+>>>>>>> Stashed changes
         self.pickle.load_sentences_from_disk(self.sentences)
 
         sorted_sentences = sorted(self.sentences, key=lambda x: x[0])
@@ -334,8 +370,15 @@ class MarkerUtteranceDict:
                 self.overlap_ids.append(
                     return_values[-2:]
                 )  # gets the ids of overlapping sentences
+<<<<<<< Updated upstream
             for marker in markers_list:
                 self.insert_marker(marker)
+=======
+                for marker in markers_list:
+                    # get a unique id for the overlap
+                    # marker.text = marker.text + str(len(self.overlap_ids))
+                    self.insert_marker(marker)
+>>>>>>> Stashed changes
 
         self.pickle.save_sentences_to_disk(self.sentences)
 
@@ -352,6 +395,10 @@ class MarkerUtteranceDict:
         -------
         none
         """
+<<<<<<< Updated upstream
+=======
+        # with self.lock:
+>>>>>>> Stashed changes
         self.pickle.load_sentences_from_disk(self.sentences)
         self.pickle.load_list_from_disk(self.list)
 
@@ -402,6 +449,10 @@ class MarkerUtteranceDict:
         -------
         none
         """
+<<<<<<< Updated upstream
+=======
+        # with self.lock:
+>>>>>>> Stashed changes
         self.pickle.load_list_from_disk(self.list)
 
         ## deep copies the list so no infinite insertions/checks
@@ -444,6 +495,9 @@ class MarkerUtteranceDict:
         # Format: speaker, text, start, end
         ## sentence object holds speaker, text, start, end
         ## initialize a sentence object to hold bank fields
+
+        ## SELF LOCK NOT NEEDED BECAUSE NO INSERTIONS/DELETIONS PAST THIS PNT?
+
         self.pickle.load_list_from_disk(self.list)
         sentence_obj = [
             self.list[0].speaker,
@@ -533,6 +587,10 @@ class MarkerUtteranceDict:
         self.pickle.save_list_to_disk(self.list)
 
     def order_overlap(self):
+<<<<<<< Updated upstream
+=======
+        # with self.lock:
+>>>>>>> Stashed changes
         self.pickle.load_list_from_disk(self.list)
 
         first_sentence_overlap_id = None
@@ -567,6 +625,10 @@ class MarkerUtteranceDict:
     def order_overlapping_sentences(
         self, first_sentence_overlap_id, second_sentence_overlap_id
     ):
+<<<<<<< Updated upstream
+=======
+        # with self.lock:
+>>>>>>> Stashed changes
         new_list = []
         start_time = float("inf")
 
@@ -621,7 +683,12 @@ class MarkerUtteranceDict:
                     self.list[:insert_index] + sorted_list + self.list[insert_index:]
                 )
 
+    # TODO IS THIS FUNCTION USED? DELETE IF NOT
     def sort(self, list_to_sort, counter):
+<<<<<<< Updated upstream
+=======
+        # with self.lock:
+>>>>>>> Stashed changes
         if self.overlaps:
             unique_ids = []
             for obj in list_to_sort:

@@ -2,7 +2,11 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Hannah Shader
+<<<<<<< Updated upstream
 # @Last Modified time: 2023-07-11 23:03:41
+=======
+# @Last Modified time: 2023-07-13 10:55:54
+>>>>>>> Stashed changes
 # @Description: Creates the xml output for our plugins
 
 from typing import Dict, Any
@@ -20,8 +24,23 @@ import xml.etree.ElementTree as ET
 import xml.dom.minidom
 
 
+<<<<<<< Updated upstream
 class XmlPlugin:
+=======
+class XmlPlugin(Plugin):
+>>>>>>> Stashed changes
     """Creates the XML file"""
+
+    def __init__(self) -> None:
+        super().__init__()
+
+    def apply(self, dependency_outputs: Dict[str, Any], methods: GBPluginMethods):
+        # overlap plugin has the most dependencies, i.e. the version of the data
+        # structure with the most and all of the markers
+        structure_interact_instance = dependency_outputs["OverlapPlugin"]
+        self.run(structure_interact_instance)
+        self.successful = True
+        return structure_interact_instance
 
     def run(self, structure_interact_instance) -> None:
         """

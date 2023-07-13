@@ -2,7 +2,11 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Hannah Shader
+<<<<<<< Updated upstream
 # @Last Modified time: 2023-07-10 16:50:12
+=======
+# @Last Modified time: 2023-07-12 16:20:25
+>>>>>>> Stashed changes
 # @Description: Calculates the average syllable rate for all speakers
 #   Denotes any sections of especially fast or slow speech.
 
@@ -16,6 +20,8 @@ from Plugin_Development.src.configs.configs import (
     INTERNAL_MARKER,
 )
 from Plugin_Development.src.data_structures.data_objects import UttObj
+from gailbot import Plugin
+from gailbot import GBPluginMethods
 
 
 ###############################################################################
@@ -51,13 +57,13 @@ class STAT_DICT(TypedDict):
     slowturncount: int
 
 
-class SyllableRatePlugin:
+class SyllableRatePlugin(Plugin):
     """
     Wrapper class for the Pause plugin. Contains functionality that inserts
     overlap markers
     """
 
-    def __init__(self, structure_interact_instance):
+    def __init__(self) -> None:
         """
         Initializes the list of syllables
 
@@ -70,9 +76,25 @@ class SyllableRatePlugin:
         -------
         None
         """
+        super().__init__()
+        self.stats = None
+        self.list_of_syllab_dict = []
+        self.structure_interact_instance = None
+
+    def apply(self, dependency_outputs: Dict[str, Any], methods: GBPluginMethods):
+        structure_interact_instance = dependency_outputs["OutputFileManager"]
         self.stats = None
         self.list_of_syllab_dict = []
         self.structure_interact_instance = structure_interact_instance
+
+        self.syllab_marker()
+        self.structure_interact_instance.sort_list()
+
+        self.successful = True
+
+        print("structure interact instance in apply in syllab rate is:")
+        self.structure_interact_instance.testing_print()
+        return structure_interact_instance
 
     def syllab_marker(self):
         """
@@ -112,6 +134,8 @@ class SyllableRatePlugin:
         None
         """
         sentence_syllab_count = 0
+        print("utt list is")
+        print(utt_list)
         speaker = utt_list[0].speaker
         flexible_info = utt_list[0].flexible_info
         for curr_utt in utt_list:
