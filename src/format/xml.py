@@ -2,11 +2,12 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-14 14:55:01
+# @Last Modified time: 2023-07-14 15:28:35
 # @Description: Creates the xml output for our plugins
 
 from typing import Dict, Any
 import os
+import logging
 from HiLabSuite.src.configs.configs import (
     INTERNAL_MARKER,
     load_label,
@@ -51,6 +52,8 @@ class XmlPlugin(Plugin):
         -------
         none
         """
+        logging.info("start XML output")
+        
         # Gets filepath
         path = os.path.join(
             structure_interact_instance.output_path, OUTPUT_FILE.NATIVE_XML

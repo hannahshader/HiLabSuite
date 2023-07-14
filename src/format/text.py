@@ -2,13 +2,14 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-14 14:56:52
+# @Last Modified time: 2023-07-14 15:28:10
 # @Description: Creates the text output for our plugins
 
 import re
 import io
 import os
 from typing import Dict, Any, List, Tuple
+import logging
 from HiLabSuite.src.data_structures.data_objects import UttObj
 
 from gailbot import Plugin
@@ -58,6 +59,8 @@ class TextPlugin(Plugin):
         -------
         none
         """
+        logging.info("start TEXT output")
+
         path = os.path.join(
             structure_interact_instance.output_path, OUTPUT_FILE.CON_TXT
         )

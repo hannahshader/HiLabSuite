@@ -2,12 +2,13 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-14 14:57:46
+# @Last Modified time: 2023-07-14 15:28:20
 # @Description: Creates the csv output for our plugins
 
 import os
 import csv
 from typing import Dict, Any
+import logging
 from HiLabSuite.src.data_structures.data_objects import UttObj
 
 from HiLabSuite.src.configs.configs import (
@@ -65,6 +66,7 @@ class CSVPlugin(Plugin):
         -------
         none
         """
+        logging.info("start CSV output")
 
         self._utterance_level(structure_interact_instance)
         self._word_level(structure_interact_instance)

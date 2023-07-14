@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-14 14:38:00
+# @Last Modified time: 2023-07-14 15:27:12
 # @Description: Checks which plugins are activated and uses them
 
 import toml
@@ -112,7 +112,7 @@ class ApplyPlugins:
         # Been analyzed, the sentences from different files can be integrated
         structure_interact_instance.sort_list()
 
-        ## Applies function to the list that only rely on word data
+        # Applies function to the list that only rely on word data
         structure_interact_instance.apply_markers(self.plugins)
 
         if "OverlapPlugin" in self.plugin_names:
