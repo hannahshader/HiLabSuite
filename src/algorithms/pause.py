@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-13 12:12:22
+# @Last Modified time: 2023-07-14 15:03:54
 # @Description: Checks for pauses in speech when one speaker is speaking
 
 import logging
@@ -10,12 +10,12 @@ import io
 from typing import Dict, Any, List
 from dataclasses import dataclass
 
-from Plugin_Development.src.configs.configs import (
+from HiLabSuite.src.configs.configs import (
     INTERNAL_MARKER,
     THRESHOLD,
     load_threshold,
 )
-from Plugin_Development.src.data_structures.data_objects import UttObj
+from HiLabSuite.src.data_structures.data_objects import UttObj
 
 from gailbot import Plugin
 from gailbot import GBPluginMethods
@@ -31,11 +31,32 @@ class PausePlugin(Plugin):
 
     def __init__(self) -> None:
         super().__init__()
+        """
+        Initializes the pause plugin
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        None
+        """
 
     def apply(self, dependency_outputs: Dict[str, Any], methods: GBPluginMethods):
-        self.structure_interact_instance = dependency_outputs["GapPlugin"]
+        """
+        Parameters
+        ----------
+        dependency_outputs: a list of dependency outputs
+        methods: the methods being used, currently GBPluginMethods
 
+        Returns
+        -------
+        A structure interact instance
+        """
+        self.structure_interact_instance = dependency_outputs["GapPlugin"]
         #TODO fix apply marker so you don't need to pass through a list
+        
         functions_list = [PausePlugin.pause_marker]
         self.structure_interact_instance.apply_markers(functions_list)
 
@@ -54,7 +75,6 @@ class PausePlugin(Plugin):
         Returns
         -------
         An utterance object representing a marker node
-
 
         Algorithm:
         ----------
@@ -86,7 +106,7 @@ class PausePlugin(Plugin):
                     INTERNAL_MARKER.PAUSES,
                     curr_utt.flexible_info,
                 )
-                ## logging.debug(f"latch marker ({markerText}) generated")
+                logging.debug(f"latch marker ({markerText}) generated")
             # check for pause threshold
             elif load_threshold().LB_PAUSE <= fto <= load_threshold().UB_PAUSE:
                 logging.debug(f"pause detected with fto {fto}")

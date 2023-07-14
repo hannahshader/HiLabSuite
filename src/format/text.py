@@ -2,25 +2,27 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-13 12:39:09
+# @Last Modified time: 2023-07-14 14:56:52
 # @Description: Creates the text output for our plugins
 
 import re
 import io
 import os
 from typing import Dict, Any, List, Tuple
+from HiLabSuite.src.data_structures.data_objects import UttObj
 
 from gailbot import Plugin
 from gailbot import GBPluginMethods
-from Plugin_Development.src.data_structures.structure_interact import (
+from HiLabSuite.src.data_structures.structure_interact import (
     StructureInteract,
 )
-from Plugin_Development.src.configs.configs import (
+from HiLabSuite.src.configs.configs import (
     INTERNAL_MARKER,
     load_label,
     PLUGIN_NAME,
     OUTPUT_FILE,
     CON_FORMATTER,
+    TEXT_FORMATTER,
 )
 
 ###############################################################################
@@ -60,7 +62,7 @@ class TextPlugin(Plugin):
             structure_interact_instance.output_path, OUTPUT_FILE.CON_TXT
         )
 
-        ## Creates the path where the text file will be written
+        # Creates the path where the text file will be written
         with io.open(path, "w", encoding="utf-8") as outfile:
             structure_interact_instance.print_all_rows_text(
                 self.format_markers, outfile, self.formatter
@@ -103,7 +105,7 @@ class TextPlugin(Plugin):
             0x15,
         )
 
-    def format_markers(self, curr) -> str:
+    def format_markers(self, curr: UttObj) -> str:
         """
         Properly formats our markers before appending them to the string
 
@@ -115,14 +117,34 @@ class TextPlugin(Plugin):
         -------
         A string of the properly formatted pause or gap
         """
-        if curr.speaker == "pauses":
-            return "(Pause=" + str(round((curr.end - curr.start), 2)) + ") "
-        elif curr.speaker == "gaps":
-            return "(Gap=" + str(round((curr.end - curr.start), 2)) + ") "
+        
+        if curr.text == INTERNAL_MARKER.PAUSES:
+            return TEXT_FORMATTER.PAUSES + str(round((curr.end - curr.start), 2)) + "> "
+        elif curr.text == INTERNAL_MARKER.GAPS:
+            return TEXT_FORMATTER.GAPS + str(round((curr.end - curr.start), 2)) + "> "
+        
+        elif curr.text == INTERNAL_MARKER.OVERLAP_FIRST_START:
+            return TEXT_FORMATTER.OVERLAP_FIRST_START
+        elif curr.text == INTERNAL_MARKER.OVERLAP_SECOND_START:
+            return TEXT_FORMATTER.OVERLAP_SECOND_START
+        elif curr.text == INTERNAL_MARKER.OVERLAP_FIRST_END:
+            return TEXT_FORMATTER.OVERLAP_FIRST_END
+        elif curr.text == INTERNAL_MARKER.OVERLAP_SECOND_END:
+            return TEXT_FORMATTER.OVERLAP_SECOND_END
+        
+        elif curr.text == INTERNAL_MARKER.SLOWSPEECH_START:
+            return TEXT_FORMATTER.SLOWSPEECH_START
+        elif curr.text == INTERNAL_MARKER.SLOWSPEECH_END:
+            return TEXT_FORMATTER.SLOWSPEECH_END
+        
+        elif curr.text == INTERNAL_MARKER.FASTSPEECH_START:
+            return TEXT_FORMATTER.FASTSPEECH_START
+        elif curr.text == INTERNAL_MARKER.FASTSPEECH_END:
+            return TEXT_FORMATTER.FASTSPEECH_END
         else:
             return self.add_trailing_whitespace(curr.text)
 
-    def text_file_helper(self, curr) -> str:
+    def text_file_helper(self, curr: UttObj) -> str:
         """
         Helper function which creates the text we want to append to the
         text file

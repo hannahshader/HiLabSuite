@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-13 12:15:29
+# @Last Modified time: 2023-07-14 14:34:47
 # @Description: The class configurations for formats, labels and output files
 
 
@@ -39,6 +39,22 @@ class SYLL_VARS:
     Dataclass for syllable variables in a csv file
     """
     LIMIT_DEVIATIONS = 2
+
+@dataclass
+class TEXT_FORMATTER:
+    """
+    Dataclass for text file output 
+    """
+    GAPS = "<GAP:Duration="
+    PAUSES = "<PAUSE:Duration="
+    OVERLAP_FIRST_START = "<OVERLAP:id=1&type=start> "
+    OVERLAP_FIRST_END = "<OVERLAP:id=1&type=end> "
+    OVERLAP_SECOND_START = "<OVERLAP:id=2&type=start> "
+    OVERLAP_SECOND_END = "<OVERLAP:id=2&type=end> "
+    SLOWSPEECH_START = "<SLOWSPEECH:type=start> "
+    SLOWSPEECH_END = "<SLOWSPEECH:type=end> "
+    FASTSPEECH_START = "<FASTSPEECH:type=start> "
+    FASTSPEECH_END = "<FASTSPEECH:type=end> "
     
 
 

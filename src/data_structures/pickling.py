@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-13 12:33:10
+# @Last Modified time: 2023-07-14 14:58:55
 # @Description: Writes data to disk our list of words and list of sentences
 
 import pickle
@@ -66,7 +66,7 @@ class Pickling:
 
                     # commented out: original version
                     # my_list = pickle.load(file)
-            ## case for if file already open
+            # case for if file already open
             except IOError:
                 pass
         return my_list

@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-13 12:45:34
+# @Last Modified time: 2023-07-14 14:57:22
 # @Description: Manages the output files created by our plugins
 
 import re
@@ -13,20 +13,21 @@ from typing import Dict, Any, List, Tuple
 
 from gailbot import Plugin
 from gailbot import GBPluginMethods
-from Plugin_Development.src.data_structures.structure_interact import (
+from HiLabSuite.src.data_structures.structure_interact import (
     StructureInteract,
 )
-from Plugin_Development.src.configs.configs import (
+from HiLabSuite.src.configs.configs import (
     INTERNAL_MARKER,
     load_label,
     PLUGIN_NAME,
     OUTPUT_FILE,
     CON_FORMATTER,
 )
-from Plugin_Development.src.format.csv import CSVPlugin
-from Plugin_Development.src.format.text import TextPlugin
-from Plugin_Development.src.format.xml import XmlPlugin
-from Plugin_Development.src.format.chat import ChatPlugin
+from HiLabSuite.src.format.csv import CSVPlugin
+from HiLabSuite.src.format.text import TextPlugin
+from HiLabSuite.src.format.xml import XmlPlugin
+from HiLabSuite.src.format.chat import ChatPlugin
+from HiLabSuite.src.data_structures.data_objects import UttObj
 
 
 ###############################################################################
@@ -75,7 +76,7 @@ class OutputFileManager(Plugin):
         chat_init.run(structure_interact_instance)
 
         audio_file_path = methods.output_path.replace(
-            "/Analysis/Plugin_Development", "/Raw/Media/merged.wav"
+            "/Analysis/HiLabSuite", "/Raw/Media/merged.wav"
         )
         shutil.copy2(audio_file_path, methods.output_path)
 

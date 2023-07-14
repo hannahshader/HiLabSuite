@@ -2,14 +2,15 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-13 12:45:10
+# @Last Modified time: 2023-07-14 14:57:46
 # @Description: Creates the csv output for our plugins
 
 import os
 import csv
 from typing import Dict, Any
+from HiLabSuite.src.data_structures.data_objects import UttObj
 
-from Plugin_Development.src.configs.configs import (
+from HiLabSuite.src.configs.configs import (
     INTERNAL_MARKER,
     load_label,
     PLUGIN_NAME,
@@ -18,7 +19,7 @@ from Plugin_Development.src.configs.configs import (
 )
 from gailbot import Plugin
 from gailbot import GBPluginMethods
-from Plugin_Development.src.data_structures.structure_interact import (
+from HiLabSuite.src.data_structures.structure_interact import (
     StructureInteract,
 )
 
@@ -65,17 +66,6 @@ class CSVPlugin(Plugin):
         none
         """
 
-        """
-        print("self.list is")
-        for item in structure_interact_instance.data_structure.list:
-            print(
-                "text is "
-                + str(item.text)
-                + ", flex info is "
-                + str(item.flexible_info)
-            )
-        """
-
         self._utterance_level(structure_interact_instance)
         self._word_level(structure_interact_instance)
 
@@ -106,7 +96,7 @@ class CSVPlugin(Plugin):
             for item in result:
                 writer.writerow(item)
 
-    def word_level_helper(self, curr) -> list:
+    def word_level_helper(self, curr: UttObj) -> list:
         """
         Appends the text of the current node to the end of the sentence
 
@@ -135,7 +125,7 @@ class CSVPlugin(Plugin):
         result = [curr.speaker, txt, curr.start, curr.end]
         return result
 
-    def format_markers(self, curr) -> str:
+    def format_markers(self, curr: UttObj) -> str:
         """
         Formats the given markers appropriately given csv file conventions.
         Returns what we actually want to concatenate to the end of the string
@@ -189,7 +179,7 @@ class CSVPlugin(Plugin):
                 writer.writerow, self.format_markers
             )
 
-    def is_speaker_utt(self, string) -> bool:
+    def is_speaker_utt(self, string: str) -> bool:
         """
         Checks if the given input is a speaker marker. If not, returns False
 

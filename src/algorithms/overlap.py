@@ -2,15 +2,15 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-13 12:11:41
+# @Last Modified time: 2023-07-14 14:43:29
 # @Description: Checks for overlaps between multiple speakers
 
 from typing import Dict, Any, List
 
-from Plugin_Development.src.configs.configs import (
+from HiLabSuite.src.configs.configs import (
     INTERNAL_MARKER,
 )
-from Plugin_Development.src.data_structures.data_objects import UttObj
+from HiLabSuite.src.data_structures.data_objects import UttObj
 from gailbot import Plugin
 from gailbot import GBPluginMethods
 
@@ -27,9 +27,30 @@ class OverlapPlugin(Plugin):
 
     def __init__(self) -> None:
         super().__init__()
+        """
+        Initializes the overlap plugin
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        None
+        """
 
     def apply(self, dependency_outputs: Dict[str, Any], methods: GBPluginMethods):
         self.structure_interact_instance = dependency_outputs["PausePlugin"]
+        """
+        Parameters
+        ----------
+        dependency_outputs: a list of dependency outputs
+        methods: the methods being used, currently GBPluginMethods
+
+        Returns
+        -------
+        A structure interact instance
+        """
 
         self.structure_interact_instance.apply_markers_overlap(
             OverlapPlugin.OverlapMarker
@@ -40,9 +61,20 @@ class OverlapPlugin(Plugin):
 
         return self.structure_interact_instance
 
-    def OverlapMarker(curr_sentence, next_sentence, list) -> List[str]:
-        """
+    def OverlapMarker(curr_sentence, next_sentence, list: List[UttObj]) -> List[str]:
+         """
+        Parameters
+        ----------
+        curr_sentence: the current sentence in the overlap
+        next_sentence: the next sentence in the overlap
+        list: the list of all utterances
+
+        Returns
+        -------
+        An utterance object representing a marker node
+
         Algorithm: modified
+        ---------
         1. given current sentence and next sentence
         2. check if: next.start < curr.end
         3. if no, not an overlap
@@ -53,7 +85,8 @@ class OverlapPlugin(Plugin):
 
         """
 
-        # define markers
+        logging.info("start overlap analysis")
+        # Define markers
         curr_start, curr_end, curr_id = (
             curr_sentence[0],
             curr_sentence[1],
@@ -65,7 +98,7 @@ class OverlapPlugin(Plugin):
             next_sentence[2],
         )
 
-        # overlap exist when next_start < curr_end
+        # Overlap exist when next_start < curr_end
         if next_start < curr_end:
             curr_speaker = ""
             next_speaker = ""
@@ -78,7 +111,7 @@ class OverlapPlugin(Plugin):
                     curr_speaker = utt.speaker
                     curr_flexible_info = utt.flexible_info
 
-            # set overlap start marker
+            # Set overlap start marker
             overlap_start_time = max(curr_start, next_start)
             overlap_start_one = UttObj(
                 overlap_start_time,
@@ -94,7 +127,7 @@ class OverlapPlugin(Plugin):
                 INTERNAL_MARKER.OVERLAP_SECOND_START,
                 next_flexible_info,
             )
-            # set overlap end marker
+            # Set overlap end marker
             overlap_end_time = min(curr_end, next_end)
             overlap_end_one = UttObj(
                 overlap_end_time,

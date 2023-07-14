@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-13 12:32:47
+# @Last Modified time: 2023-07-14 15:02:38
 # @Description: Creates a marker utterance dictionary
 
 import copy
@@ -17,12 +17,12 @@ from collections import OrderedDict
 from typing import Any, Dict, List, IO
 from typing import OrderedDict as OrderedDictType, TypeVar
 
-from Plugin_Development.src.data_structures.data_objects import UttObj
-from Plugin_Development.src.algorithms.apply_plugins import ApplyPlugins
-from Plugin_Development.src.configs.configs import INTERNAL_MARKER
-from Plugin_Development.src.configs.configs import THRESHOLD
-from Plugin_Development.src.configs.configs import load_threshold
-from Plugin_Development.src.data_structures.pickling import Pickling
+from HiLabSuite.src.data_structures.data_objects import UttObj
+from HiLabSuite.src.algorithms.apply_plugins import ApplyPlugins
+from HiLabSuite.src.configs.configs import INTERNAL_MARKER
+from HiLabSuite.src.configs.configs import THRESHOLD
+from HiLabSuite.src.configs.configs import load_threshold
+from HiLabSuite.src.data_structures.pickling import Pickling
 
 from gailbot import Plugin
 from gailbot import GBPluginMethods
@@ -182,7 +182,7 @@ class MarkerUtteranceDict:
             for item in self.list:
                 print(item.text)
 
-    def turn_criteria_overlaps(self, utt_dict, prev_utt):
+    def turn_criteria_overlaps(self, utt_dict, prev_utt: UttObj):
         if prev_utt == None:
             return False
         return (utt_dict.start - prev_utt.end) >= load_threshold().TURN_END_THRESHOLD_SECS
@@ -456,7 +456,7 @@ class MarkerUtteranceDict:
         """
         # Format: speaker, text, start, end
         # sentence object holds speaker, text, start, end
-        ## initialize a sentence object to hold bank fields
+        # initialize a sentence object to hold bank fields
 
         # SELF LOCK NOT NEEDED BECAUSE NO INSERTIONS/DELETIONS PAST THIS PNT?
 
@@ -676,7 +676,7 @@ class MarkerUtteranceDict:
                 )
 
     # TODO IS THIS FUNCTION USED? DELETE IF NOT
-    def sort(self, list_to_sort, counter):
+    def sort(self, list_to_sort, counter: int) -> List[Any]:
         """
         Sorts a given list
 
@@ -721,7 +721,7 @@ class MarkerUtteranceDict:
 
         return sorted_list
 
-    def is_marker_overlap_start(self, curr):
+    def is_marker_overlap_start(self, curr: UttObj):
         """
         Checks if a marker is the start of an overlap
 
@@ -738,7 +738,7 @@ class MarkerUtteranceDict:
             or curr.text == INTERNAL_MARKER.OVERLAP_SECOND_START
         )
 
-    def is_marker_overlap_end(self, curr):
+    def is_marker_overlap_end(self, curr: UttObj):
         """
         Checks if a marker is the end of an overlap
 

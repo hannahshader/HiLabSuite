@@ -2,12 +2,12 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-13 12:39:49
+# @Last Modified time: 2023-07-14 14:55:01
 # @Description: Creates the xml output for our plugins
 
 from typing import Dict, Any
 import os
-from Plugin_Development.src.configs.configs import (
+from HiLabSuite.src.configs.configs import (
     INTERNAL_MARKER,
     load_label,
     PLUGIN_NAME,
@@ -18,6 +18,7 @@ from gailbot import Plugin
 from gailbot import GBPluginMethods
 import xml.etree.ElementTree as ET
 import xml.dom.minidom
+from HiLabSuite.src.data_structures.data_objects import UttObj
 
 ###############################################################################
 # CLASS DEFINITIONS                                                           #
@@ -112,7 +113,7 @@ class XmlPlugin(Plugin):
         with open(path, "w") as file:
             file.write(pretty_xml_str)
 
-    def apply_subelement_root(self, speaker) -> ET.SubElement:
+    def apply_subelement_root(self, speaker: str) -> ET.SubElement:
         """
         Creates xml formatting for the beginning of a sentence
 
@@ -158,7 +159,7 @@ class XmlPlugin(Plugin):
             word_elem = ET.SubElement(sentence, "w")
             word_elem.text = self.format_markers(word)
 
-    def apply_sentence_end(self, sentence, sentence_start, sentence_end):
+    def apply_sentence_end(self, sentence: str, sentence_start: str, sentence_end: str) -> None:
         """
         xml formatting for terminating the sentence
 
@@ -200,7 +201,7 @@ class XmlPlugin(Plugin):
         except ValueError:
             return -1
 
-    def format_markers(self, curr) -> str:
+    def format_markers(self, curr: UttObj) -> str:
         """
         Formats the non-utterance markers
 

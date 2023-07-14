@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-13 12:20:55
+# @Last Modified time: 2023-07-14 15:03:17
 # @Description: Calculates the average syllable rate for all speakers
 #   Denotes any sections of especially fast or slow speech.
 
@@ -12,11 +12,11 @@ import logging
 from typing import Dict, Any, List, TypedDict
 from scipy.stats import median_abs_deviation
 
-from Plugin_Development.src.configs.configs import (
+from HiLabSuite.src.configs.configs import (
     INTERNAL_MARKER,
     SYLL_VARS,
 )
-from Plugin_Development.src.data_structures.data_objects import UttObj
+from HiLabSuite.src.data_structures.data_objects import UttObj
 from gailbot import Plugin
 from gailbot import GBPluginMethods
 
@@ -65,6 +65,17 @@ class SyllableRatePlugin(Plugin):
 
     def apply(self, dependency_outputs: Dict[str, Any], methods: GBPluginMethods):
         structure_interact_instance = dependency_outputs["OutputFileManager"]
+        """
+        Parameters
+        ----------
+        dependency_outputs: a list of dependency outputs
+        methods: the methods being used, currently GBPluginMethods
+
+        Returns
+        -------
+        A structure interact instance
+        """
+        
         self.stats = None
         self.list_of_syllab_dict = []
         self.structure_interact_instance = structure_interact_instance
@@ -74,8 +85,6 @@ class SyllableRatePlugin(Plugin):
 
         self.successful = True
 
-        print("structure interact instance in apply in syllab rate is:")
-        self.structure_interact_instance.testing_print()
         return structure_interact_instance
 
     def syllab_marker(self):
@@ -83,6 +92,7 @@ class SyllableRatePlugin(Plugin):
         Creates a syllable marker to get the overall syllable rate
 
         """
+        logging.info("start syllable rate  analysis")
         self.structure_interact_instance.apply_for_syllab_rate(
             self.get_utt_syllable_rate
         )
@@ -98,7 +108,7 @@ class SyllableRatePlugin(Plugin):
 
     def get_utt_syllable_rate(
         self, utt_list: List, sentence_start: float, sentence_end: float
-    ):
+    ) -> None:
         """
         Gets the syllable rates for each utterance
 
@@ -116,8 +126,6 @@ class SyllableRatePlugin(Plugin):
         None
         """
         sentence_syllab_count = 0
-        print("utt list is")
-        print(utt_list)
         speaker = utt_list[0].speaker
         flexible_info = utt_list[0].flexible_info
         for curr_utt in utt_list:

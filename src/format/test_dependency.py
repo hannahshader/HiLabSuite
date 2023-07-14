@@ -13,20 +13,20 @@ from typing import Dict, Any, List, Tuple
 
 from gailbot import Plugin
 from gailbot import GBPluginMethods
-from Plugin_Development.src.data_structures.structure_interact import (
+from HiLabSuite.src.data_structures.structure_interact import (
     StructureInteract,
 )
-from Plugin_Development.src.configs.configs import (
+from HiLabSuite.src.configs.configs import (
     INTERNAL_MARKER,
     load_label,
     PLUGIN_NAME,
     OUTPUT_FILE,
     CON_FORMATTER,
 )
-from Plugin_Development.src.format.csv import CSVPlugin
-from Plugin_Development.src.format.text import TextPlugin
-from Plugin_Development.src.format.xml import XmlPlugin
-from Plugin_Development.src.format.chat import ChatPlugin
+from HiLabSuite.src.format.csv import CSVPlugin
+from HiLabSuite.src.format.text import TextPlugin
+from HiLabSuite.src.format.xml import XmlPlugin
+from HiLabSuite.src.format.chat import ChatPlugin
 
 
 class TestDependency(Plugin):

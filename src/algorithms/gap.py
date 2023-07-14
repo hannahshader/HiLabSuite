@@ -2,14 +2,14 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-27 12:16:07
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-13 12:11:01
+# @Last Modified time: 2023-07-14 14:43:59
 from typing import Dict, Any, List
-from Plugin_Development.src.configs.configs import (
+from HiLabSuite.src.configs.configs import (
     INTERNAL_MARKER,
     THRESHOLD,
     load_threshold,
 )
-from Plugin_Development.src.data_structures.data_objects import UttObj
+from HiLabSuite.src.data_structures.data_objects import UttObj
 
 import logging
 from gailbot import Plugin
@@ -35,13 +35,36 @@ class GapPlugin(Plugin):
 
     def __init__(self) -> None:
         super().__init__()
+        """
+        Initializes the gap plugin
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        None
+        """
 
     def apply(self, dependency_outputs: Dict[str, Any], methods: GBPluginMethods):
         self.structure_interact_instance = dependency_outputs["SyllableRatePlugin"]
+        """
+        Parameters
+        ----------
+        dependency_outputs: a list of dependency outputs
+        methods: the methods being used, currently GBPluginMethods
+
+        Returns
+        -------
+        A structure interact instance
+        """
 
         # TODO fix apply marker so you don't need to pass through a list
         functions_list = [GapPlugin.gap_marker]
         self.structure_interact_instance.apply_markers(functions_list)
+
+        logging.info("start gap analysis")
 
         self.successful = True
         return self.structure_interact_instance

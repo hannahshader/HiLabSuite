@@ -2,17 +2,17 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-13 12:11:07
+# @Last Modified time: 2023-07-14 14:38:00
 # @Description: Checks which plugins are activated and uses them
 
 import toml
 from collections import OrderedDict
 from typing import OrderedDict as OrderedDictType, TypeVar
 from typing import Dict, Any, List
-from Plugin_Development.src.algorithms.gap import GapPlugin
-from Plugin_Development.src.algorithms.overlap import OverlapPlugin
-from Plugin_Development.src.algorithms.pause import PausePlugin
-from Plugin_Development.src.algorithms.syllab_rate import SyllableRatePlugin
+from HiLabSuite.src.algorithms.gap import GapPlugin
+from HiLabSuite.src.algorithms.overlap import OverlapPlugin
+from HiLabSuite.src.algorithms.pause import PausePlugin
+from HiLabSuite.src.algorithms.syllab_rate import SyllableRatePlugin
 
 ###############################################################################
 # CLASS DEFINITIONS                                                           #
@@ -107,12 +107,9 @@ class ApplyPlugins:
         -------
             A list of plugin names.
         """
-        # if "SyllableRatePlugin" in self.plugin_names:
-        #    syllab_rate_instance = SyllableRatePlugin(structure_interact_instance)
-        #    syllab_rate_instance.syllab_marker()
 
-        ## after data from individual setences in seperate files have
-        ## been analyzed, the sentences from different files can be integrated
+        # After data from individual setences in seperate files have
+        # Been analyzed, the sentences from different files can be integrated
         structure_interact_instance.sort_list()
 
         ## Applies function to the list that only rely on word data
