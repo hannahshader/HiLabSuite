@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-14 15:28:35
+# @Last Modified time: 2023-07-14 15:40:57
 # @Description: Creates the xml output for our plugins
 
 from typing import Dict, Any
@@ -154,10 +154,10 @@ class XmlPlugin(Plugin):
         none
         """
         if (
-            (word.text).strip() != "slowspeech_start"
-            and (word.text).strip() != "slowspeech_end"
-            and (word.text).strip() != "fastspeech_start"
-            and (word.text).strip() != "fastspeech_end"
+            (word.text).strip() != INTERNAL_MARKER.SLOWSPEECH_START
+            and (word.text).strip() != INTERNAL_MARKER.SLOWSPEECH_END
+            and (word.text).strip() != INTERNAL_MARKER.FASTSPEECH_START
+            and (word.text).strip() != INTERNAL_MARKER.FASTSPEECH_END
         ):
             word_elem = ET.SubElement(sentence, "w")
             word_elem.text = self.format_markers(word)
@@ -216,13 +216,15 @@ class XmlPlugin(Plugin):
         -------
         a string of the properly formatted overlap, pause, or gap.
         """
-        if curr.text == "overlap-secondStart" or curr.text == "overlap-firstStart":
+        if (curr.text == INTERNAL_MARKER.OVERLAP_FIRST_START 
+            or curr.text == INTERNAL_MARKER.OVERLAP_SECOND_START):
             return " < "
-        elif curr.text == "overlap-firstEnd":
+        elif curr.text == INTERNAL_MARKER.OVERLAP_FIRST_END:
             return " > [<]"
-        elif curr.text == "overlap-secondEnd":
+        elif curr.text == INTERNAL_MARKER.OVERLAP_SECOND_START:
             return " > [>]"
-        elif curr.text == "pauses" or curr.text == "gaps":
+        elif (curr.text == INTERNAL_MARKER.PAUSES 
+              or curr.text == INTERNAL_MARKER.GAPS):
             time_difference = "{:.2f}".format(curr.end - curr.start)
             return "(" + time_difference + ")"
         else:

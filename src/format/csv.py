@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-14 15:28:20
+# @Last Modified time: 2023-07-14 15:37:58
 # @Description: Creates the csv output for our plugins
 
 import os
@@ -142,16 +142,16 @@ class CSVPlugin(Plugin):
         to append to the csv output
         """
         if (
-            curr.text == "pauses"
-            or curr.text == "gaps"
-            or curr.text == "overlap-secondStart"
-            or curr.text == "overlap-firstStart"
-            or curr.text == "overlap-firstEnd"
-            or curr.text == "overlap-secondEnd"
-            or curr.text == "slowspeech_start"
-            or curr.text == "slowspeech_end"
-            or curr.text == "fastspeech_start"
-            or curr.text == "fastspeech_end"
+            curr.text == INTERNAL_MARKER.PAUSES
+            or curr.text == INTERNAL_MARKER.GAPS
+            or curr.text == INTERNAL_MARKER.OVERLAP_FIRST_START
+            or curr.text == INTERNAL_MARKER.OVERLAP_SECOND_START
+            or curr.text == INTERNAL_MARKER.OVERLAP_FIRST_END
+            or curr.text == INTERNAL_MARKER.OVERLAP_SECOND_END
+            or curr.text == INTERNAL_MARKER.SLOWSPEECH_START
+            or curr.text == INTERNAL_MARKER.SLOWSPEECH_END
+            or curr.text == INTERNAL_MARKER.FASTSPEECH_START
+            or curr.text == INTERNAL_MARKER.FASTSPEECH_END
         ):
             return " (" + curr.text + ") "
         else:

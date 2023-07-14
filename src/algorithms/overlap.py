@@ -2,10 +2,11 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-14 14:43:29
+# @Last Modified time: 2023-07-14 15:48:22
 # @Description: Checks for overlaps between multiple speakers
 
 from typing import Dict, Any, List
+import logging
 
 from HiLabSuite.src.configs.configs import (
     INTERNAL_MARKER,
@@ -28,7 +29,7 @@ class OverlapPlugin(Plugin):
     def __init__(self) -> None:
         super().__init__()
         """
-        Initializes the overlap plugin
+        Initializes the gap plugin
 
         Parameters
         ----------
@@ -40,7 +41,6 @@ class OverlapPlugin(Plugin):
         """
 
     def apply(self, dependency_outputs: Dict[str, Any], methods: GBPluginMethods):
-        self.structure_interact_instance = dependency_outputs["PausePlugin"]
         """
         Parameters
         ----------
@@ -51,6 +51,7 @@ class OverlapPlugin(Plugin):
         -------
         A structure interact instance
         """
+        self.structure_interact_instance = dependency_outputs["PausePlugin"]
 
         self.structure_interact_instance.apply_markers_overlap(
             OverlapPlugin.OverlapMarker
@@ -62,19 +63,17 @@ class OverlapPlugin(Plugin):
         return self.structure_interact_instance
 
     def OverlapMarker(curr_sentence, next_sentence, list: List[UttObj]) -> List[str]:
-         """
-        Parameters
-        ----------
-        curr_sentence: the current sentence in the overlap
+        """
+        curr_sentence: the first sentence in the overlap
         next_sentence: the next sentence in the overlap
-        list: the list of all utterances
-
+        list: the list of utterance objects
+        
         Returns
         -------
-        An utterance object representing a marker node
-
+        A list of overlap markers
+    
         Algorithm: modified
-        ---------
+        -------
         1. given current sentence and next sentence
         2. check if: next.start < curr.end
         3. if no, not an overlap
@@ -86,7 +85,7 @@ class OverlapPlugin(Plugin):
         """
 
         logging.info("start overlap analysis")
-        # Define markers
+        # define markers
         curr_start, curr_end, curr_id = (
             curr_sentence[0],
             curr_sentence[1],

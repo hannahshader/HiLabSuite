@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-14 14:34:47
+# @Last Modified time: 2023-07-14 15:38:41
 # @Description: The class configurations for formats, labels and output files
 
 
@@ -55,6 +55,8 @@ class TEXT_FORMATTER:
     SLOWSPEECH_END = "<SLOWSPEECH:type=end> "
     FASTSPEECH_START = "<FASTSPEECH:type=start> "
     FASTSPEECH_END = "<FASTSPEECH:type=end> "
+    PAUSES_CAPS = "PAUSES"
+    GAPS_CAPS = "GAPS"
     
 
 

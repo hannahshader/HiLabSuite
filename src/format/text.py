@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-14 15:28:10
+# @Last Modified time: 2023-07-14 15:39:21
 # @Description: Creates the text output for our plugins
 
 import re
@@ -166,7 +166,8 @@ class TextPlugin(Plugin):
 
         speaker = ""
         result = []
-        if curr.speaker != "PAUSES" and curr.speaker != "GAPS":
+        if (curr.speaker != TEXT_FORMATTER.PAUSES_CAPS 
+            and curr.speaker != TEXT_FORMATTER.GAPS_CAPS):
             result = [
                 curr.speaker,
                 txt,
