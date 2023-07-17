@@ -2,11 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Hannah Shader
-<<<<<<< Updated upstream
-# @Last Modified time: 2023-07-11 16:38:26
-=======
-# @Last Modified time: 2023-07-13 11:11:06
->>>>>>> Stashed changes
+# @Last Modified time: 2023-07-17 13:18:18
 # @Description: Checks for overlaps between multiple speakers
 
 from typing import Dict, Any, List
@@ -35,36 +31,13 @@ MARKER = INTERNAL_MARKER  # gets class representing a marker node
 THRESHOLD = load_threshold()  # function to retrieve threshold data from config
 INVALID_OVERLAP = (-1, -1, -1, -1)  # markers for an invalid overlap
 
-<<<<<<< Updated upstream
-
-MARKER = INTERNAL_MARKER
-""" The format of the marker to be inserted into the list """
-THRESHOLD = load_threshold()
-""" The threshold for what length of time qualifies an 'overlap' """
-INVALID_OVERLAP = (-1, -1, -1, -1)
-""" A dummy format for an invalid overlap """
-
-###############################################################################
-# GLOBALS                                                                     #
-###############################################################################
-
-MARKER = INTERNAL_MARKER  # gets class representing a marker node
-THRESHOLD = load_threshold()  # function to retrieve threshold data from config
-INVALID_OVERLAP = (-1, -1, -1, -1)  # markers for an invalid overlap
-
-=======
->>>>>>> Stashed changes
 
 ###############################################################################
 # CLASS DEFINITIONS                                                           #
 ###############################################################################
 
 
-<<<<<<< Updated upstream
-class OverlapPlugin:
-=======
 class OverlapPlugin(Plugin):
->>>>>>> Stashed changes
     """
     Wrapper class for the Overlap plugin. Contains functionality that inserts
     overlap markers
@@ -80,6 +53,7 @@ class OverlapPlugin(Plugin):
             OverlapPlugin.OverlapMarker
         )
         self.structure_interact_instance.group_overlapping_sentences()
+        # self.structure_interact_instance.insert_overlap_markers_character_level()
 
         self.successful = True
 

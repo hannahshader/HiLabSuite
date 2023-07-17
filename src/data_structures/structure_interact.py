@@ -2,11 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Hannah Shader
-<<<<<<< Updated upstream
-# @Last Modified time: 2023-07-07 14:03:08
-=======
-# @Last Modified time: 2023-07-12 15:49:08
->>>>>>> Stashed changes
+# @Last Modified time: 2023-07-13 18:17:21
 # @Description: Contains our structures for running our plugins and creating
 #   their output.
 
@@ -265,3 +261,7 @@ class StructureInteract(Plugin):
     # Sorts the data structure to keep overlapping sentences together
     def group_overlapping_sentences(self):
         return self.data_structure.order_overlap()
+
+    # inserts the overlap markers into character level
+    def insert_overlap_markers_character_level(self):
+        return self.data_structure.insert_overlap_markers_character_level()

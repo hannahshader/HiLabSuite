@@ -1,13 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-<<<<<<< Updated upstream
-# @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-06-29 10:34:51
-=======
 # @Last Modified by:   Hannah Shader
-# @Last Modified time: 2023-07-13 10:55:45
->>>>>>> Stashed changes
+# @Last Modified time: 2023-07-13 17:12:10
 # @Description: Creates the CHAT output for our plugins based on TalkBank format
 
 import subprocess
@@ -23,6 +18,7 @@ from Plugin_Development.src.configs.configs import (
 )
 from gailbot import Plugin
 from gailbot import GBPluginMethods
+import shutil
 
 
 class ChatPlugin(Plugin):
@@ -36,6 +32,13 @@ class ChatPlugin(Plugin):
         # structure with the most and all of the markers
         structure_interact_instance = dependency_outputs["XmlPlugin"]
         self.run(structure_interact_instance)
+
+        # get the media file in the output folder
+        audio_file_path = methods.output_path.replace(
+            "/Analysis/Plugin_Development", "/Raw/Media/merged.wav"
+        )
+        shutil.copy2(audio_file_path, methods.output_path)
+
         self.successful = True
 
     def run(self, structure_interact_instance) -> None:
