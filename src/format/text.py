@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-14 15:39:21
+# @Last Modified time: 2023-07-17 13:29:15
 # @Description: Creates the text output for our plugins
 
 import re

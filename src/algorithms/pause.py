@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-14 15:03:54
+# @Last Modified time: 2023-07-17 13:24:56
 # @Description: Checks for pauses in speech when one speaker is speaking
 
 import logging

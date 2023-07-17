@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-27 12:16:07
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-14 14:43:59
+# @Last Modified time: 2023-07-17 13:24:31
 from typing import Dict, Any, List
 from HiLabSuite.src.configs.configs import (
     INTERNAL_MARKER,
@@ -26,7 +26,6 @@ logger = logging.getLogger(__name__)
 ###############################################################################
 # CLASS DEFINITIONS                                                           #
 ###############################################################################
-
 class GapPlugin(Plugin):
     """
     Wrapper class for the Gaps plugin. Contains functionality that inserts

@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-14 15:48:22
+# @Last Modified time: 2023-07-17 13:24:43
 # @Description: Checks for overlaps between multiple speakers
 
 from typing import Dict, Any, List
@@ -57,6 +57,7 @@ class OverlapPlugin(Plugin):
             OverlapPlugin.OverlapMarker
         )
         self.structure_interact_instance.group_overlapping_sentences()
+        # self.structure_interact_instance.insert_overlap_markers_character_level()
 
         self.successful = True
 
