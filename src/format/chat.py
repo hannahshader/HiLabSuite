@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-17 14:25:53
+# @Last Modified time: 2023-07-17 16:18:51
 # @Description: Creates the CHAT output for our plugins based on TalkBank format
 
 import subprocess
@@ -72,7 +72,7 @@ class ChatPlugin(Plugin):
         # NOTE: need to integrate chatter path into Gailbot because this was
         # not operational beforehand
         current_file_path = os.path.abspath(__file__)
-        jar_path = current_file_path.replace("/chat.py", "../bin/chatter.jar")
+        jar_path = current_file_path.replace("format/chat.py", "/bin/chatter.jar")
 
         command = (
             'java -cp "'

@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-17 15:33:10
+# @Last Modified time: 2023-07-17 15:58:29
 # @Description: Creates the xml output for our plugins
 
 from typing import Dict, Any
@@ -229,14 +229,15 @@ class XmlPlugin(Plugin):
         a string of the properly formatted overlap, pause, or gap.
         """
         # case for if curr is an overlap marker
-        if curr.text == "overlap-secondStart" or curr.text == "overlap-firstStart":
+        if (curr.text == INTERNAL_MARKER.OVERLAP_FIRST_START 
+            or curr.text == INTERNAL_MARKER.OVERLAP_SECOND_START):
             return " < "
-        elif curr.text == "overlap-firstEnd":
+        elif curr.text == INTERNAL_MARKER.OVERLAP_FIRST_END :
             return " > [<" + str(curr.overlap_id) + "]"
 
-        elif curr.text == "overlap-secondEnd":
+        elif curr.text == INTERNAL_MARKER.OVERLAP_SECOND_END:
             return " > [>" + str(curr.overlap_id) + "]"
-        elif curr.text == "pauses" or curr.text == "gaps":
+        elif curr.text == INTERNAL_MARKER.PAUSES or curr.text == INTERNAL_MARKER.GAPS:
             time_difference = "{:.2f}".format(curr.end - curr.start)
             return "(" + time_difference + ")"
         else:

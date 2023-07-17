@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-17 14:56:35
+# @Last Modified time: 2023-07-17 15:45:41
 # @Description: The class configurations for formats, labels and output files
 
 
@@ -32,13 +32,14 @@ class CSV_FORMATTER:
     HEADER = ["SPEAKER LABEL", "TEXT", "START TIME", "END TIME"]
     TXT_SEP = " "
 
-
 @dataclass
 class SYLL_VARS:
     """
     Dataclass for syllable variables in a csv file
     """
     LIMIT_DEVIATIONS = 2
+
+
 
 @dataclass
 class TEXT_FORMATTER:
@@ -102,6 +103,8 @@ class INTERNAL_MARKER:
         GAPS,
         OVERLAPS,
         PAUSES,
+        MICROPAUSE,
+    
         OVERLAP_FIRST_START,
         OVERLAP_FIRST_END,
         OVERLAP_SECOND_START,
