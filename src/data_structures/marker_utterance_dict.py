@@ -2,19 +2,18 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-17 13:26:54
+# @Last Modified time: 2023-07-17 15:38:57
 # @Description: Creates a marker utterance dictionary
 
 import copy
 import bisect
-import pickle
 import sys
 import threading
 import os
 import itertools
 from pydantic import BaseModel
 from collections import OrderedDict
-from typing import Any, Dict, List, IO
+from typing import Any, Dict, List, IO, Tuple
 from typing import OrderedDict as OrderedDictType, TypeVar
 
 from HiLabSuite.src.data_structures.data_objects import UttObj
@@ -22,12 +21,9 @@ from HiLabSuite.src.algorithms.apply_plugins import ApplyPlugins
 from HiLabSuite.src.configs.configs import INTERNAL_MARKER
 from HiLabSuite.src.configs.configs import THRESHOLD
 from HiLabSuite.src.configs.configs import load_threshold
-from HiLabSuite.src.data_structures.pickling import Pickling
 
 from gailbot import Plugin
 from gailbot import GBPluginMethods
-
-THRESHOLD = load_threshold()
 
 ###############################################################################
 # CLASS DEFINITIONS                                                           #
@@ -58,7 +54,6 @@ class MarkerUtteranceDict:
         """
 
         self.lock = threading.Lock()
-        self.pickle = Pickling()
         if utterance_map is None:
             # Holds data about words spoken by each speaker
             self.list = []
@@ -172,17 +167,32 @@ class MarkerUtteranceDict:
 
             # Create a deep copy for the class
             self.list = copy.deepcopy(utterances)
-            self.pickle.save_list_to_disk(self.list)
             self.sentences = copy.deepcopy(sentence_data)
-            self.pickle.save_sentences_to_disk(self.sentences)
 
 
     def testing_print(self):
+        """
+        Testing function that prints a given output
+        """
         with self.lock:
             for item in self.list:
                 print(item.text)
 
-    def turn_criteria_overlaps(self, utt_dict, prev_utt: UttObj):
+    def turn_criteria_overlaps(self, utt_dict: dict[UttObj], prev_utt: UttObj) -> bool:
+        """
+        Returns whether or not the difference between two utterances meets the 
+        threshold
+
+        Parameters
+        ----------
+        utt_dict: the utterance dictionary
+        prev_utt: the previous utterance
+        
+        Returns
+        -------
+        a boolean
+
+        """
         if prev_utt == None:
             return False
         return (utt_dict.start - prev_utt.end) >= load_threshold().TURN_END_THRESHOLD_SECS
@@ -213,14 +223,12 @@ class MarkerUtteranceDict:
         none
         """
         # with self.lock:
-        self.pickle.load_list_from_disk(self.list)
         if value == None:
             return
         index = bisect.bisect_left([obj.start for obj in self.list], value.start)
         self.list.insert(index, value)
-        self.pickle.save_list_to_disk(self.list)
 
-    def get_next_utt(self, current_item) -> Any:
+    def get_next_utt(self, current_item: UttObj) -> Any:
         """
         Given a current element in the list, gets the next element in the
         list that is not a marker, but is an utterance with corresponding text
@@ -234,7 +242,6 @@ class MarkerUtteranceDict:
         the next utterance
         """
         # with self.lock:
-        self.pickle.load_list_from_disk(self.list)
         if current_item in self.list:
             current_index = self.list.index(current_item)
             next_index = current_index + 1
@@ -244,13 +251,11 @@ class MarkerUtteranceDict:
                 if self.is_speaker_utt(next_utterance):
                     return next_utterance
                 next_index += 1
-            self.pickle.save_list_to_disk(self.list)
             return False
         else:
-            self.pickle.save_list_to_disk(self.list)
             return False
 
-    def is_speaker_utt(self, curr) -> bool:
+    def is_speaker_utt(self, curr: UttObj) -> bool:
         """
         Checks the speaker field of piece of data to see if utterance is
         a marker
@@ -269,7 +274,7 @@ class MarkerUtteranceDict:
         else:
             return True
 
-    def apply_functions(self, apply_functions) -> list[any]:
+    def apply_functions(self, apply_functions: List[callable]) -> list[any]:
         """
         Gets a list of functions.
         Iterates through all items in the list and applies
@@ -284,15 +289,13 @@ class MarkerUtteranceDict:
         a list of all of the results of the functions run
         """
         # with self.lock:
-        self.pickle.load_list_from_disk(self.list)
         result = []
         for item in self.list:
             for func in apply_functions:
                 result.append(func(item))
-        self.pickle.save_list_to_disk(self.list)
         return result
 
-    def apply_function(self, func) -> list[any]:
+    def apply_function(self, func: callable) -> list[any]:
         """
         Gets a single function.
         Iterates through all items in the list and applies
@@ -307,14 +310,12 @@ class MarkerUtteranceDict:
         a list of the result of the function run
         """
         # with self.lock:
-        self.pickle.load_list_from_disk(self.list)
         result = []
         for item in self.list:
             result.append(func(item))
-        self.pickle.save_list_to_disk(self.list)
         return result
 
-    def apply_for_overlap(self, apply_function) -> None:
+    def apply_for_overlap(self, apply_function: callable) -> None:
         """
         Iterates through list of sentence data and inserts markers
         Will always be used to add overlap plugin markers
@@ -340,13 +341,13 @@ class MarkerUtteranceDict:
             if return_values[-2:] != []:
                 self.overlap_ids.append(
                     return_values[-2:]
-                )  # gets the ids of overlapping sentences
+                )  # Gets the ids of overlapping sentences
                 for marker in to_insert_list:
-                    # get a unique id for the overlap
+                    # Get a unique id for the overlap
                     marker.overlap_id = len(self.overlap_ids)
                     self.insert_marker(marker)
 
-    def apply_for_syllab_rate(self, func) -> None:
+    def apply_for_syllab_rate(self, func: callable) -> None:
         """
         Iterates through list of sentence data and inserts pairs of markers
         for the start and end of fast/slow speech
@@ -360,8 +361,6 @@ class MarkerUtteranceDict:
         none
         """
         # with self.lock:
-        self.pickle.load_sentences_from_disk(self.sentences)
-        self.pickle.load_list_from_disk(self.list)
 
         # Deep copies the list so no infinite insertions/checks
         sentences_copy = copy.deepcopy(self.sentences)
@@ -391,10 +390,8 @@ class MarkerUtteranceDict:
                     sentence_index += 1
             sentence_index += 1
 
-        self.pickle.save_sentences_to_disk(self.sentences)
-        self.pickle.save_list_to_disk(self.list)
 
-    def apply_insert_marker(self, apply_functions) -> None:
+    def apply_insert_marker(self, apply_functions: List[callable]) -> None:
         """
         Takes a list of functions to apply that have arguments as two utterances
         These functions return either one or four marker values
@@ -423,14 +420,13 @@ class MarkerUtteranceDict:
                 curr_next = self.get_next_utt(curr)
                 # Returns if there is no next item
                 if curr_next == False:
-                    self.pickle.save_list_to_disk(self.list)
                     return
                 # Storing markers as a list becuase the overlap function
                 # Returns four markers
                 marker = func(curr, curr_next)
                 self.insert_marker(marker)
 
-    def print_all_rows_text(self, format_markers, outfile: IO[str], formatter) -> None:
+    def print_all_rows_text(self, format_markers: callable, outfile: IO[str], formatter) -> None:
         """
         Creates the text output for Gailbot
 
@@ -452,7 +448,6 @@ class MarkerUtteranceDict:
 
         # SELF LOCK NOT NEEDED BECAUSE NO INSERTIONS/DELETIONS PAST THIS PNT?
 
-        self.pickle.load_list_from_disk(self.list)
         sentence_obj = [
             self.list[0].speaker,
             self.list[0].text + " ",
@@ -474,9 +469,8 @@ class MarkerUtteranceDict:
                     sentence_obj[3] = self.list[index].end
         if sentence_obj[1] != "  ":
             outfile.write(sentence_obj[1])
-        self.pickle.save_list_to_disk(self.list)
 
-    def print_all_rows_csv(self, print_func, format_markers) -> None:
+    def print_all_rows_csv(self, print_func: callable, format_markers: callable) -> None:
         """
         Creates the csv output for Gailbot, separating each line by its speaker
 
@@ -489,7 +483,6 @@ class MarkerUtteranceDict:
         -------
         none
         """
-        self.pickle.load_list_from_disk(self.list)
 
         sentence_obj = [
             self.list[0].speaker,
@@ -513,12 +506,12 @@ class MarkerUtteranceDict:
         if sentence_obj[1] != "  ":
             print_func(sentence_obj)
 
-        self.pickle.save_list_to_disk(self.list)
 
     # Iterates through the list data structure creating the xml file,
     # Which will later be used to generate the chat file
     def print_all_rows_xml(
-        self, apply_subelement_root, apply_subelement_word, apply_sentence_end
+        self, apply_subelement_root: callable, apply_subelement_word: callable, 
+        apply_sentence_end: callable
     ):
         """
         Creates the xml output for Gailbot, separating each line by its speaker
@@ -533,7 +526,6 @@ class MarkerUtteranceDict:
         -------
         none
         """
-        self.pickle.load_list_from_disk(self.list)
         prev_speaker = ""
         sentence = apply_subelement_root(self.list[0].speaker)
         apply_subelement_word(sentence, self.list[0])
@@ -552,7 +544,6 @@ class MarkerUtteranceDict:
                     apply_subelement_word(sentence, self.list[index])
             sentence_end = self.list[index].end
         apply_sentence_end(sentence, sentence_start, sentence_end)
-        self.pickle.save_list_to_disk(self.list)
 
     def order_overlap(self):
         """
@@ -567,7 +558,6 @@ class MarkerUtteranceDict:
         none
         """
         # with self.lock:
-        self.pickle.load_list_from_disk(self.list)
 
         first_sentence_overlap_id = None
         second_sentence_overlap_id = None
@@ -596,11 +586,10 @@ class MarkerUtteranceDict:
             result.extend(group)
 
         self.list = result
-        self.pickle.save_list_to_disk(self.list)
 
     def order_overlapping_sentences(
-        self, first_sentence_overlap_id, second_sentence_overlap_id
-    ):
+        self, first_sentence_overlap_id: int, second_sentence_overlap_id: int
+    ) -> None:
         """
         Reorders sentences based on the overlap specifications
 
@@ -648,8 +637,20 @@ class MarkerUtteranceDict:
 
             self.insert_small_list(start_time, sorted_list)
 
-    def insert_small_list(self, start_time, small_list):
-        # Find the correct index to insert
+    def insert_small_list(self, start_time: int, small_list: List[UttObj]):
+        """
+        Finds the correct index to insert
+
+        Parameters
+        ----------
+        start_time: an integer for the start time to insert for
+        small_list: the smaller list to insert the index inside of
+
+        Returns
+        -------
+        none
+        """
+        
         insert_index = None
         for index in range(len(self.list)):
             if self.list[index].start > start_time:
@@ -671,15 +672,26 @@ class MarkerUtteranceDict:
     # be broken up
     # if so, calls the split utterance function
     def insert_overlap_markers_character_level(self):
+        """
+        Continue checking for overlaps not placed within utterances
+        until a full loop has been completed and no utterance has
+        been modified
+
+        Parameters
+        ----------
+        none
+
+        Returns
+        -------
+        none
+        """
         # print("self.list is: ")
         # for item in self.list:
         #    print("utt is: " + str(item))
         # this list will hold smaller lists of two elements
         # [start_time, ]
 
-        # continue checking for overlaps not placed within utterances
-        # until a full loop has been completed and no utterance has
-        # been modified
+        
         while True:
             old_list = self.list.copy()
             new_list = []
@@ -689,8 +701,6 @@ class MarkerUtteranceDict:
                 current_item = self.list[i]
                 next_item = self.list[i + 1]
 
-                # print("curr item is: " + str(current_item))
-                # print("next item is: " + str(next_item))
 
                 # case for passing if there are empty markers
                 # TODO: make sure we're never adding empty markers?
@@ -726,7 +736,19 @@ class MarkerUtteranceDict:
             if old_list == self.list:
                 break
 
-    def split_utt(self, utt, next_utt):
+    def split_utt(self, utt: UttObj , next_utt: UttObj) -> Tuple[UttObj, UttObj]:
+        """
+        splits an utterance based on where an overlap marker lands
+
+        Parameters
+        ----------
+        utt: the curent utterance
+        next_utt: the next utterance
+
+        Returns
+        -------
+        none
+        """
         time_elapsed = utt.end - utt.start
         number_chars = len(utt.text)
         time_per_char = time_elapsed / number_chars
@@ -796,49 +818,3 @@ class MarkerUtteranceDict:
         # print("utt butt is: " + str(utt_butt))
 
         return utt_head, utt_butt
-
-    # TODO IS THIS FUNCTION USED? DELETE IF NOT
-    def sort(self, list_to_sort, counter: int) -> List[Any]:
-        """
-        Sorts a given list
-
-        Parameters
-        ----------
-        list_to_sort: the list to sort
-        counter: a counter
-
-        Returns
-        -------
-        A sorted list
-        """
-        
-        # with self.lock:
-        if self.overlaps:
-            unique_ids = []
-            for obj in list_to_sort:
-                if obj.flexible_info not in unique_ids:
-                    unique_ids.append(obj.flexible_info)
-
-            sorted_list = sorted(
-                list_to_sort,
-                key=lambda obj: (
-                    unique_ids.index(obj.flexible_info),
-                    list_to_sort.index(obj),
-                ),
-            )
-
-        else:
-            unique_speakers = []
-            for obj in list_to_sort:
-                if obj.speaker not in unique_speakers:
-                    unique_speakers.append(obj.speaker)
-
-            sorted_list = sorted(
-                list_to_sort,
-                key=lambda obj: (
-                    unique_speakers.index(obj.speaker),
-                    list_to_sort.index(obj),
-                ),
-            )
-
-        return sorted_list

@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-17 13:25:06
+# @Last Modified time: 2023-07-17 15:30:44
 # @Description: Creates the csv output for our plugins
 
 import os
@@ -196,22 +196,3 @@ class CSVPlugin(Plugin):
         """
         internal_marker_set = INTERNAL_MARKER.INTERNAL_MARKER_SET
         return string not in internal_marker_set
-
-    def get_first_speaker(self, result) -> str:
-        """
-        Returns the first speaker, or false if none is found
-
-        Parameters
-        ----------
-        result : The resulting output of this
-
-        Returns
-        -------
-        str: a string of the first speaker or false.
-        """
-        for x, row in enumerate(result):
-            for y, value in enumerate(result[x]):
-                if self.is_speaker_utt(value[0]):
-                    return value[0]
-
-            break

@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-17 13:24:10
+# @Last Modified time: 2023-07-17 13:42:41
 # @Description: Checks which plugins are activated and uses them
 
 import toml
@@ -50,16 +50,7 @@ class ApplyPlugins:
         -------
             A list of plugin names.
         """
-        ##TODO: Fix this
-        """
-        with open(file_path, "r") as file:
-            config_data = toml.load(file)
-        plugin_names = []
-        if "plugins" in config_data:
-            for plugin in config_data["plugins"]:
-                if "plugin_name" in plugin:
-                    plugin_names.append(plugin["plugin_name"])
-        """
+
         plugin_names = [
             "OverlapPlugin",
             "PausePlugin",

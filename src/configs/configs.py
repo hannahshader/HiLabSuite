@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-14 15:38:41
+# @Last Modified time: 2023-07-17 14:56:35
 # @Description: The class configurations for formats, labels and output files
 
 
@@ -190,7 +190,7 @@ class OUTPUT_FILE:
     """
 
     CHAT = "conversation.cha"
-    NATIVE_XML = "conversation.gailbot.xml"
+    NATIVE_XML = "conversation.talkbank.xml"
     TB_XML = "conversation.talkbank.xml"
     WORD_CSV = "words.csv"
     UTT_CSV = "conversation.csv"

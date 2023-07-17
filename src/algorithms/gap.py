@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-27 12:16:07
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-17 13:24:31
+# @Last Modified time: 2023-07-17 15:16:25
 from typing import Dict, Any, List
 from HiLabSuite.src.configs.configs import (
     INTERNAL_MARKER,
@@ -47,7 +47,6 @@ class GapPlugin(Plugin):
         """
 
     def apply(self, dependency_outputs: Dict[str, Any], methods: GBPluginMethods):
-        self.structure_interact_instance = dependency_outputs["SyllableRatePlugin"]
         """
         Parameters
         ----------
@@ -58,6 +57,8 @@ class GapPlugin(Plugin):
         -------
         A structure interact instance
         """
+        self.structure_interact_instance = dependency_outputs["SyllableRatePlugin"]
+
 
         # TODO fix apply marker so you don't need to pass through a list
         functions_list = [GapPlugin.gap_marker]

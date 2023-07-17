@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-17 13:25:19
+# @Last Modified time: 2023-07-17 14:25:53
 # @Description: Creates the CHAT output for our plugins based on TalkBank format
 
 import subprocess
@@ -20,6 +20,7 @@ from HiLabSuite.src.configs.configs import (
 from gailbot import Plugin
 from gailbot import GBPluginMethods
 from HiLabSuite.src.data_structures.data_objects import UttObj
+import shutil
 
 ###############################################################################
 # CLASS DEFINITIONS                                                           #
@@ -39,7 +40,7 @@ class ChatPlugin(Plugin):
 
         # get the media file in the output folder
         audio_file_path = methods.output_path.replace(
-            "/Analysis/Plugin_Development", "/Raw/Media/merged.wav"
+            "/Analysis/HiLabSuite", "/Raw/Media/merged.wav"
         )
         shutil.copy2(audio_file_path, methods.output_path)
 
@@ -71,7 +72,7 @@ class ChatPlugin(Plugin):
         # NOTE: need to integrate chatter path into Gailbot because this was
         # not operational beforehand
         current_file_path = os.path.abspath(__file__)
-        jar_path = current_file_path.replace("/chat.py", "/chatter.jar")
+        jar_path = current_file_path.replace("/chat.py", "../bin/chatter.jar")
 
         command = (
             'java -cp "'

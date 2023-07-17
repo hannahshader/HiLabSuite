@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-17 13:27:09
+# @Last Modified time: 2023-07-17 15:33:10
 # @Description: Creates the xml output for our plugins
 
 from typing import Dict, Any
@@ -31,7 +31,19 @@ class XmlPlugin(Plugin):
     def __init__(self) -> None:
         super().__init__()
 
-    def apply(self, dependency_outputs: Dict[str, Any], methods: GBPluginMethods):
+    def apply(self, dependency_outputs: Dict[str, Any], methods: GBPluginMethods) -> None:
+        """
+        Populates the data structure with plugins
+
+        Parameters
+        ----------
+        dependency_outputs : a dictionary of dependency outputs
+        methods: the methods being used, currently GBPluginMethods
+
+        Returns
+        -------
+        none
+        """
         # overlap plugin has the most dependencies, i.e. the version of the data
         # structure with the most and all of the markers
         structure_interact_instance = dependency_outputs["OverlapPlugin"]

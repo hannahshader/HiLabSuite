@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-17 13:29:07
+# @Last Modified time: 2023-07-17 15:29:27
 # @Description: Contains our structures for running our plugins and creating
 #   their output.
 
@@ -111,7 +111,7 @@ class StructureInteract(Plugin):
         """
         return self.data_structure.speakers
 
-    def interact_insert_marker(self, item) -> None:
+    def interact_insert_marker(self, item: UttObj) -> None:
         """
         Inserts and marker and maintains the organization of the data structure
 
@@ -127,10 +127,10 @@ class StructureInteract(Plugin):
             self.data_structure.insert_marker(item)
 
     # general apply function list for items data structure
-    def apply_functions(self, apply_functions):
+    def apply_functions(self, apply_functions: list[callable]):
         return self.data_structure.apply_functions(apply_functions)
 
-    def apply_function(self, apply_function) -> None:
+    def apply_function(self, apply_function: callable) -> None:
         """
         A general apply function to apply one function to items in list
         Changed the () from (self, apply_functionS) to the current
@@ -145,7 +145,7 @@ class StructureInteract(Plugin):
         """
         return self.data_structure.apply_function(apply_function)
 
-    def print_all_rows_text(self, format_markers, outfile: IO[str], formatter) -> None:
+    def print_all_rows_text(self, format_markers: callable, outfile: IO[str], formatter: callable) -> None:
         """
         An apply function to print all the rows for the text output
 
@@ -161,7 +161,7 @@ class StructureInteract(Plugin):
         """
         self.data_structure.print_all_rows_text(format_markers, outfile, formatter)
 
-    def print_all_rows_csv(self, print_func, format_markers) -> None:
+    def print_all_rows_csv(self, print_func: callable, format_markers: callable) -> None:
         """
         An apply function to print all the rows for the csv output
 
@@ -177,7 +177,7 @@ class StructureInteract(Plugin):
         self.data_structure.print_all_rows_csv(print_func, format_markers)
 
     def print_all_rows_xml(
-        self, apply_subelement_root, apply_subelement_word, apply_sentence_end
+        self, apply_subelement_root: callable, apply_subelement_word: callable, apply_sentence_end
     ):
         """
         Apply function to print all the rows for xml output
@@ -196,7 +196,7 @@ class StructureInteract(Plugin):
             apply_subelement_root, apply_subelement_word, apply_sentence_end
         )
 
-    def apply_markers(self, apply_functions) -> None:
+    def apply_markers(self, apply_functions: List[callable]) -> None:
         """
         Takes an instance of structure interact, which holds a MarkerUtterance
         object.
@@ -243,13 +243,13 @@ class StructureInteract(Plugin):
         """
         self.data_structure.apply_for_syllab_rate(apply_function)
 
-    def is_speaker_utt(self, curr) -> bool:
+    def is_speaker_utt(self, curr: UttObj) -> bool:
         """
         Returns whether or not the given marker is a speaker utterance
 
         Parameters
         ----------
-        string: the current string to check whether it is a speaker utterance
+        string: the current utterance object to check whether it is a speaker utterance
 
         Returns
         -------

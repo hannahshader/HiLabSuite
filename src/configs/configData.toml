@@ -1,7 +1,8 @@
 [THRESHOLD]
-# Minimum thresholds for various overlaps, pauses, and gaps.
+# Minimum thresholds for overlaps, pauses, and gaps.
 GAPS_LB = 0.3
 OVERLAP_MARKERLIMIT = 4.0
+TURN_END_THRESHOLD_SECS = 0.3
 LB_LATCH = 0.01
 UB_LATCH = 0.09
 LB_PAUSE = 0.2
@@ -9,7 +10,6 @@ UB_PAUSE = 1.0 # This is blah.
 LB_MICROPAUSE = 0.1
 UB_MICROPAUSE = 0.2
 LB_LARGE_PAUSE = 1.0
-TURN_END_THRESHOLD_SECS = 0.3
 
 [LABEL.DEFAULT]
 # The default labels for each of the markers
