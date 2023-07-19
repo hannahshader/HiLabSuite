@@ -1,4 +1,4 @@
-suite_name = "HiLabSuite"
+suite_name = "Plugin_Development"
 
 [metadata]
 Author = "hilab"
