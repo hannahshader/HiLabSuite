@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-# @Last Modified by:   Hannah Shader
-# @Last Modified time: 2023-07-19 10:46:45
+# @Last Modified by:   Jacob Boyar
+# @Last Modified time: 2023-07-19 11:44:43
 # @Description: Creates a marker utterance dictionary
 
 import copy
