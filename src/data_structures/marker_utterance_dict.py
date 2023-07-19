@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-# @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-17 15:38:57
+# @Last Modified by:   Hannah Shader
+# @Last Modified time: 2023-07-19 10:46:45
 # @Description: Creates a marker utterance dictionary
 
 import copy
@@ -28,6 +28,7 @@ from gailbot import GBPluginMethods
 ###############################################################################
 # CLASS DEFINITIONS                                                           #
 ###############################################################################
+
 
 class MarkerUtteranceDict:
     """
@@ -64,7 +65,7 @@ class MarkerUtteranceDict:
             self.speakers = []
             self.overlaps = False
 
-            # Will be populated later in overlap plugin to hold the sentences 
+            # Will be populated later in overlap plugin to hold the sentences
             # that will need to be reordered
             self.overlap_ids = []
         else:
@@ -75,21 +76,21 @@ class MarkerUtteranceDict:
             speaker = ""
             prev_utt = None
 
-            # Will be populated later in overlap plugin to hold the sentences 
+            # Will be populated later in overlap plugin to hold the sentences
             # that will need to be reordered
             self.overlap_ids = []
 
             # Create a counter for ids to assign to flexible info field for
             # verlapping data in folders
-            # This info will take the place of speaker ids when printing the 
+            # This info will take the place of speaker ids when printing the
             # files
-            # Must be -1 becuase incriments up every first loop as speaker will 
+            # Must be -1 becuase incriments up every first loop as speaker will
             # never be ""
             counter_sentence_overlaps = -1
 
             # Create a boolean that stores whether or not there's a folder for
             # overlaps
-            # Create a variable that creates different speaker ids for each 
+            # Create a variable that creates different speaker ids for each
             # file if there are overlaps
             self.overlaps = len(utterance_map) > 1
 
@@ -169,7 +170,6 @@ class MarkerUtteranceDict:
             self.list = copy.deepcopy(utterances)
             self.sentences = copy.deepcopy(sentence_data)
 
-
     def testing_print(self):
         """
         Testing function that prints a given output
@@ -180,14 +180,14 @@ class MarkerUtteranceDict:
 
     def turn_criteria_overlaps(self, utt_dict: dict[UttObj], prev_utt: UttObj) -> bool:
         """
-        Returns whether or not the difference between two utterances meets the 
+        Returns whether or not the difference between two utterances meets the
         threshold
 
         Parameters
         ----------
         utt_dict: the utterance dictionary
         prev_utt: the previous utterance
-        
+
         Returns
         -------
         a boolean
@@ -195,7 +195,9 @@ class MarkerUtteranceDict:
         """
         if prev_utt == None:
             return False
-        return (utt_dict.start - prev_utt.end) >= load_threshold().TURN_END_THRESHOLD_SECS
+        return (
+            utt_dict.start - prev_utt.end
+        ) >= load_threshold().TURN_END_THRESHOLD_SECS
 
     def sort_list(self) -> None:
         """
@@ -390,7 +392,6 @@ class MarkerUtteranceDict:
                     sentence_index += 1
             sentence_index += 1
 
-
     def apply_insert_marker(self, apply_functions: List[callable]) -> None:
         """
         Takes a list of functions to apply that have arguments as two utterances
@@ -426,7 +427,9 @@ class MarkerUtteranceDict:
                 marker = func(curr, curr_next)
                 self.insert_marker(marker)
 
-    def print_all_rows_text(self, format_markers: callable, outfile: IO[str], formatter) -> None:
+    def print_all_rows_text(
+        self, format_markers: callable, outfile: IO[str], formatter
+    ) -> None:
         """
         Creates the text output for Gailbot
 
@@ -470,7 +473,9 @@ class MarkerUtteranceDict:
         if sentence_obj[1] != "  ":
             outfile.write(sentence_obj[1])
 
-    def print_all_rows_csv(self, print_func: callable, format_markers: callable) -> None:
+    def print_all_rows_csv(
+        self, print_func: callable, format_markers: callable
+    ) -> None:
         """
         Creates the csv output for Gailbot, separating each line by its speaker
 
@@ -506,12 +511,13 @@ class MarkerUtteranceDict:
         if sentence_obj[1] != "  ":
             print_func(sentence_obj)
 
-
     # Iterates through the list data structure creating the xml file,
     # Which will later be used to generate the chat file
     def print_all_rows_xml(
-        self, apply_subelement_root: callable, apply_subelement_word: callable, 
-        apply_sentence_end: callable
+        self,
+        apply_subelement_root: callable,
+        apply_subelement_word: callable,
+        apply_sentence_end: callable,
     ):
         """
         Creates the xml output for Gailbot, separating each line by its speaker
@@ -588,20 +594,8 @@ class MarkerUtteranceDict:
         self.list = result
 
     def order_overlapping_sentences(
-        self, first_sentence_overlap_id: int, second_sentence_overlap_id: int
-    ) -> None:
-        """
-        Reorders sentences based on the overlap specifications
-
-        Parameters
-        ----------
-        first_sentence_overlap_id: the first sentence to reorder
-        second_sentence_overlap_id: the second sentence to reorder
-
-        Returns
-        -------
-        none
-        """
+        self, first_sentence_overlap_id, second_sentence_overlap_id
+    ):
         # with self.lock:
         new_list = []
         start_time = float("inf")
@@ -637,20 +631,8 @@ class MarkerUtteranceDict:
 
             self.insert_small_list(start_time, sorted_list)
 
-    def insert_small_list(self, start_time: int, small_list: List[UttObj]):
-        """
-        Finds the correct index to insert
-
-        Parameters
-        ----------
-        start_time: an integer for the start time to insert for
-        small_list: the smaller list to insert the index inside of
-
-        Returns
-        -------
-        none
-        """
-        
+    def insert_small_list(self, start_time, small_list):
+        # Find the correct index to insert
         insert_index = None
         for index in range(len(self.list)):
             if self.list[index].start > start_time:
@@ -668,67 +650,65 @@ class MarkerUtteranceDict:
         if insert_index is not None:
             self.list = self.list[:insert_index] + small_list + self.list[insert_index:]
 
-    # gets the word before the overlap marker and checks to see if it needs to
-    # be broken up
-    # if so, calls the split utterance function
     def insert_overlap_markers_character_level(self):
         """
-        Continue checking for overlaps not placed within utterances
-        until a full loop has been completed and no utterance has
-        been modified
+        Gets the word before the overlap marker and checks to see if it needs
+        to be split, with the overlap marker inserted within.
+        If so, calls the split utterance function.
+        Updates the list with overlap markers within words on the character
+        level.
 
         Parameters
         ----------
-        none
+        None.
 
         Returns
         -------
-        none
+        None.
         """
-        # print("self.list is: ")
-        # for item in self.list:
-        #    print("utt is: " + str(item))
-        # this list will hold smaller lists of two elements
-        # [start_time, ]
-
-        
+        # continue checking for overlaps not placed within utterances
+        # until a full loop has been completed and no utterance has
+        # been modified
         while True:
             old_list = self.list.copy()
             new_list = []
             i = 0
             new_insertion = False
             while i < len(old_list) - 1:
-                current_item = self.list[i]
-                next_item = self.list[i + 1]
-
-
-                # case for passing if there are empty markers
-                # TODO: make sure we're never adding empty markers?
+                current_item = old_list[i]
+                next_item = old_list[i + 1]
                 if (
-                    next_item.text == INTERNAL_MARKER.OVERLAP_FIRST_START
-                    or next_item.text == INTERNAL_MARKER.OVERLAP_FIRST_END
-                    or next_item.text == INTERNAL_MARKER.OVERLAP_SECOND_START
-                    or next_item.text == INTERNAL_MARKER.OVERLAP_SECOND_END
-                ) and (current_item.flexible_info == next_item.flexible_info):
-                    if next_item.start < current_item.end:
-                        # print("curr item is: " + str(current_item))
-                        # print("next item is: " + str(next_item))
-                        # split the utt
-                        utt_head, utt_butt = self.split_utt(current_item, next_item)
+                    (
+                        next_item.text == INTERNAL_MARKER.OVERLAP_FIRST_START
+                        or next_item.text == INTERNAL_MARKER.OVERLAP_FIRST_END
+                        or next_item.text == INTERNAL_MARKER.OVERLAP_SECOND_START
+                        or next_item.text == INTERNAL_MARKER.OVERLAP_SECOND_END
+                    )
+                    and (current_item.flexible_info == next_item.flexible_info)
+                    and (current_item.speaker == next_item.speaker)
+                    and (next_item.start < current_item.end)
+                ):
+                    # case if the next utt is an overlap marker, and the
+                    # overlap marker corresponds to the word before, and
+                    # the overlap occurs within the word before
+                    utt_head, utt_butt = self.split_utt(current_item, next_item)
 
-                        # insert new split utt and marker into the list
-                        new_list.append(utt_head)
-                        new_list.append(next_item)
+                    new_list.append(utt_head)
+                    new_list.append(next_item)
+                    if utt_butt != None:
                         new_list.append(utt_butt)
 
-                        # get the index past the overlap marker
-                        i += 1
-                        new_insertion = True
+                    # get the index past the overlap marker
+                    i += 1
+                    new_insertion = True
                 else:
-                    if current_item.text != "":
-                        new_list.append(current_item)
+                    new_list.append(current_item)
 
                 i += 1
+
+            # insert the very last utt in the list, as it is not inspected
+            # because it cannot have a following overlap to insert into it
+            new_list.append(old_list[-1])
 
             # set self.list to the new_list
             self.list = new_list
@@ -736,36 +716,33 @@ class MarkerUtteranceDict:
             if old_list == self.list:
                 break
 
-    def split_utt(self, utt: UttObj , next_utt: UttObj) -> Tuple[UttObj, UttObj]:
+    def split_utt(self, utt, next_utt):
         """
-        splits an utterance based on where an overlap marker lands
+        Divides an utterance into two utterances based on the
+        start time of an overlap marker. Returns the two new
+        utterances.
 
         Parameters
         ----------
-        utt: the curent utterance
-        next_utt: the next utterance
+        An utterance to split, and a overlap marker utterance
+        to check start time with.
 
         Returns
         -------
-        none
+        Two new utterances (split).
         """
         time_elapsed = utt.end - utt.start
         number_chars = len(utt.text)
         time_per_char = time_elapsed / number_chars
-        print("time_elapsed is: " + str(time_per_char))
-        print("number_char is: " + str(number_chars))
-        print("char start is: " + str(utt.start))
-        print("char end is: " + str(utt.end))
 
         curr_start = utt.start
-        utt_head = UttObj(utt.start, 0, utt.speaker, "", utt.flexible_info)
-        utt_butt = UttObj(0, utt.end, utt.speaker, "", utt.flexible_info)
 
+        # create a list of dictionaries where keys are a character in the word
+        # and values are a list of floats that represent start and end time
+        # for the char
         char_list = []
         char_dict = {}
         i = 0
-        print("number chars is " + str(number_chars))
-        print("utt text is " + utt.text)
         while i < number_chars:
             char_dict = {}
             char_dict[utt.text[i]] = [curr_start, curr_start + time_per_char]
@@ -776,45 +753,52 @@ class MarkerUtteranceDict:
         utt_head_list = []
         utt_butt_list = []
 
-        for dictionary in char_list:
+        # stort the list of dictionaries into lists of dictionaries
+        # one where all start times are after the next overlap start time
+        # one where all start times are before the next overlap start time
+        for index, dictionary in enumerate(char_list[:-1]):
             start_time = list(dictionary.values())[0][0]
             if start_time > next_utt.start:
                 utt_butt_list.append(dictionary)
             else:
                 utt_head_list.append(dictionary)
 
-        print("utt head list is:" + str(utt_head_list))
-        print("utt butt list is:" + str(utt_butt_list))
+        # the last list element will always end up in the seperated list
+        # this handles the case where the start time of the overlap is
+        # within the start and end time of the last character
+        last_dictionary = char_list[-1]
+        utt_butt_list.append(last_dictionary)
 
-        print("char list is:")
-        for item in char_list:
-            print(item)
+        # handles case where there's just one character, and the
+        # word doesn't need to be broken up
+        if len(utt_head_list) == 0:
+            return utt, None
 
-        # if utt.text == "ffffff":
-        #    print("utt is: " + str(utt))
-        #    print("next utt is" + str(next_utt))
-        #    print("char dict is: " + str(char_dict))
+        # concat all characters in front half and second half of word
+        utt_head_string = ""
+        for dictionary in utt_head_list:
+            utt_head_string += list(dictionary.keys())[0]
 
-        # print("utt.text is: " + str(utt.text))
-        # print("utt number_chars is: " + str(number_chars))
-        # print("next utt is: " + str(next_utt))
-        # print("utt is: " + str(utt))
-        # print("utt head is: " + str(utt_head))
-        # print("utt butt is: " + str(utt_butt))
+        utt_butt_string = ""
+        for dictionary in utt_butt_list:
+            utt_butt_string += list(dictionary.keys())[0]
 
-        for i in range(number_chars):
-            if curr_start < next_utt.start:
-                utt_head.text += utt.text[i]
-                curr_start += time_per_char
-                utt_head.end = curr_start
-            else:
-                utt_butt.text += utt.text[i]
-                utt_butt.start = curr_start
-                curr_start += time_per_char
+        # create utterance objects for front and end of the split utt
+        utt_head = UttObj(
+            next(iter(utt_head_list[0].values()))[0],
+            next(iter(utt_head_list[-1].values()))[-1],
+            utt.speaker,
+            utt_head_string,
+            utt.flexible_info,
+        )
 
-            # print("char is: " + str(utt.text[i]) + " start is: " + str(curr_start))
+        utt_butt = UttObj(
+            next(iter(utt_butt_list[0].values()))[0],
+            next(iter(utt_butt_list[-1].values()))[-1],
+            utt.speaker,
+            utt_butt_string,
+            utt.flexible_info,
+        )
 
-        # print("utt head is: " + str(utt_head))
-        # print("utt butt is: " + str(utt_butt))
-
+        # return two utt in place of the original utt
         return utt_head, utt_butt

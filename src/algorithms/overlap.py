@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-# @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-17 13:44:00
+# @Last Modified by:   Hannah Shader
+# @Last Modified time: 2023-07-19 10:44:43
 # @Description: Checks for overlaps between multiple speakers
 
 from typing import Dict, Any, List
@@ -57,7 +57,7 @@ class OverlapPlugin(Plugin):
             OverlapPlugin.OverlapMarker
         )
         self.structure_interact_instance.group_overlapping_sentences()
-        # self.structure_interact_instance.insert_overlap_markers_character_level()
+        self.structure_interact_instance.insert_overlap_markers_character_level()
 
         self.successful = True
 
@@ -68,11 +68,11 @@ class OverlapPlugin(Plugin):
         curr_sentence: the first sentence in the overlap
         next_sentence: the next sentence in the overlap
         list: the list of utterance objects
-        
+
         Returns
         -------
         A list of overlap markers
-    
+
         Algorithm: modified
         -------
         1. given current sentence and next sentence
