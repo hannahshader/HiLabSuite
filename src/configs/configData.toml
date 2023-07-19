@@ -1,86 +1,34 @@
-[THRESHOLD.DEFAULT]
-# Minimum thresholds for overlaps, pauses, and gaps.
 
-[THRESHOLD.GAPS]
-GAPS_LB = 0.3
+[FORMATTER.CON]
+#The hardcoded formatting for CON, used in TEXT
+TURN = "{0}\t{1} {2}{4}_{3}{4}\n"   
+TXT_SEP = " "                       #Used as a separator between utterances
 
-[THRESHOLD.OVERLAPS]
-OVERLAP_MARKERLIMIT = 4.0
-TURN_END_THRESHOLD_SECS = 0.3
+[FORMATTER.CSV]
+#The hardcoded formatting for CSV output
+HEADER = ["SPEAKER LABEL", "TEXT", "START TIME", "END TIME"]
+                                    #List of possible headers
+TXT_SEP = " "                       #Used as a separator between utterances
 
-[THRESHOLD.PAUSES]
-LB_LATCH = 0.01
-UB_LATCH = 0.09
-LB_PAUSE = 0.2
-UB_PAUSE = 1.0 # This is blah.
-LB_MICROPAUSE = 0.1
-UB_MICROPAUSE = 0.2
-LB_LARGE_PAUSE = 1.0
+[FORMATTER.SYLL]
+#The hardcoded values for the Syllable Rate plugin specifically
+LIMIT_DEVIATIONS = 2    #Maximum deviations between two
 
-[LABEL.DEFAULT]
-# The default labels for each of the markers
-SPEAKERLABEL  = "SP_"
-GAPMARKER     = "(Gap)"
-OVERLAPMARKER = "(Overlap)"
-PAUSE         = "(Pause)"
-OVERLAPMARKER_CURR_START = " < "
-OVERLAPMARKER_CURR_END   = " > [<]"
-OVERLAPMARKER_NEXT_START = " < "
-OVERLAPMARKER_NEXT_END   = " > [>]"
+[FORMATTER.TEXT]
+#The hardcoded formatting for TEXT output
+GAPS = "<GAP:Duration="
+PAUSES = "<PAUSE:Duration="
+OVERLAP_FIRST_START = "<OVERLAP:id=1&type=start> "
+OVERLAP_FIRST_END = "<OVERLAP:id=1&type=end> "
+OVERLAP_SECOND_START = "<OVERLAP:id=2&type=start> "
+OVERLAP_SECOND_END = "<OVERLAP:id=2&type=end> "
+SLOWSPEECH_START = "<SLOWSPEECH:type=start> "
+SLOWSPEECH_END = "<SLOWSPEECH:type=end> "
+FASTSPEECH_START = "<FASTSPEECH:type=start> "
+FASTSPEECH_END = "<FASTSPEECH:type=end> "
+PAUSES_CAPS = "PAUSES"
+GAPS_CAPS = "GAPS"
 
-[LABEL.CSV]
-# The CSV labels for each of the markers
-SPEAKERLABEL = "SP_"
-GAPMARKER     = "(Gap)"
-OVERLAPMARKER = "(Overlap)"
-PAUSE         = "(Pause)"
-OVERLAPMARKER_CURR_START = "Overlap First Start"
-OVERLAPMARKER_CURR_END   = "Overlap First End"
-OVERLAPMARKER_NEXT_START = "Overlap Second Start"
-OVERLAPMARKER_NEXT_END   = "Overlap Second End"
-
-[LABEL.CHAT]
-# The CHAT labels for each of the markers
-SPEAKERLABEL  = "SP_"
-GAPMARKER     = "(Gap)"
-OVERLAPMARKER = "(Overlap)"
-PAUSE         = "(Pause)"
-OVERLAPMARKER_CURR_START = " < "
-OVERLAPMARKER_CURR_END   = " > [<]"
-OVERLAPMARKER_NEXT_START = " < "
-OVERLAPMARKER_NEXT_END   = " > [>]"
-
-[LABEL.TXT]
-# The TXT labels for each of the markers
-SPEAKERLABEL = "SP_"
-GAPMARKER     = "(Gap)"
-OVERLAPMARKER = "(Overlap)"
-PAUSE         = "(Pause)"
-OVERLAPMARKER_CURR_START = " < "
-OVERLAPMARKER_CURR_END   = " > [<]"
-OVERLAPMARKER_NEXT_START = " < "
-OVERLAPMARKER_NEXT_END   = " > [>]"
-
-[LABEL.XML]
-# The XML labels for each of the markers
-SPEAKERLABEL = "SP"
-GAPMARKER     = "(Gap)"
-OVERLAPMARKER = "(Overlap)"
-PAUSE         = "(Pause)"
-OVERLAPMARKER_CURR_START = " < "
-OVERLAPMARKER_CURR_END   = " > [<]"
-OVERLAPMARKER_NEXT_START = " < "
-OVERLAPMARKER_NEXT_END   = " > [>]"
-
-
-[OUTPUT_FILE]
-CHAT = "conversation.cha"
-NATIVE_XML = "conversation.talkbank.xml"
-TB_XML = "conversation.talkbank.xml"
-WORD_CSV = "words.csv"
-UTT_CSV = "conversation.csv"
-CON_TXT = "conversation.txt"
-CHAT_ERROR = "chat_error.txt"
 
 [FORMATTER.INTERNAL]
 # Class for an internal marker node. Contains appropriate attributes for gap,
@@ -105,9 +53,9 @@ OVERLAP_FIRST_END = "overlap-firstEnd"
 OVERLAP_SECOND_START = "overlap-secondStart"
 OVERLAP_SECOND_END = "overlap-secondEnd"
 
-SLOWSPEECH_DELIM = "\u2207"
-FASTSPEECH_DELIM = "\u2206"
-LATCH_DELIM = "\u2248"
+SLOWSPEECH_DELIM = "\u2207"             #Special character for slowspeech
+FASTSPEECH_DELIM = "\u2206"             #Special character for slowspeech
+LATCH_DELIM = "\u2248"                  #Special character for latch
 SLOWSPEECH_START = "slowspeech_start"
 SLOWSPEECH_END = "slowspeech_end"
 FASTSPEECH_START = "fastspeech_start"
@@ -115,29 +63,35 @@ FASTSPEECH_END = "fastspeech_end"
 DELIM_MARKER1 = "."
 DELIM_MARKER2 = "%"
 
-UTT_PAUSE_MARKERS = ["%HESITATION"]
+UTT_PAUSE_MARKERS = ["%HESITATION"]     #Treated as a list
 
-[FORMATTER.TEXT]
-GAPS = "<GAP:Duration="
-PAUSES = "<PAUSE:Duration="
-OVERLAP_FIRST_START = "<OVERLAP:id=1&type=start> "
-OVERLAP_FIRST_END = "<OVERLAP:id=1&type=end> "
-OVERLAP_SECOND_START = "<OVERLAP:id=2&type=start> "
-OVERLAP_SECOND_END = "<OVERLAP:id=2&type=end> "
-SLOWSPEECH_START = "<SLOWSPEECH:type=start> "
-SLOWSPEECH_END = "<SLOWSPEECH:type=end> "
-FASTSPEECH_START = "<FASTSPEECH:type=start> "
-FASTSPEECH_END = "<FASTSPEECH:type=end> "
-PAUSES_CAPS = "PAUSES"
-GAPS_CAPS = "GAPS"
 
-[FORMATTER.SYLL]
-LIMIT_DEVIATIONS = 2
+# Minimum thresholds for overlaps, pauses, and gaps.
+[THRESHOLD.GAPS]
+GAPS_LB = 0.3   #The minimum time required for a gap to be measured, 0.3 seconds
+                #Anything less than that does not qualify to be a gap
 
-[FORMATTER.CSV]
-HEADER = ["SPEAKER LABEL", "TEXT", "START TIME", "END TIME"]
-TXT_SEP = " "
+[THRESHOLD.OVERLAPS]
+OVERLAP_MARKERLIMIT = 4.0       #The maximum amount of overlap markers
+TURN_END_THRESHOLD_SECS = 0.3   #The threshold to end a turn, 0.3 seconds
+                                #If 0.3 seconds pass without any utterances,
+                                #a new turn is initiated
 
-[FORMATTER.CON]
-TURN = "{0}\t{1} {2}{4}_{3}{4}\n"
-TXT_SEP = " "
+[THRESHOLD.PAUSES]
+LB_LATCH = 0.01                 #A latch is between 0.01 and 0.1 seconds of 
+UB_LATCH = 0.09                 #silence within a speaker's turn
+LB_MICROPAUSE = 0.1             #A micropause is between 0.1 and 0.2 seconds
+UB_MICROPAUSE = 0.2
+LB_PAUSE = 0.2                  #A pause is between 0.2 and 1.0 seconds
+UB_PAUSE = 1.0 # This is blah.
+LB_LARGE_PAUSE = 1.0            #If a pause exceeds 1.0 seconds in length, it
+                                #is treated as a special case
+
+[OUTPUT_FILE]
+#The names for the various output files
+CHAT = "conversation.cha"
+NATIVE_XML = "conversation.talkbank.xml"
+WORD_CSV = "words.csv"
+UTT_CSV = "conversation.csv"
+CON_TXT = "conversation.txt"
+CHAT_ERROR = "chat_error.txt"

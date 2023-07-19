@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-19 15:16:30
+# @Last Modified time: 2023-07-19 15:51:36
 # @Description: Creates the xml output for our plugins
 
 from typing import Dict, Any
@@ -10,7 +10,6 @@ import os
 import logging
 from HiLabSuite.src.configs.configs import (
     load_formatter,
-    load_label,
     load_output_file,
 )
 from gailbot import Plugin

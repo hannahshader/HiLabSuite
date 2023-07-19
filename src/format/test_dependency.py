@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader
 # @Date:   2023-07-12 12:16:59
-# @Last Modified by:   Hannah Shader
-# @Last Modified time: 2023-07-12 15:35:53
+# @Last Modified by:   Jacob Boyar
+# @Last Modified time: 2023-07-19 15:44:56
 
 """
 import re
@@ -18,7 +18,6 @@ from HiLabSuite.src.data_structures.structure_interact import (
 )
 from HiLabSuite.src.configs.configs import (
     INTERNAL_MARKER,
-    load_label,
     OUTPUT_FILE,
     CON_FORMATTER,
 )

@@ -19,7 +19,6 @@ from HiLabSuite.src.data_structures.structure_interact import (
 )
 from HiLabSuite.src.configs.configs import (
     load_formatter,
-    load_label,
     load_output_file,
 )
 

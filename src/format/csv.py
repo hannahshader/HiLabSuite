@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-19 15:16:16
+# @Last Modified time: 2023-07-19 15:45:02
 # @Description: Creates the csv output for our plugins
 
 import os
@@ -13,7 +13,6 @@ from HiLabSuite.src.data_structures.data_objects import UttObj
 
 from HiLabSuite.src.configs.configs import (
     load_formatter,
-    load_label,
     load_output_file,
 )
 from gailbot import Plugin

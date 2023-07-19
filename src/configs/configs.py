@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-19 15:15:23
+# @Last Modified time: 2023-07-19 15:51:52
 # @Description: The class configurations for formats, labels and output files
 
 
@@ -56,6 +56,7 @@ class TEXT_FORMATTER:
     FASTSPEECH_END: str = field_from_dict()
     PAUSES_CAPS: str = field_from_dict()
     GAPS_CAPS: str = field_from_dict()
+
 
 @dataclass
 class INTERNAL_MARKER(DataclassFromDict):
@@ -158,35 +159,6 @@ class ALL_THRESHOLDS(DataclassFromDict):
     PAUSES: THRESHOLD_PAUSES = field_from_dict()
     OVERLAPS: THRESHOLD_OVERLAPS = field_from_dict()
 
-
-@dataclass
-class LABEL(DataclassFromDict):
-    """
-    Dataclass for marker labels used in marker nodes
-    """
-
-    SPEAKERLABEL: str = field_from_dict()
-    GAPMARKER: str = field_from_dict()
-    OVERLAPMARKER: str = field_from_dict()
-    PAUSE: str = field_from_dict()
-    OVERLAPMARKER_CURR_START: str = field_from_dict()
-    OVERLAPMARKER_CURR_END: str = field_from_dict()
-    OVERLAPMARKER_NEXT_START: str = field_from_dict()
-    OVERLAPMARKER_NEXT_END: str = field_from_dict()
-
-
-@dataclass
-class ALL_LABELS(DataclassFromDict):
-    """
-    Dataclass for labels used for file formats
-    """
-
-    DEFAULT: LABEL = field_from_dict()
-    TXT: LABEL = field_from_dict()
-    XML: LABEL = field_from_dict()
-    CSV: LABEL = field_from_dict()
-    CHAT: LABEL = field_from_dict()
-
 @dataclass
 class OUTPUT_FILE(DataclassFromDict):
     """
@@ -195,20 +167,10 @@ class OUTPUT_FILE(DataclassFromDict):
 
     CHAT: str = field_from_dict()
     NATIVE_XML: str = field_from_dict()
-    TB_XML: str = field_from_dict()
     WORD_CSV: str = field_from_dict()
     UTT_CSV: str = field_from_dict()
     CON_TXT: str = field_from_dict()
     CHAT_ERROR: str = field_from_dict()
-
-
-def load_label():
-    """
-    Load label value from config.toml file
-    """
-    d = toml.load(os.path.join(os.path.dirname(__file__), "configData.toml"))
-    return ALL_LABELS.from_dict(d["LABEL"])
-
 
 def load_threshold():
     """
