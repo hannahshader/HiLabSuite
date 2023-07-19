@@ -1,19 +1,21 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-# @Last Modified by:   Hannah Shader
-# @Last Modified time: 2023-07-19 10:44:43
+# @Last Modified by:   Jacob Boyar
+# @Last Modified time: 2023-07-19 15:14:40
 # @Description: Checks for overlaps between multiple speakers
 
 from typing import Dict, Any, List
 import logging
 
 from HiLabSuite.src.configs.configs import (
-    INTERNAL_MARKER,
+    load_formatter,
 )
 from HiLabSuite.src.data_structures.data_objects import UttObj
 from gailbot import Plugin
 from gailbot import GBPluginMethods
+
+INTERNAL_MARKER = load_formatter().INTERNAL
 
 ###############################################################################
 # CLASS DEFINITIONS                                                           #

@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-17 15:39:40
+# @Last Modified time: 2023-07-19 15:16:24
 # @Description: Creates the text output for our plugins
 
 import re
@@ -18,13 +18,16 @@ from HiLabSuite.src.data_structures.structure_interact import (
     StructureInteract,
 )
 from HiLabSuite.src.configs.configs import (
-    INTERNAL_MARKER,
+    load_formatter,
     load_label,
-    PLUGIN_NAME,
-    OUTPUT_FILE,
-    CON_FORMATTER,
-    TEXT_FORMATTER,
+    load_output_file,
 )
+
+OUTPUT_FILE = load_output_file()
+INTERNAL_MARKER = load_formatter().INTERNAL
+CON_FORMATTER = load_formatter().CON
+TEXT_FORMATTER = load_formatter().TEXT
+
 
 ###############################################################################
 # CLASS DEFINITIONS                                                           #

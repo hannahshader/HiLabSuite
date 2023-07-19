@@ -1,8 +1,14 @@
-[THRESHOLD]
+[THRESHOLD.DEFAULT]
 # Minimum thresholds for overlaps, pauses, and gaps.
+
+[THRESHOLD.GAPS]
 GAPS_LB = 0.3
+
+[THRESHOLD.OVERLAPS]
 OVERLAP_MARKERLIMIT = 4.0
 TURN_END_THRESHOLD_SECS = 0.3
+
+[THRESHOLD.PAUSES]
 LB_LATCH = 0.01
 UB_LATCH = 0.09
 LB_PAUSE = 0.2
@@ -67,9 +73,71 @@ OVERLAPMARKER_NEXT_START = " < "
 OVERLAPMARKER_NEXT_END   = " > [>]"
 
 
+[OUTPUT_FILE]
+CHAT = "conversation.cha"
+NATIVE_XML = "conversation.talkbank.xml"
+TB_XML = "conversation.talkbank.xml"
+WORD_CSV = "words.csv"
+UTT_CSV = "conversation.csv"
+CON_TXT = "conversation.txt"
+CHAT_ERROR = "chat_error.txt"
 
+[FORMATTER.INTERNAL]
+# Class for an internal marker node. Contains appropriate attributes for gap,
+# overlap, pause, and syllable rate markers.
+GAPS = "gaps"
+OVERLAPS = "overlaps"
+PAUSES = "pauses"
+FTO = "fto"
+LATCH = "latch"
+MICROPAUSE = "micropause"
+NO_SPEAKER = " "
 
+# Marker text
+MARKERTYPE = "markerType"
+MARKERINFO = "markerInfo"
+MARKERSPEAKER = "markerSpeaker"
+MARKER_SEP = ":"
+KEYVALUE_SEP = "="
+TYPE_INFO_SP = "(markerType={0}:markerInfo={1}:markerSpeaker={2})"
+OVERLAP_FIRST_START = "overlap-firstStart"
+OVERLAP_FIRST_END = "overlap-firstEnd"
+OVERLAP_SECOND_START = "overlap-secondStart"
+OVERLAP_SECOND_END = "overlap-secondEnd"
 
+SLOWSPEECH_DELIM = "\u2207"
+FASTSPEECH_DELIM = "\u2206"
+LATCH_DELIM = "\u2248"
+SLOWSPEECH_START = "slowspeech_start"
+SLOWSPEECH_END = "slowspeech_end"
+FASTSPEECH_START = "fastspeech_start"
+FASTSPEECH_END = "fastspeech_end"
+DELIM_MARKER1 = "."
+DELIM_MARKER2 = "%"
 
+UTT_PAUSE_MARKERS = ["%HESITATION"]
 
+[FORMATTER.TEXT]
+GAPS = "<GAP:Duration="
+PAUSES = "<PAUSE:Duration="
+OVERLAP_FIRST_START = "<OVERLAP:id=1&type=start> "
+OVERLAP_FIRST_END = "<OVERLAP:id=1&type=end> "
+OVERLAP_SECOND_START = "<OVERLAP:id=2&type=start> "
+OVERLAP_SECOND_END = "<OVERLAP:id=2&type=end> "
+SLOWSPEECH_START = "<SLOWSPEECH:type=start> "
+SLOWSPEECH_END = "<SLOWSPEECH:type=end> "
+FASTSPEECH_START = "<FASTSPEECH:type=start> "
+FASTSPEECH_END = "<FASTSPEECH:type=end> "
+PAUSES_CAPS = "PAUSES"
+GAPS_CAPS = "GAPS"
 
+[FORMATTER.SYLL]
+LIMIT_DEVIATIONS = 2
+
+[FORMATTER.CSV]
+HEADER = ["SPEAKER LABEL", "TEXT", "START TIME", "END TIME"]
+TXT_SEP = " "
+
+[FORMATTER.CON]
+TURN = "{0}\t{1} {2}{4}_{3}{4}\n"
+TXT_SEP = " "

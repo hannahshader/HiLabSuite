@@ -2,24 +2,27 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-17 15:58:29
+# @Last Modified time: 2023-07-19 15:16:30
 # @Description: Creates the xml output for our plugins
 
 from typing import Dict, Any
 import os
 import logging
 from HiLabSuite.src.configs.configs import (
-    INTERNAL_MARKER,
+    load_formatter,
     load_label,
-    PLUGIN_NAME,
-    OUTPUT_FILE,
-    CSV_FORMATTER,
+    load_output_file,
 )
 from gailbot import Plugin
 from gailbot import GBPluginMethods
 import xml.etree.ElementTree as ET
 import xml.dom.minidom
 from HiLabSuite.src.data_structures.data_objects import UttObj
+
+
+OUTPUT_FILE = load_output_file()
+INTERNAL_MARKER = load_formatter().INTERNAL
+
 
 ###############################################################################
 # CLASS DEFINITIONS                                                           #

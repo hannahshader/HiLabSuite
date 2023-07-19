@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-17 16:18:51
+# @Last Modified time: 2023-07-19 14:46:31
 # @Description: Creates the CHAT output for our plugins based on TalkBank format
 
 import subprocess
@@ -11,16 +11,15 @@ import os
 import io
 import logging
 from HiLabSuite.src.configs.configs import (
-    INTERNAL_MARKER,
     load_label,
-    PLUGIN_NAME,
-    OUTPUT_FILE,
-    CSV_FORMATTER,
+    load_output_file,
 )
 from gailbot import Plugin
 from gailbot import GBPluginMethods
 from HiLabSuite.src.data_structures.data_objects import UttObj
 import shutil
+
+OUTPUT_FILE = load_output_file()
 
 ###############################################################################
 # CLASS DEFINITIONS                                                           #

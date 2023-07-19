@@ -195,7 +195,7 @@ in configData.toml LABEL.XML field
 ## Configs Module
 Include configuration data for plugin suite
 
-## config.py 
+## config.py TODO FIX THIS
 Include dataclasses for marker, threshold, output file name, and Labels 
 
 dataclass overview:
@@ -208,7 +208,6 @@ LABEL: Label used in output file, which will replace the internal maker
 in format module 
 ALL_LABELS: Currently used Label in plugin suite format module, the data 
             content will be read from "configData.toml" file 
-PLUGIN_NAME: the name of each plugin 
 
 ## configData.toml
 THRESHOLD: stores the threshold data 

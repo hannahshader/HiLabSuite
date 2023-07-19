@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-19 11:44:43
+# @Last Modified time: 2023-07-19 15:21:51
 # @Description: Creates a marker utterance dictionary
 
 import copy
@@ -18,12 +18,17 @@ from typing import OrderedDict as OrderedDictType, TypeVar
 
 from HiLabSuite.src.data_structures.data_objects import UttObj
 from HiLabSuite.src.algorithms.apply_plugins import ApplyPlugins
-from HiLabSuite.src.configs.configs import INTERNAL_MARKER
-from HiLabSuite.src.configs.configs import THRESHOLD
+from HiLabSuite.src.configs.configs import load_formatter
 from HiLabSuite.src.configs.configs import load_threshold
 
 from gailbot import Plugin
 from gailbot import GBPluginMethods
+
+THRESHOLD = load_threshold().OVERLAPS
+INTERNAL_MARKER = load_formatter().INTERNAL
+
+
+
 
 ###############################################################################
 # CLASS DEFINITIONS                                                           #
@@ -197,7 +202,7 @@ class MarkerUtteranceDict:
             return False
         return (
             utt_dict.start - prev_utt.end
-        ) >= load_threshold().TURN_END_THRESHOLD_SECS
+        ) >= THRESHOLD.TURN_END_THRESHOLD_SECS
 
     def sort_list(self) -> None:
         """

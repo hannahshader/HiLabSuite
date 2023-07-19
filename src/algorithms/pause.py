@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-19 11:44:32
+# @Last Modified time: 2023-07-19 15:14:44
 # @Description: Checks for pauses in speech when one speaker is speaking
 
 import logging
@@ -11,14 +11,17 @@ from typing import Dict, Any, List
 from dataclasses import dataclass
 
 from HiLabSuite.src.configs.configs import (
-    INTERNAL_MARKER,
-    THRESHOLD,
+    load_formatter,
     load_threshold,
 )
 from HiLabSuite.src.data_structures.data_objects import UttObj
 
 from gailbot import Plugin
 from gailbot import GBPluginMethods
+
+THRESHOLD = load_threshold().PAUSES
+INTERNAL_MARKER = load_formatter().INTERNAL
+
 
 ###############################################################################
 # CLASS DEFINITIONS                                                           #
@@ -92,7 +95,7 @@ class PausePlugin(Plugin):
             fto = round(next_utt.start - curr_utt.end, 2)
             markerText = ""
             # check for latch threshold
-            if (load_threshold().LB_LATCH <= fto) and (fto <= load_threshold().UB_LATCH):
+            if (THRESHOLD.LB_LATCH <= fto) and (fto <= THRESHOLD.UB_LATCH):
                 logging.debug(f"latch detected with fto {fto}")
                 # format marker text
                 markerText = INTERNAL_MARKER.TYPE_INFO_SP.format(
@@ -108,7 +111,7 @@ class PausePlugin(Plugin):
                 )
                 logging.debug(f"latch marker ({markerText}) generated")
             # check for pause threshold
-            elif load_threshold().LB_PAUSE <= fto <= load_threshold().UB_PAUSE:
+            elif THRESHOLD.LB_PAUSE <= fto <= THRESHOLD.UB_PAUSE:
                 logging.debug(f"pause detected with fto {fto}")
                 markerText = INTERNAL_MARKER.TYPE_INFO_SP.format(
                     INTERNAL_MARKER.PAUSES, str(round(fto, 2)), str(curr_utt.speaker)
@@ -123,7 +126,7 @@ class PausePlugin(Plugin):
                 )
                 logging.debug(f"pause marker ({markerText}) generated")
             # check for micro pause threshold
-            elif load_threshold().LB_MICROPAUSE <= fto <= load_threshold().UB_MICROPAUSE:
+            elif THRESHOLD.LB_MICROPAUSE <= fto <= THRESHOLD.UB_MICROPAUSE:
                 logging.debug(f"micro pause detected with fto {fto}")
                 markerText = INTERNAL_MARKER.TYPE_INFO_SP.format(
                     INTERNAL_MARKER.PAUSES, str(round(fto, 1)), str(curr_utt.speaker)
@@ -138,7 +141,7 @@ class PausePlugin(Plugin):
                 )
                 logging.debug(f"micro pause marker ({markerText}) generated")
             # check for large pause threshold
-            elif fto >= load_threshold().LB_LARGE_PAUSE:
+            elif fto >= THRESHOLD.LB_LARGE_PAUSE:
                 logging.debug(f"large pause detected with fto {fto}")
                 markerText = INTERNAL_MARKER.TYPE_INFO_SP.format(
                     INTERNAL_MARKER.PAUSES, str(round(fto, 1)), str(curr_utt.speaker)

@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-17 13:29:23
+# @Last Modified time: 2023-07-19 14:46:01
 # @Description: Manages the output files created by our plugins
 
 import re
@@ -17,11 +17,8 @@ from HiLabSuite.src.data_structures.structure_interact import (
     StructureInteract,
 )
 from HiLabSuite.src.configs.configs import (
-    INTERNAL_MARKER,
     load_label,
-    PLUGIN_NAME,
-    OUTPUT_FILE,
-    CON_FORMATTER,
+    load_output_file,
 )
 from HiLabSuite.src.format.csv import CSVPlugin
 from HiLabSuite.src.format.text import TextPlugin
@@ -29,6 +26,8 @@ from HiLabSuite.src.format.xml import XmlPlugin
 from HiLabSuite.src.format.chat import ChatPlugin
 from HiLabSuite.src.data_structures.data_objects import UttObj
 
+
+OUTPUT_FILE = load_output_file()
 
 ###############################################################################
 # CLASS DEFINITIONS                                                           #

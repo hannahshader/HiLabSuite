@@ -19,7 +19,6 @@ from HiLabSuite.src.data_structures.structure_interact import (
 from HiLabSuite.src.configs.configs import (
     INTERNAL_MARKER,
     load_label,
-    PLUGIN_NAME,
     OUTPUT_FILE,
     CON_FORMATTER,
 )

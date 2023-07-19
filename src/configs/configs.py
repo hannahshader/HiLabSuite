@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-17 15:45:41
+# @Last Modified time: 2023-07-19 15:15:23
 # @Description: The class configurations for formats, labels and output files
 
 
@@ -19,8 +19,8 @@ class CON_FORMATTER:
     Dataclass that defines string template for an utterance turn
     """
 
-    TURN = "{0}\t{1} {2}{4}_{3}{4}\n"
-    TXT_SEP = " "
+    TURN: str = field_from_dict()
+    TXT_SEP: str = field_from_dict()
 
 
 @dataclass
@@ -29,82 +29,77 @@ class CSV_FORMATTER:
     Dataclass for header texts in a csv file
     """
 
-    HEADER = ["SPEAKER LABEL", "TEXT", "START TIME", "END TIME"]
-    TXT_SEP = " "
+    HEADER: List[str] = field_from_dict()
+    TXT_SEP: str = field_from_dict()
 
 @dataclass
 class SYLL_VARS:
     """
     Dataclass for syllable variables in a csv file
     """
-    LIMIT_DEVIATIONS = 2
-
-
+    LIMIT_DEVIATIONS: int = field_from_dict()
 
 @dataclass
 class TEXT_FORMATTER:
     """
     Dataclass for text file output 
     """
-    GAPS = "<GAP:Duration="
-    PAUSES = "<PAUSE:Duration="
-    OVERLAP_FIRST_START = "<OVERLAP:id=1&type=start> "
-    OVERLAP_FIRST_END = "<OVERLAP:id=1&type=end> "
-    OVERLAP_SECOND_START = "<OVERLAP:id=2&type=start> "
-    OVERLAP_SECOND_END = "<OVERLAP:id=2&type=end> "
-    SLOWSPEECH_START = "<SLOWSPEECH:type=start> "
-    SLOWSPEECH_END = "<SLOWSPEECH:type=end> "
-    FASTSPEECH_START = "<FASTSPEECH:type=start> "
-    FASTSPEECH_END = "<FASTSPEECH:type=end> "
-    PAUSES_CAPS = "PAUSES"
-    GAPS_CAPS = "GAPS"
-    
-
+    GAPS: str = field_from_dict()
+    PAUSES: str = field_from_dict()
+    OVERLAP_FIRST_START: str = field_from_dict()
+    OVERLAP_FIRST_END: str = field_from_dict()
+    OVERLAP_SECOND_START: str = field_from_dict()
+    OVERLAP_SECOND_END: str = field_from_dict()
+    SLOWSPEECH_START: str = field_from_dict()
+    SLOWSPEECH_END: str = field_from_dict()
+    FASTSPEECH_START: str = field_from_dict()
+    FASTSPEECH_END: str = field_from_dict()
+    PAUSES_CAPS: str = field_from_dict()
+    GAPS_CAPS: str = field_from_dict()
 
 @dataclass
-class INTERNAL_MARKER:
+class INTERNAL_MARKER(DataclassFromDict):
     """
     Class for an internal marker node. Contains appropriate attributes for gap,
     overlap, pause, and syllable rate markers.
     """
-
-    GAPS = "gaps"
-    OVERLAPS = "overlaps"
-    PAUSES = "pauses"
-    FTO = "fto"
-    LATCH = "latch"
-    MICROPAUSE = "micropause"
-    NO_SPEAKER = " "
+    GAPS: str = field_from_dict()
+    OVERLAPS: str = field_from_dict()
+    PAUSES: str = field_from_dict()
+    FTO: str = field_from_dict()
+    LATCH: str = field_from_dict()
+    MICROPAUSE: str = field_from_dict()
+    NO_SPEAKER: str = field_from_dict()
 
     # Marker text
-    MARKERTYPE = "markerType"
-    MARKERINFO = "markerInfo"
-    MARKERSPEAKER = "markerSpeaker"
-    MARKER_SEP = ":"
-    KEYVALUE_SEP = "="
-    TYPE_INFO_SP = "(markerType={0}:markerInfo={1}:markerSpeaker={2})"
-    OVERLAP_FIRST_START = "overlap-firstStart"
-    OVERLAP_FIRST_END = "overlap-firstEnd"
-    OVERLAP_SECOND_START = "overlap-secondStart"
-    OVERLAP_SECOND_END = "overlap-secondEnd"
+    MARKERTYPE: str = field_from_dict()
+    MARKERINFO: str = field_from_dict()
+    MARKERSPEAKER: str = field_from_dict()
+    MARKER_SEP: str = field_from_dict()
+    KEYVALUE_SEP: str = field_from_dict()
+    TYPE_INFO_SP: str = field_from_dict()
+    OVERLAP_FIRST_START: str = field_from_dict()
+    OVERLAP_FIRST_END: str = field_from_dict()
+    OVERLAP_SECOND_START: str = field_from_dict()
+    OVERLAP_SECOND_END: str = field_from_dict()
 
-    SLOWSPEECH_DELIM = "\u2207"
-    FASTSPEECH_DELIM = "\u2206"
-    LATCH_DELIM = "\u2248"
-    SLOWSPEECH_START = "slowspeech_start"
-    SLOWSPEECH_END = "slowspeech_end"
-    FASTSPEECH_START = "fastspeech_start"
-    FASTSPEECH_END = "fastspeech_end"
-    DELIM_MARKER1 = "."
-    DELIM_MARKER2 = "%"
+    SLOWSPEECH_DELIM: str = field_from_dict()
+    FASTSPEECH_DELIM: str = field_from_dict()
+    LATCH_DELIM: str = field_from_dict()
+    SLOWSPEECH_START: str = field_from_dict()
+    SLOWSPEECH_END: str = field_from_dict()
+    FASTSPEECH_START: str = field_from_dict()
+    FASTSPEECH_END: str = field_from_dict()
+    DELIM_MARKER1: str = field_from_dict()
+    DELIM_MARKER2: str = field_from_dict()
 
-    UTT_PAUSE_MARKERS = ["%HESITATION"]
+    UTT_PAUSE_MARKERS: List[str] = field_from_dict()
     INTERNAL_MARKER_SET = {
         GAPS,
         OVERLAPS,
         PAUSES,
         MICROPAUSE,
-    
+
         OVERLAP_FIRST_START,
         OVERLAP_FIRST_END,
         OVERLAP_SECOND_START,
@@ -115,16 +110,28 @@ class INTERNAL_MARKER:
         FASTSPEECH_START,
     }
 
-
 @dataclass
-class THRESHOLD(DataclassFromDict):
+class FORMATTER(DataclassFromDict):
+
+    INTERNAL: INTERNAL_MARKER = field_from_dict()
+    SYLL: SYLL_VARS = field_from_dict()
+    TEXT: TEXT_FORMATTER = field_from_dict()
+    CSV: CSV_FORMATTER = field_from_dict()
+    CON: CON_FORMATTER = field_from_dict()
+    
+@dataclass
+class THRESHOLD_GAPS(DataclassFromDict):
     """
-    Dataclass defining thresholds (floats) for paralinguistic feature
-    identifications
+    Dataclass defining thresholds (floats) for gaps
     """
 
     GAPS_LB: float = field_from_dict()
-    OVERLAP_MARKERLIMIT: float = field_from_dict()
+
+@dataclass
+class THRESHOLD_PAUSES(DataclassFromDict):
+    """
+    Dataclass defining thresholds (floats) for pauses
+    """
     LB_LATCH: float = field_from_dict()
     UB_LATCH: float = field_from_dict()
     LB_PAUSE: float = field_from_dict()
@@ -132,7 +139,24 @@ class THRESHOLD(DataclassFromDict):
     LB_MICROPAUSE: float = field_from_dict()
     UB_MICROPAUSE: float = field_from_dict()
     LB_LARGE_PAUSE: float = field_from_dict()
+
+@dataclass
+class THRESHOLD_OVERLAPS(DataclassFromDict):
+    """
+    Dataclass defining thresholds (floats) for overlaps
+    """
+    OVERLAP_MARKERLIMIT: float = field_from_dict()
     TURN_END_THRESHOLD_SECS: float = field_from_dict()
+
+@dataclass
+class ALL_THRESHOLDS(DataclassFromDict):
+    """
+    Dataclass for thresholds used for gaps, pauses, and overlaps
+    """
+
+    GAPS: THRESHOLD_GAPS = field_from_dict()
+    PAUSES: THRESHOLD_PAUSES = field_from_dict()
+    OVERLAPS: THRESHOLD_OVERLAPS = field_from_dict()
 
 
 @dataclass
@@ -163,42 +187,19 @@ class ALL_LABELS(DataclassFromDict):
     CSV: LABEL = field_from_dict()
     CHAT: LABEL = field_from_dict()
 
-
 @dataclass
-class PLUGIN_NAME:
-    """
-    Dataclass listing plugin names
-    """
-
-    WordTree = "WordTreePlugin"
-    ConvModel = "ConversationModelPlugin"
-    ConvMap = "ConversationMapPlugin"
-    UttMap = "UtteranceMapPlugin"
-    SpeakerMap = "SpeakerMapPlugin"
-    ConvMap = "ConversationMapPlugin"
-    Overlap = "OverlapPlugin"
-    Pause = "PausePlugin"
-    Gap = "GapPlugin"
-    SyllableRate = "SyllableRatePlugin"
-    Chat = "ChatPlugin"
-    Text = "TextPlugin"
-    CSV = "CSVPlugin"
-    XML = "XMLPlugin"
-
-
-@dataclass
-class OUTPUT_FILE:
+class OUTPUT_FILE(DataclassFromDict):
     """
     Dataclass defining filenames in different format
     """
 
-    CHAT = "conversation.cha"
-    NATIVE_XML = "conversation.talkbank.xml"
-    TB_XML = "conversation.talkbank.xml"
-    WORD_CSV = "words.csv"
-    UTT_CSV = "conversation.csv"
-    CON_TXT = "conversation.txt"
-    CHAT_ERROR = "chat_error.txt"
+    CHAT: str = field_from_dict()
+    NATIVE_XML: str = field_from_dict()
+    TB_XML: str = field_from_dict()
+    WORD_CSV: str = field_from_dict()
+    UTT_CSV: str = field_from_dict()
+    CON_TXT: str = field_from_dict()
+    CHAT_ERROR: str = field_from_dict()
 
 
 def load_label():
@@ -214,4 +215,19 @@ def load_threshold():
     Load threshold values from config.toml
     """
     d = toml.load(os.path.join(os.path.dirname(__file__), "configData.toml"))
-    return THRESHOLD.from_dict(d["THRESHOLD"])
+    return ALL_THRESHOLDS.from_dict(d["THRESHOLD"])
+
+def load_output_file():
+    """
+    Load output file names from config.toml file
+    """
+    d = toml.load(os.path.join(os.path.dirname(__file__), "configData.toml"))
+    return OUTPUT_FILE.from_dict(d["OUTPUT_FILE"])
+
+def load_formatter():
+    """
+    Load output file names from config.toml file
+    """
+    d = toml.load(os.path.join(os.path.dirname(__file__), "configData.toml"))
+    return FORMATTER.from_dict(d["FORMATTER"])
+

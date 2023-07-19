@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-17 15:30:44
+# @Last Modified time: 2023-07-19 15:16:16
 # @Description: Creates the csv output for our plugins
 
 import os
@@ -12,17 +12,21 @@ import logging
 from HiLabSuite.src.data_structures.data_objects import UttObj
 
 from HiLabSuite.src.configs.configs import (
-    INTERNAL_MARKER,
+    load_formatter,
     load_label,
-    PLUGIN_NAME,
-    OUTPUT_FILE,
-    CSV_FORMATTER,
+    load_output_file,
 )
 from gailbot import Plugin
 from gailbot import GBPluginMethods
 from HiLabSuite.src.data_structures.structure_interact import (
     StructureInteract,
 )
+
+OUTPUT_FILE = load_output_file()
+INTERNAL_MARKER = load_formatter().INTERNAL
+CSV_FORMATTER = load_formatter().CSV
+
+
 
 ###############################################################################
 # CLASS DEFINITIONS                                                           #
