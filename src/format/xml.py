@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-19 15:51:36
+# @Last Modified time: 2023-07-20 11:21:27
 # @Description: Creates the xml output for our plugins
 
 from typing import Dict, Any
@@ -27,13 +27,16 @@ INTERNAL_MARKER = load_formatter().INTERNAL
 # CLASS DEFINITIONS                                                           #
 ###############################################################################
 
+
 class XmlPlugin(Plugin):
     """Creates the XML file"""
 
     def __init__(self) -> None:
         super().__init__()
 
-    def apply(self, dependency_outputs: Dict[str, Any], methods: GBPluginMethods) -> None:
+    def apply(
+        self, dependency_outputs: Dict[str, Any], methods: GBPluginMethods
+    ) -> None:
         """
         Populates the data structure with plugins
 
@@ -67,7 +70,7 @@ class XmlPlugin(Plugin):
         none
         """
         logging.info("start XML output")
-        
+
         # Gets filepath
         path = os.path.join(
             structure_interact_instance.output_path, OUTPUT_FILE.NATIVE_XML
@@ -100,6 +103,12 @@ class XmlPlugin(Plugin):
             speaker_data[i]["name"] = self.speaker_list[i]
             speaker_data[i]["role"] = "Adult"
             speaker_data[i]["language"] = "eng"
+
+        speaker_data.append({})
+        speaker_data[-1]["id"] = INTERNAL_MARKER.GAPS
+        speaker_data[-1]["name"] = INTERNAL_MARKER.GAPS
+        speaker_data[-1]["role"] = "Adult"
+        speaker_data[-1]["language"] = "eng"
 
         root_elem = ET.SubElement(self.root, "Participants")
 
@@ -148,10 +157,14 @@ class XmlPlugin(Plugin):
         # Creates the xml element for a sentence
         counter_temp = self.counter
         self.counter = self.counter + 1
+        if speaker == INTERNAL_MARKER.GAPS:
+            return_string = INTERNAL_MARKER.GAPS
+        else:
+            return_string = "SP" + str(index)
         return ET.SubElement(
             self.root,
             "u",
-            attrib={"who": ("SP" + str(index)), "uID": "u{}".format(counter_temp)},
+            attrib={"who": return_string, "uID": "u{}".format(counter_temp)},
         )
 
     def apply_subelement_word(self, sentence: str, word: str) -> None:
@@ -176,7 +189,9 @@ class XmlPlugin(Plugin):
             word_elem = ET.SubElement(sentence, "w")
             word_elem.text = self.format_markers(word)
 
-    def apply_sentence_end(self, sentence: str, sentence_start: str, sentence_end: str) -> None:
+    def apply_sentence_end(
+        self, sentence: str, sentence_start: str, sentence_end: str
+    ) -> None:
         """
         xml formatting for terminating the sentence
 
@@ -231,10 +246,12 @@ class XmlPlugin(Plugin):
         a string of the properly formatted overlap, pause, or gap.
         """
         # case for if curr is an overlap marker
-        if (curr.text == INTERNAL_MARKER.OVERLAP_FIRST_START 
-            or curr.text == INTERNAL_MARKER.OVERLAP_SECOND_START):
+        if (
+            curr.text == INTERNAL_MARKER.OVERLAP_FIRST_START
+            or curr.text == INTERNAL_MARKER.OVERLAP_SECOND_START
+        ):
             return " < "
-        elif curr.text == INTERNAL_MARKER.OVERLAP_FIRST_END :
+        elif curr.text == INTERNAL_MARKER.OVERLAP_FIRST_END:
             return " > [<" + str(curr.overlap_id) + "]"
 
         elif curr.text == INTERNAL_MARKER.OVERLAP_SECOND_END:

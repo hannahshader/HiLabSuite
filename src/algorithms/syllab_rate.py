@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-19 15:16:05
+# @Last Modified time: 2023-07-20 11:02:28
 # @Description: Calculates the average syllable rate for all speakers
 #   Denotes any sections of especially fast or slow speech.
 
@@ -14,13 +14,14 @@ from scipy.stats import median_abs_deviation
 
 from HiLabSuite.src.configs.configs import (
     load_formatter,
+    load_threshold,
 )
 from HiLabSuite.src.data_structures.data_objects import UttObj
 from gailbot import Plugin
 from gailbot import GBPluginMethods
 
 INTERNAL_MARKER = load_formatter().INTERNAL
-SYLL_VARS = load_formatter().SYLL
+THRESHOLD = load_threshold().SYLLABLE
 
 
 ###############################################################################
@@ -181,8 +182,8 @@ class SyllableRatePlugin(Plugin):
         allRates = numpy.sort(numpy.array(allRates))
         median = numpy.median(allRates)
         median_absolute_deviation = round(median_abs_deviation(allRates), 2)
-        lowerLimit = median - (SYLL_VARS.LIMIT_DEVIATIONS * median_absolute_deviation)
-        upperLimit = median + (SYLL_VARS.LIMIT_DEVIATIONS * median_absolute_deviation)
+        lowerLimit = median - (THRESHOLD.LIMIT_DEVIATIONS * median_absolute_deviation)
+        upperLimit = median + (THRESHOLD.LIMIT_DEVIATIONS * median_absolute_deviation)
 
         # Creates a dictionary for stat fields
         stats: STAT_DICT = {

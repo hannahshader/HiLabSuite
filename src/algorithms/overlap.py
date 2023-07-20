@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-19 15:14:40
+# @Last Modified time: 2023-07-20 10:52:46
 # @Description: Checks for overlaps between multiple speakers
 
 from typing import Dict, Any, List
@@ -16,6 +16,7 @@ from gailbot import Plugin
 from gailbot import GBPluginMethods
 
 INTERNAL_MARKER = load_formatter().INTERNAL
+
 
 ###############################################################################
 # CLASS DEFINITIONS                                                           #

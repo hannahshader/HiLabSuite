@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-19 15:35:13
+# @Last Modified time: 2023-07-20 11:09:03
 # @Description: Checks for pauses in speech when one speaker is speaking
 
 import logging
@@ -20,6 +20,7 @@ from gailbot import Plugin
 from gailbot import GBPluginMethods
 
 THRESHOLD = load_threshold().PAUSES
+THRESHOLDGAPS = load_threshold().GAPS
 INTERNAL_MARKER = load_formatter().INTERNAL
 
 
@@ -57,9 +58,11 @@ class PausePlugin(Plugin):
         -------
         A structure interact instance
         """
+        # testing
         self.structure_interact_instance = dependency_outputs["GapPlugin"]
-        #TODO fix apply marker so you don't need to pass through a list
-        
+
+        # self.structure_interact_instance.testing_print()
+
         functions_list = [PausePlugin.pause_marker]
         self.structure_interact_instance.apply_markers(functions_list)
 
@@ -95,7 +98,10 @@ class PausePlugin(Plugin):
             fto = round(next_utt.start - curr_utt.end, 2)
             markerText = ""
             # check for latch threshold
-            if (THRESHOLD.LB_LATCH <= fto and fto < THRESHOLD.UB_LATCH):
+            if THRESHOLDGAPS.TURN_END_THRESHOLD_SECS <= fto:
+                pass
+            elif (THRESHOLD.LB_LATCH <= fto < THRESHOLD.UB_LATCH
+            ):
                 logging.debug(f"latch detected with fto {fto}")
                 # format marker text
                 markerText = INTERNAL_MARKER.TYPE_INFO_SP.format(
@@ -126,7 +132,9 @@ class PausePlugin(Plugin):
                 )
                 logging.debug(f"pause marker ({markerText}) generated")
             # check for micro pause threshold
-            elif THRESHOLD.LB_MICROPAUSE <= fto < THRESHOLD.UB_MICROPAUSE:
+            elif (
+                THRESHOLD.LB_MICROPAUSE <= fto < THRESHOLD.UB_MICROPAUSE
+            ):
                 logging.debug(f"micro pause detected with fto {fto}")
                 markerText = INTERNAL_MARKER.TYPE_INFO_SP.format(
                     INTERNAL_MARKER.PAUSES, str(round(fto, 1)), str(curr_utt.speaker)

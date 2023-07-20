@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-27 12:16:07
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-19 15:14:36
+# @Last Modified time: 2023-07-20 10:55:04
 from typing import Dict, Any, List
 from HiLabSuite.src.configs.configs import (
     load_formatter,
@@ -24,6 +24,7 @@ logger = logging.getLogger(__name__)
 
 THRESHOLD = load_threshold().GAPS
 INTERNAL_MARKER = load_formatter().INTERNAL
+
 
 ###############################################################################
 # CLASS DEFINITIONS                                                           #
@@ -61,10 +62,11 @@ class GapPlugin(Plugin):
         """
         self.structure_interact_instance = dependency_outputs["SyllableRatePlugin"]
 
-
         # TODO fix apply marker so you don't need to pass through a list
         functions_list = [GapPlugin.gap_marker]
         self.structure_interact_instance.apply_markers(functions_list)
+
+        self.structure_interact_instance.new_turn_with_gap()
 
         logging.info("start gap analysis")
 
@@ -96,7 +98,16 @@ class GapPlugin(Plugin):
         """
         fto = round(next_utt.start - curr_utt.end, 2)
         logging.debug(f"get fto : {fto}")
-        if fto >= THRESHOLD.GAPS_LB and curr_utt.speaker != next_utt.speaker:
+        if THRESHOLD.TURN_END_THRESHOLD_SECS <= fto:
+            logging.debug(f"get fto : {fto}")
+            return UttObj(
+                start=curr_utt.end,
+                end=next_utt.start,
+                speaker=curr_utt.speaker,
+                text=INTERNAL_MARKER.GAPS,
+                flexible_info=curr_utt.flexible_info,
+            )
+        elif fto >= THRESHOLD.GAPS_LB and curr_utt.speaker != next_utt.speaker:
             logging.debug(f"get fto : {fto}")
             # format marker text
             markerText = INTERNAL_MARKER.TYPE_INFO_SP.format(

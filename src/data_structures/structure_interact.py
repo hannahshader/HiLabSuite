@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-17 15:29:27
+# @Last Modified time: 2023-07-20 10:53:58
 # @Description: Contains our structures for running our plugins and creating
 #   their output.
 
@@ -27,6 +27,7 @@ OUT_PATH = "Temporary"
 ###############################################################################
 # CLASS DEFINITIONS                                                           #
 ###############################################################################
+
 
 class StructureInteract(Plugin):
     """
@@ -145,7 +146,9 @@ class StructureInteract(Plugin):
         """
         return self.data_structure.apply_function(apply_function)
 
-    def print_all_rows_text(self, format_markers: callable, outfile: IO[str], formatter: callable) -> None:
+    def print_all_rows_text(
+        self, format_markers: callable, outfile: IO[str], formatter: callable
+    ) -> None:
         """
         An apply function to print all the rows for the text output
 
@@ -161,7 +164,9 @@ class StructureInteract(Plugin):
         """
         self.data_structure.print_all_rows_text(format_markers, outfile, formatter)
 
-    def print_all_rows_csv(self, print_func: callable, format_markers: callable) -> None:
+    def print_all_rows_csv(
+        self, print_func: callable, format_markers: callable
+    ) -> None:
         """
         An apply function to print all the rows for the csv output
 
@@ -177,7 +182,10 @@ class StructureInteract(Plugin):
         self.data_structure.print_all_rows_csv(print_func, format_markers)
 
     def print_all_rows_xml(
-        self, apply_subelement_root: callable, apply_subelement_word: callable, apply_sentence_end
+        self,
+        apply_subelement_root: callable,
+        apply_subelement_word: callable,
+        apply_sentence_end,
     ):
         """
         Apply function to print all the rows for xml output
@@ -264,3 +272,6 @@ class StructureInteract(Plugin):
     # inserts the overlap markers into character level
     def insert_overlap_markers_character_level(self):
         return self.data_structure.insert_overlap_markers_character_level()
+
+    def new_turn_with_gap(self):
+        return self.data_structure.new_turn_with_gap()

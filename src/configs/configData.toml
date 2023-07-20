@@ -10,10 +10,6 @@ HEADER = ["SPEAKER LABEL", "TEXT", "START TIME", "END TIME"]
                                     #List of possible headers
 TXT_SEP = " "                       #Used as a separator between utterances
 
-[FORMATTER.SYLL]
-#The hardcoded values for the Syllable Rate plugin specifically
-LIMIT_DEVIATIONS = 2    #Maximum deviations between two
-
 [FORMATTER.TEXT]
 #The hardcoded formatting for TEXT output
 GAPS = "<GAP:Duration="
@@ -70,12 +66,12 @@ UTT_PAUSE_MARKERS = ["%HESITATION"]     #Treated as a list
 [THRESHOLD.GAPS]
 GAPS_LB = 0.3   #The minimum time required for a gap to be measured, 0.3 seconds
                 #Anything less than that does not qualify to be a gap
-
-[THRESHOLD.OVERLAPS]
-OVERLAP_MARKERLIMIT = 4.0       #The maximum amount of overlap markers
 TURN_END_THRESHOLD_SECS = 0.3   #The threshold to end a turn, 0.3 seconds
                                 #If 0.3 seconds pass without any utterances,
                                 #a new turn is initiated
+
+[THRESHOLD.OVERLAPS]
+OVERLAP_MARKERLIMIT = 4.0       #The maximum amount of overlap markers
 
 [THRESHOLD.PAUSES]
 LB_LATCH = 0.01                 #A latch is between 0.01 and 0.1 seconds of 
@@ -86,6 +82,10 @@ LB_PAUSE = 0.2                  #A pause is between 0.2 and 1.0 seconds
 UB_PAUSE = 1.0 # This is blah.
 LB_LARGE_PAUSE = 1.0            #If a pause exceeds 1.0 seconds in length, it
                                 #is treated as a special case
+
+[THRESHOLD.SYLLABLE]
+#The hardcoded values for the Syllable Rate plugin specifically
+LIMIT_DEVIATIONS = 2    #Maximum deviations between two
 
 [OUTPUT_FILE]
 #The names for the various output files

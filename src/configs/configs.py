@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-19 15:51:52
+# @Last Modified time: 2023-07-20 11:08:11
 # @Description: The class configurations for formats, labels and output files
 
 
@@ -31,13 +31,6 @@ class CSV_FORMATTER:
 
     HEADER: List[str] = field_from_dict()
     TXT_SEP: str = field_from_dict()
-
-@dataclass
-class SYLL_VARS:
-    """
-    Dataclass for syllable variables in a csv file
-    """
-    LIMIT_DEVIATIONS: int = field_from_dict()
 
 @dataclass
 class TEXT_FORMATTER:
@@ -115,7 +108,6 @@ class INTERNAL_MARKER(DataclassFromDict):
 class FORMATTER(DataclassFromDict):
 
     INTERNAL: INTERNAL_MARKER = field_from_dict()
-    SYLL: SYLL_VARS = field_from_dict()
     TEXT: TEXT_FORMATTER = field_from_dict()
     CSV: CSV_FORMATTER = field_from_dict()
     CON: CON_FORMATTER = field_from_dict()
@@ -127,6 +119,7 @@ class THRESHOLD_GAPS(DataclassFromDict):
     """
 
     GAPS_LB: float = field_from_dict()
+    TURN_END_THRESHOLD_SECS: float = field_from_dict()
 
 @dataclass
 class THRESHOLD_PAUSES(DataclassFromDict):
@@ -147,7 +140,13 @@ class THRESHOLD_OVERLAPS(DataclassFromDict):
     Dataclass defining thresholds (floats) for overlaps
     """
     OVERLAP_MARKERLIMIT: float = field_from_dict()
-    TURN_END_THRESHOLD_SECS: float = field_from_dict()
+
+@dataclass
+class THRESHOLD_SYLLABLE:
+    """
+    Dataclass for syllable variables in a csv file
+    """
+    LIMIT_DEVIATIONS: int = field_from_dict()
 
 @dataclass
 class ALL_THRESHOLDS(DataclassFromDict):
@@ -158,6 +157,7 @@ class ALL_THRESHOLDS(DataclassFromDict):
     GAPS: THRESHOLD_GAPS = field_from_dict()
     PAUSES: THRESHOLD_PAUSES = field_from_dict()
     OVERLAPS: THRESHOLD_OVERLAPS = field_from_dict()
+    SYLLABLE: THRESHOLD_SYLLABLE = field_from_dict()
 
 @dataclass
 class OUTPUT_FILE(DataclassFromDict):

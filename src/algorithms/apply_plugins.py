@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-17 13:42:41
+# @Last Modified time: 2023-07-20 10:51:52
 # @Description: Checks which plugins are activated and uses them
 
 import toml

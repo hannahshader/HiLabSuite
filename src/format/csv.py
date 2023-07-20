@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-19 15:45:02
+# @Last Modified time: 2023-07-20 11:15:35
 # @Description: Creates the csv output for our plugins
 
 import os
@@ -24,8 +24,6 @@ from HiLabSuite.src.data_structures.structure_interact import (
 OUTPUT_FILE = load_output_file()
 INTERNAL_MARKER = load_formatter().INTERNAL
 CSV_FORMATTER = load_formatter().CSV
-
-
 
 ###############################################################################
 # CLASS DEFINITIONS                                                           #
@@ -52,7 +50,11 @@ class CSVPlugin(Plugin):
         -------
         none
         """
+
         structure_interact_instance = dependency_outputs["OverlapPlugin"]
+
+        # testing
+        structure_interact_instance.testing_print()
         self.run(structure_interact_instance)
         self.successful = True
 
@@ -111,7 +113,8 @@ class CSVPlugin(Plugin):
 
         Returns
         -------
-        A list which comprises the necessary node information:
+        A list which compr
+        ises the necessary node information:
         speaker, text, start, and end times.
         """
         l = []
@@ -124,10 +127,10 @@ class CSVPlugin(Plugin):
             return [
                 "",
                 curr.speaker,
-                curr.start,
-                curr.end,
+                round(curr.start, 2),
+                round(curr.end, 2),
             ]
-        result = [curr.speaker, txt, curr.start, curr.end]
+        result = [curr.speaker, txt, round(curr.start, 2), round(curr.end, 2)]
         return result
 
     def format_markers(self, curr: UttObj) -> str:
