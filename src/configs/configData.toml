@@ -28,6 +28,9 @@ LATCH_START = "<LATCH:type=start&Duration="
 LATCH_END = "<LATCH:type=end"
 MICROPAUSE = "MICROPAUSE:Duration="
 
+[EXCEPTIONS]
+HESITATION = "%HESITATION"
+
 [FORMATTER.INTERNAL]
 # Class for an internal marker node. Contains appropriate attributes for gap,
 # overlap, pause, and syllable rate markers.
@@ -66,10 +69,10 @@ UTT_PAUSE_MARKERS = ["%HESITATION"]     #Treated as a list
 
 # Minimum thresholds for overlaps, pauses, and gaps.
 [THRESHOLD.GAPS]
-GAPS_LB = 0.3   #The minimum time required for a gap to be measured, 0.3 seconds
+GAPS_LB = 1.0   #The minimum time required for a gap to be measured, 0.1 seconds
                 #Anything less than that does not qualify to be a gap
-TURN_END_THRESHOLD_SECS = 0.3   #The threshold to end a turn, 0.3 seconds
-                                #If 0.3 seconds pass without any utterances,
+TURN_END_THRESHOLD_SECS = 1.0   #The threshold to end a turn, 0.3 seconds
+                                #If 1.0 seconds pass without any utterances,
                                 #a new turn is initiated
 
 LB_LATCH = 0.01                 #A latch is between 0.01 and 0.1 seconds of 

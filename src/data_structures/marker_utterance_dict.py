@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-# @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-25 11:23:08
+# @Last Modified by:   Hannah Shader
+# @Last Modified time: 2023-07-25 11:54:15
 # @Description: Creates a marker utterance dictionary
 
 import copy
@@ -17,9 +17,10 @@ from typing import Any, Dict, List, IO, Tuple
 from typing import OrderedDict as OrderedDictType, TypeVar
 
 from HiLabSuite.src.data_structures.data_objects import UttObj
-from HiLabSuite.src.algorithms.apply_plugins import ApplyPlugins
 from HiLabSuite.src.configs.configs import load_formatter
 from HiLabSuite.src.configs.configs import load_threshold
+from HiLabSuite.src.configs.configs import load_exception
+
 
 from gailbot import Plugin
 from gailbot import GBPluginMethods
@@ -203,9 +204,7 @@ class MarkerUtteranceDict:
         """
         if prev_utt == None:
             return False
-        return (
-            utt_dict.start - prev_utt.end
-        ) >= THRESHOLD.TURN_END_THRESHOLD_SECS
+        return (utt_dict.start - prev_utt.end) >= THRESHOLD.TURN_END_THRESHOLD_SECS
 
     def sort_list(self) -> None:
         """
