@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-20 11:09:03
+# @Last Modified time: 2023-07-25 11:19:00
 # @Description: Checks for pauses in speech when one speaker is speaking
 
 import logging
@@ -66,6 +66,8 @@ class PausePlugin(Plugin):
         functions_list = [PausePlugin.pause_marker]
         self.structure_interact_instance.apply_markers(functions_list)
 
+        self.structure_interact_instance.new_turn_with_gap_and_pause()
+
         self.successful = True
         return self.structure_interact_instance
 
@@ -96,11 +98,12 @@ class PausePlugin(Plugin):
         if curr_utt.speaker == next_utt.speaker:
             logging.info("start pause analysis")
             fto = round(next_utt.start - curr_utt.end, 2)
-            markerText = ""
             # check for latch threshold
             if THRESHOLDGAPS.TURN_END_THRESHOLD_SECS <= fto:
                 pass
-            elif (THRESHOLD.LB_LATCH <= fto < THRESHOLD.UB_LATCH
+            """
+            elif (load_threshold().LB_LATCH <= fto) and (
+                fto <= load_threshold().UB_LATCH
             ):
                 logging.debug(f"latch detected with fto {fto}")
                 # format marker text
@@ -116,13 +119,10 @@ class PausePlugin(Plugin):
                     curr_utt.flexible_info,
                 )
                 logging.debug(f"latch marker ({markerText}) generated")
+            """
             # check for pause threshold
-            elif THRESHOLD.LB_PAUSE <= fto < THRESHOLD.UB_PAUSE:
-                logging.debug(f"pause detected with fto {fto}")
-                markerText = INTERNAL_MARKER.TYPE_INFO_SP.format(
-                    INTERNAL_MARKER.PAUSES, str(round(fto, 2)), str(curr_utt.speaker)
-                )
-                logging.debug(f"generating pause marker: {markerText}")
+            if THRESHOLD.LB_PAUSE <= fto < THRESHOLD.UB_PAUSE:
+                logging.debug(f"generating pause marker")
                 return UttObj(
                     curr_utt.end,
                     next_utt.start,
@@ -130,26 +130,20 @@ class PausePlugin(Plugin):
                     INTERNAL_MARKER.PAUSES,
                     curr_utt.flexible_info,
                 )
-                logging.debug(f"pause marker ({markerText}) generated")
             # check for micro pause threshold
-            elif (
-                THRESHOLD.LB_MICROPAUSE <= fto < THRESHOLD.UB_MICROPAUSE
-            ):
-                logging.debug(f"micro pause detected with fto {fto}")
-                markerText = INTERNAL_MARKER.TYPE_INFO_SP.format(
-                    INTERNAL_MARKER.PAUSES, str(round(fto, 1)), str(curr_utt.speaker)
-                )
-                logging.debug(f"generating micro pause marker: {markerText}")
-                return_marker = UttObj(
+            elif THRESHOLD.LB_MICROPAUSE <= fto < THRESHOLD.UB_MICROPAUSE:
+                logging.debug(f"generating micropause marker")
+                return UttObj(
                     curr_utt.end,
                     next_utt.start,
                     curr_utt.speaker,
-                    INTERNAL_MARKER.PAUSES,
+                    INTERNAL_MARKER.MICROPAUSE,
                     curr_utt.flexible_info,
                 )
-                logging.debug(f"micro pause marker ({markerText}) generated")
+                logging.debug(f"micro pause marker  generated")
+            """
             # check for large pause threshold
-            elif fto >= THRESHOLD.LB_LARGE_PAUSE:
+            elif fto >= load_threshold().LB_LARGE_PAUSE:
                 logging.debug(f"large pause detected with fto {fto}")
                 markerText = INTERNAL_MARKER.TYPE_INFO_SP.format(
                     INTERNAL_MARKER.PAUSES, str(round(fto, 1)), str(curr_utt.speaker)
@@ -163,4 +157,5 @@ class PausePlugin(Plugin):
                     curr_utt.flexible_info,
                 )
                 logging.debug(f"larger pause marker ({markerText}) generated")
+            """
         return

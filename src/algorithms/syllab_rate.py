@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-20 11:02:28
+# @Last Modified time: 2023-07-25 11:19:34
 # @Description: Calculates the average syllable rate for all speakers
 #   Denotes any sections of especially fast or slow speech.
 
@@ -27,6 +27,7 @@ THRESHOLD = load_threshold().SYLLABLE
 ###############################################################################
 # CLASS DEFINITIONS                                                           #
 ###############################################################################
+
 
 class SYLLAB_DICT(TypedDict):
     utt: List[UttObj]
@@ -69,6 +70,8 @@ class SyllableRatePlugin(Plugin):
 
     def apply(self, dependency_outputs: Dict[str, Any], methods: GBPluginMethods):
         structure_interact_instance = dependency_outputs["OutputFileManager"]
+        print("dependency outputs is: \n")
+        print(dependency_outputs)
         """
         Parameters
         ----------
@@ -79,7 +82,7 @@ class SyllableRatePlugin(Plugin):
         -------
         A structure interact instance
         """
-        
+
         self.stats = None
         self.list_of_syllab_dict = []
         self.structure_interact_instance = structure_interact_instance

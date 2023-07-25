@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-27 12:16:07
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-20 10:55:04
+# @Last Modified time: 2023-07-25 11:16:24
 from typing import Dict, Any, List
 from HiLabSuite.src.configs.configs import (
     load_formatter,
@@ -24,7 +24,6 @@ logger = logging.getLogger(__name__)
 
 THRESHOLD = load_threshold().GAPS
 INTERNAL_MARKER = load_formatter().INTERNAL
-
 
 ###############################################################################
 # CLASS DEFINITIONS                                                           #
@@ -66,8 +65,6 @@ class GapPlugin(Plugin):
         functions_list = [GapPlugin.gap_marker]
         self.structure_interact_instance.apply_markers(functions_list)
 
-        self.structure_interact_instance.new_turn_with_gap()
-
         logging.info("start gap analysis")
 
         self.successful = True
@@ -98,6 +95,26 @@ class GapPlugin(Plugin):
         """
         fto = round(next_utt.start - curr_utt.end, 2)
         logging.debug(f"get fto : {fto}")
+        if (
+            THRESHOLD.LB_LATCH <= fto < THRESHOLD.UB_LATCH
+            and curr_utt.speaker != next_utt.speaker
+        ):
+            logging.debug(f"get fto : {fto}")
+            marker1 = UttObj(
+                start=curr_utt.end,
+                end=curr_utt.end,
+                speaker=curr_utt.speaker,
+                text=INTERNAL_MARKER.LATCH_START,
+                flexible_info=curr_utt.flexible_info,
+            )
+            marker2 = UttObj(
+                start=next_utt.start,
+                end=next_utt.start,  # fix so this is inserted before the word
+                speaker=curr_utt.speaker,
+                text=INTERNAL_MARKER.LATCH_END,
+                flexible_info=next_utt.flexible_info,
+            )
+            return marker1, marker2
         if THRESHOLD.TURN_END_THRESHOLD_SECS <= fto:
             logging.debug(f"get fto : {fto}")
             return UttObj(
@@ -107,7 +124,9 @@ class GapPlugin(Plugin):
                 text=INTERNAL_MARKER.GAPS,
                 flexible_info=curr_utt.flexible_info,
             )
-        elif fto >= THRESHOLD.GAPS_LB and curr_utt.speaker != next_utt.speaker:
+        """
+        elif fto >= load_threshold().GAPS_LB and curr_utt.speaker != next_utt.speaker:
+            # if fto >= load_threshold().GAPS_LB and curr_utt.speaker != next_utt.speaker:
             logging.debug(f"get fto : {fto}")
             # format marker text
             markerText = INTERNAL_MARKER.TYPE_INFO_SP.format(
@@ -121,3 +140,4 @@ class GapPlugin(Plugin):
                 text=INTERNAL_MARKER.GAPS,
                 flexible_info=curr_utt.flexible_info,
             )
+        """

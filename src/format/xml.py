@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-20 11:21:27
+# @Last Modified time: 2023-07-25 11:26:30
 # @Description: Creates the xml output for our plugins
 
 from typing import Dict, Any
@@ -105,11 +105,16 @@ class XmlPlugin(Plugin):
             speaker_data[i]["language"] = "eng"
 
         speaker_data.append({})
-        speaker_data[-1]["id"] = INTERNAL_MARKER.GAPS
-        speaker_data[-1]["name"] = INTERNAL_MARKER.GAPS
+        speaker_data[-1]["id"] = INTERNAL_MARKER.GAP
+        speaker_data[-1]["name"] = INTERNAL_MARKER.GAP
         speaker_data[-1]["role"] = "Adult"
         speaker_data[-1]["language"] = "eng"
 
+        speaker_data.append({})
+        speaker_data[-1]["id"] = INTERNAL_MARKER.PAUSE
+        speaker_data[-1]["name"] = INTERNAL_MARKER.PAUSE
+        speaker_data[-1]["role"] = "Adult"
+        speaker_data[-1]["language"] = "eng"
         root_elem = ET.SubElement(self.root, "Participants")
 
         # Counter for setting utterance ids
@@ -128,7 +133,6 @@ class XmlPlugin(Plugin):
             self.apply_subelement_word,
             self.apply_sentence_end,
         )
-
         xml_str = ET.tostring(self.root, encoding="utf-8")
         dom = xml.dom.minidom.parseString(xml_str)  ## parse the XML string
         pretty_xml_str = dom.toprettyxml(
@@ -158,7 +162,9 @@ class XmlPlugin(Plugin):
         counter_temp = self.counter
         self.counter = self.counter + 1
         if speaker == INTERNAL_MARKER.GAPS:
-            return_string = INTERNAL_MARKER.GAPS
+            return_string = INTERNAL_MARKER.GAP
+        elif speaker == INTERNAL_MARKER.PAUSES:
+            return_string = INTERNAL_MARKER.PAUSE
         else:
             return_string = "SP" + str(index)
         return ET.SubElement(
@@ -180,14 +186,8 @@ class XmlPlugin(Plugin):
         -------
         none
         """
-        if (
-            (word.text).strip() != INTERNAL_MARKER.SLOWSPEECH_START
-            and (word.text).strip() != INTERNAL_MARKER.SLOWSPEECH_END
-            and (word.text).strip() != INTERNAL_MARKER.FASTSPEECH_START
-            and (word.text).strip() != INTERNAL_MARKER.FASTSPEECH_END
-        ):
-            word_elem = ET.SubElement(sentence, "w")
-            word_elem.text = self.format_markers(word)
+        word_elem = ET.SubElement(sentence, "w")
+        word_elem.text = self.format_markers(word)
 
     def apply_sentence_end(
         self, sentence: str, sentence_start: str, sentence_end: str
@@ -246,6 +246,7 @@ class XmlPlugin(Plugin):
         a string of the properly formatted overlap, pause, or gap.
         """
         # case for if curr is an overlap marker
+
         if (
             curr.text == INTERNAL_MARKER.OVERLAP_FIRST_START
             or curr.text == INTERNAL_MARKER.OVERLAP_SECOND_START
@@ -259,5 +260,21 @@ class XmlPlugin(Plugin):
         elif curr.text == INTERNAL_MARKER.PAUSES or curr.text == INTERNAL_MARKER.GAPS:
             time_difference = "{:.2f}".format(curr.end - curr.start)
             return "(" + time_difference + ")"
+        elif (
+            curr.text == INTERNAL_MARKER.SLOWSPEECH_START
+            or curr.text == INTERNAL_MARKER.SLOWSPEECH_END
+        ):
+            return INTERNAL_MARKER.SLOWSPEECH_DELIM
+        elif (
+            curr.text == INTERNAL_MARKER.FASTSPEECH_START
+            or curr.text == INTERNAL_MARKER.FASTSPEECH_END
+        ):
+            return INTERNAL_MARKER.FASTSPEECH_DELIM
+        elif curr.text == INTERNAL_MARKER.LATCH_START:
+            return " +... "
+        elif curr.text == INTERNAL_MARKER.LATCH_END:
+            return " ++ "
+        elif curr.text == INTERNAL_MARKER.MICROPAUSE:
+            return " (.) "
         else:
             return curr.text

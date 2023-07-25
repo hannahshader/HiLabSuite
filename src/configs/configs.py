@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-20 11:08:11
+# @Last Modified time: 2023-07-25 11:22:21
 # @Description: The class configurations for formats, labels and output files
 
 
@@ -49,6 +49,9 @@ class TEXT_FORMATTER:
     FASTSPEECH_END: str = field_from_dict()
     PAUSES_CAPS: str = field_from_dict()
     GAPS_CAPS: str = field_from_dict()
+    LATCH_START: str = field_from_dict()
+    LATCH_END: str = field_from_dict()
+    MICROPAUSE: str = field_from_dict()
 
 
 @dataclass
@@ -64,6 +67,8 @@ class INTERNAL_MARKER(DataclassFromDict):
     LATCH: str = field_from_dict()
     MICROPAUSE: str = field_from_dict()
     NO_SPEAKER: str = field_from_dict()
+    LATCH_START: str = field_from_dict()
+    LATCH_END: str = field_from_dict()
 
     # Marker text
     MARKERTYPE: str = field_from_dict()
@@ -120,14 +125,15 @@ class THRESHOLD_GAPS(DataclassFromDict):
 
     GAPS_LB: float = field_from_dict()
     TURN_END_THRESHOLD_SECS: float = field_from_dict()
+    LB_LATCH: float = field_from_dict()
+    UB_LATCH: float = field_from_dict()
 
 @dataclass
 class THRESHOLD_PAUSES(DataclassFromDict):
     """
     Dataclass defining thresholds (floats) for pauses
     """
-    LB_LATCH: float = field_from_dict()
-    UB_LATCH: float = field_from_dict()
+    
     LB_PAUSE: float = field_from_dict()
     UB_PAUSE: float = field_from_dict()
     LB_MICROPAUSE: float = field_from_dict()

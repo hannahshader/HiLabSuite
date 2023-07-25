@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-20 10:53:58
+# @Last Modified time: 2023-07-25 11:23:41
 # @Description: Contains our structures for running our plugins and creating
 #   their output.
 
@@ -273,5 +273,5 @@ class StructureInteract(Plugin):
     def insert_overlap_markers_character_level(self):
         return self.data_structure.insert_overlap_markers_character_level()
 
-    def new_turn_with_gap(self):
-        return self.data_structure.new_turn_with_gap()
+    def new_turn_with_gap_and_pause(self):
+        return self.data_structure.new_turn_with_gap_and_pause()

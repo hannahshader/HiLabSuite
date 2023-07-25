@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-19 15:16:24
+# @Last Modified time: 2023-07-25 11:25:20
 # @Description: Creates the text output for our plugins
 
 import re
@@ -137,8 +137,19 @@ class TextPlugin(Plugin):
         
         if curr.text == INTERNAL_MARKER.PAUSES:
             return TEXT_FORMATTER.PAUSES + str(round((curr.end - curr.start), 2)) + "> "
+        elif curr.text == INTERNAL_MARKER.MICROPAUSE:
+            return (
+                TEXT_FORMATTER.MICROPAUSE
+                + str(round((curr.end - curr.start), 2))
+                + "> "
+            )
+        
         elif curr.text == INTERNAL_MARKER.GAPS:
             return TEXT_FORMATTER.GAPS + str(round((curr.end - curr.start), 2)) + "> "
+        elif curr.text == INTERNAL_MARKER.LATCH_START:
+            return TEXT_FORMATTER.LATCH_START
+        elif curr.text == INTERNAL_MARKER.LATCH_END:
+            return TEXT_FORMATTER.LATCH_END
         
         elif curr.text == INTERNAL_MARKER.OVERLAP_FIRST_START:
             return TEXT_FORMATTER.OVERLAP_FIRST_START

@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-20 11:15:35
+# @Last Modified time: 2023-07-25 11:24:27
 # @Description: Creates the csv output for our plugins
 
 import os
@@ -158,6 +158,9 @@ class CSVPlugin(Plugin):
             or curr.text == INTERNAL_MARKER.SLOWSPEECH_END
             or curr.text == INTERNAL_MARKER.FASTSPEECH_START
             or curr.text == INTERNAL_MARKER.FASTSPEECH_END
+            or curr.text == INTERNAL_MARKER.LATCH_START
+            or curr.text == INTERNAL_MARKER.LATCH_END
+            or curr.text == INTERNAL_MARKER.MICROPAUSE
         ):
             return " (" + curr.text + ") "
         else:
