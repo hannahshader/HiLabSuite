@@ -65,6 +65,8 @@ FASTSPEECH_END = "fastspeech_end"
 DELIM_MARKER1 = "."
 DELIM_MARKER2 = "%"
 
+FRAGMENT_LIST = ["eh", "er", "ew", "hm", "mm", "uh", "uhm", "um"]
+
 UTT_PAUSE_MARKERS = ["%HESITATION"]     #Treated as a list
 
 # Minimum thresholds for overlaps, pauses, and gaps.

@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-25 11:26:30
+# @Last Modified time: 2023-07-27 12:51:08
 # @Description: Creates the xml output for our plugins
 
 from typing import Dict, Any
@@ -20,6 +20,7 @@ from HiLabSuite.src.data_structures.data_objects import UttObj
 
 
 OUTPUT_FILE = load_output_file()
+INTERNAL_MARKER = load_formatter().INTERNAL
 INTERNAL_MARKER = load_formatter().INTERNAL
 
 
@@ -276,5 +277,9 @@ class XmlPlugin(Plugin):
             return " ++ "
         elif curr.text == INTERNAL_MARKER.MICROPAUSE:
             return " (.) "
+        
+        elif curr.text in INTERNAL_MARKER.FRAGMENT_LIST:
+            return "&-" + curr.text
+        
         else:
             return curr.text
