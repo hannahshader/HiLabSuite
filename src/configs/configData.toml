@@ -66,6 +66,11 @@ DELIM_MARKER1 = "."
 DELIM_MARKER2 = "%"
 
 FRAGMENT_LIST = ["eh", "er", "ew", "hm", "mm", "uh", "uhm", "um"]
+TITLE_LIST = ["Mr", "Dr", "Ms", "Mrs", "St"]
+TITLE_LIST_FULL = ["Mister", "Doctor", "Miss", "Missus", "Saint"]
+
+
+
 
 UTT_PAUSE_MARKERS = ["%HESITATION"]     #Treated as a list
 

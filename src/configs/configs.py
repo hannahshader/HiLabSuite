@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-27 12:54:22
+# @Last Modified time: 2023-08-01 11:51:19
 # @Description: The class configurations for formats, labels and output files
 
 
@@ -124,6 +124,10 @@ class INTERNAL_MARKER(DataclassFromDict):
         PAUSE,
     }
     FRAGMENT_LIST: list[str] = field_from_dict()
+    TITLE_LIST: list[str] = field_from_dict()
+    TITLE_LIST_FULL: list[str] = field_from_dict()
+
+
 
 
 @dataclass

@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-27 12:51:08
+# @Last Modified time: 2023-08-01 11:49:53
 # @Description: Creates the xml output for our plugins
 
 from typing import Dict, Any
@@ -280,6 +280,13 @@ class XmlPlugin(Plugin):
         
         elif curr.text in INTERNAL_MARKER.FRAGMENT_LIST:
             return "&-" + curr.text
+        
+        elif curr.text in INTERNAL_MARKER.TITLE_LIST:
+            index_of_string = INTERNAL_MARKER.TITLE_LIST.index(curr.text)
+            return INTERNAL_MARKER.TITLE_LIST_FULL[index_of_string]
+        
+        elif (len(curr.text) == 2 and curr.text[1] == "."):
+            return curr.text[0].lower() + "@l"
         
         else:
             return curr.text

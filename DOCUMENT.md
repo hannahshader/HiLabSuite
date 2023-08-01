@@ -219,4 +219,4 @@ LABEL: stores the label data for CSV, XML, CHAT, and TXT plugin in format
 empty overlaps: occur when one word completely envelops another word in
 overlap, causing the envelopping word to not appear inside the overlap markers.
 Due to a limitation with our current implementation of overlaps, which works
-at a word level and not a character level.
+at a word level  not a character level.
