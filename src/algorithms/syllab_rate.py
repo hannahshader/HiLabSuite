@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-12 15:17:02
+# @Last Modified time: 2023-07-25 11:19:34
 # @Description: Calculates the average syllable rate for all speakers
 #   Denotes any sections of especially fast or slow speech.
 
@@ -11,20 +11,23 @@ import numpy
 import logging
 from typing import Dict, Any, List, TypedDict
 from scipy.stats import median_abs_deviation
-import threading
 
-from Plugin_Development.src.configs.configs import (
-    INTERNAL_MARKER,
-    SYLLAB_RATE_VARS,
+from HiLabSuite.src.configs.configs import (
+    load_formatter,
+    load_threshold,
 )
-from Plugin_Development.src.data_structures.data_objects import UttObj
+from HiLabSuite.src.data_structures.data_objects import UttObj
+from gailbot import Plugin
+from gailbot import GBPluginMethods
 
-lock = threading.Lock()
+INTERNAL_MARKER = load_formatter().INTERNAL
+THRESHOLD = load_threshold().SYLLABLE
 
 
 ###############################################################################
 # CLASS DEFINITIONS                                                           #
 ###############################################################################
+
 
 class SYLLAB_DICT(TypedDict):
     utt: List[UttObj]
@@ -41,13 +44,13 @@ class STAT_DICT(TypedDict):
     slowturncount: int
 
 
-class SyllableRatePlugin:
+class SyllableRatePlugin(Plugin):
     """
     Wrapper class for the Pause plugin. Contains functionality that inserts
     overlap markers
     """
 
-    def __init__(self, structure_interact_instance):
+    def __init__(self) -> None:
         """
         Initializes the list of syllables
 
@@ -60,15 +63,43 @@ class SyllableRatePlugin:
         -------
         None
         """
+        super().__init__()
+        self.stats = None
+        self.list_of_syllab_dict = []
+        self.structure_interact_instance = None
+
+    def apply(self, dependency_outputs: Dict[str, Any], methods: GBPluginMethods):
+        structure_interact_instance = dependency_outputs["OutputFileManager"]
+        print("dependency outputs is: \n")
+        print(dependency_outputs)
+        """
+        Parameters
+        ----------
+        dependency_outputs: a list of dependency outputs
+        methods: the methods being used, currently GBPluginMethods
+
+        Returns
+        -------
+        A structure interact instance
+        """
+
         self.stats = None
         self.list_of_syllab_dict = []
         self.structure_interact_instance = structure_interact_instance
+
+        self.syllab_marker()
+        self.structure_interact_instance.sort_list()
+
+        self.successful = True
+
+        return structure_interact_instance
 
     def syllab_marker(self):
         """
         Creates a syllable marker to get the overall syllable rate
 
         """
+        logging.info("start syllable rate  analysis")
         self.structure_interact_instance.apply_for_syllab_rate(
             self.get_utt_syllable_rate
         )
@@ -84,7 +115,7 @@ class SyllableRatePlugin:
 
     def get_utt_syllable_rate(
         self, utt_list: List, sentence_start: float, sentence_end: float
-    ):
+    ) -> None:
         """
         Gets the syllable rates for each utterance
 
@@ -101,19 +132,16 @@ class SyllableRatePlugin:
         -------
         None
         """
-        logging.info("getting the utterance syllable rate")
-        
         sentence_syllab_count = 0
         speaker = utt_list[0].speaker
         flexible_info = utt_list[0].flexible_info
-        with lock:
-            for curr_utt in utt_list:
-                # Doesn't include other paralinguistic markers data
-                # in the speaker rate data
-                # Assumes all feature text starts with non numberic char
-                if (curr_utt.text[0].isalpha()) == False:
-                    continue
-                sentence_syllab_count += syllables.estimate(curr_utt.text)
+        for curr_utt in utt_list:
+            # Doesn't include other paralinguistic markers data
+            # in the speaker rate data
+            # Assumes all feature text starts with non numberic char
+            if (curr_utt.text[0].isalpha()) == False:
+                continue
+            sentence_syllab_count += syllables.estimate(curr_utt.text)
 
         time_diff = abs(sentence_start - sentence_end)
         # No time difference
@@ -132,8 +160,7 @@ class SyllableRatePlugin:
             "syllableNum": sentence_syllab_count,
             "syllableRate": syllable_rate,
         }
-        with lock:
-            self.list_of_syllab_dict.append(utt_syllable)
+        self.list_of_syllab_dict.append(utt_syllable)
 
     def get_stats(self, utt_syll_dict: Dict) -> STAT_DICT:
         """
@@ -150,19 +177,16 @@ class SyllableRatePlugin:
         STAT_DICT
 
         """
-
-        logging.info("getting the syllable data statistics")
-        
         allRates = []
-        # Get all utterance syllable data
+        # get all utterance syllable data
         for dic in utt_syll_dict:
             allRates.append(dic["syllableRate"])
-        # Compute median, median absolute deviation, and limits
+        # compute median, median absolute deviation, and limits
         allRates = numpy.sort(numpy.array(allRates))
         median = numpy.median(allRates)
         median_absolute_deviation = round(median_abs_deviation(allRates), 2)
-        lowerLimit = median - (SYLLAB_RATE_VARS.LIMIT_DEVIATIONS * median_absolute_deviation)
-        upperLimit = median + (SYLLAB_RATE_VARS.LIMIT_DEVIATIONS * median_absolute_deviation)
+        lowerLimit = median - (THRESHOLD.LIMIT_DEVIATIONS * median_absolute_deviation)
+        upperLimit = median + (THRESHOLD.LIMIT_DEVIATIONS * median_absolute_deviation)
 
         # Creates a dictionary for stat fields
         stats: STAT_DICT = {
@@ -186,9 +210,6 @@ class SyllableRatePlugin:
         -------
         UttObj representing syllable markers. Returns two of them
         """
-
-        logging.info("creating the syllable markers")
-        
         fastCount = 0
         slowCount = 0
         if sentence["syllableRate"] <= self.stats["lowerLimit"]:

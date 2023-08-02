@@ -2,33 +2,82 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-12 15:17:07
+# @Last Modified time: 2023-07-20 10:52:46
 # @Description: Checks for overlaps between multiple speakers
 
 from typing import Dict, Any, List
 import logging
-import threading
 
-from Plugin_Development.src.configs.configs import (
-    INTERNAL_MARKER,
+from HiLabSuite.src.configs.configs import (
+    load_formatter,
 )
-from Plugin_Development.src.data_structures.data_objects import UttObj
+from HiLabSuite.src.data_structures.data_objects import UttObj
+from gailbot import Plugin
+from gailbot import GBPluginMethods
 
-lock = threading.Lock()
+INTERNAL_MARKER = load_formatter().INTERNAL
+
 
 ###############################################################################
 # CLASS DEFINITIONS                                                           #
 ###############################################################################
 
-class OverlapPlugin:
+
+class OverlapPlugin(Plugin):
     """
     Wrapper class for the Overlap plugin. Contains functionality that inserts
     overlap markers
     """
 
-    def OverlapMarker(curr_sentence, next_sentence, list) -> List[str]:
+    def __init__(self) -> None:
+        super().__init__()
         """
+        Initializes the gap plugin
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        None
+        """
+
+    def apply(self, dependency_outputs: Dict[str, Any], methods: GBPluginMethods):
+        """
+        Parameters
+        ----------
+        dependency_outputs: a list of dependency outputs
+        methods: the methods being used, currently GBPluginMethods
+
+        Returns
+        -------
+        A structure interact instance
+        """
+        self.structure_interact_instance = dependency_outputs["PausePlugin"]
+
+        self.structure_interact_instance.apply_markers_overlap(
+            OverlapPlugin.OverlapMarker
+        )
+        self.structure_interact_instance.group_overlapping_sentences()
+        self.structure_interact_instance.insert_overlap_markers_character_level()
+
+        self.successful = True
+
+        return self.structure_interact_instance
+
+    def OverlapMarker(curr_sentence, next_sentence, list: List[UttObj]) -> List[str]:
+        """
+        curr_sentence: the first sentence in the overlap
+        next_sentence: the next sentence in the overlap
+        list: the list of utterance objects
+
+        Returns
+        -------
+        A list of overlap markers
+
         Algorithm: modified
+        -------
         1. given current sentence and next sentence
         2. check if: next.start < curr.end
         3. if no, not an overlap
@@ -39,6 +88,7 @@ class OverlapPlugin:
 
         """
 
+        logging.info("start overlap analysis")
         # define markers
         curr_start, curr_end, curr_id = (
             curr_sentence[0],
@@ -55,15 +105,14 @@ class OverlapPlugin:
         if next_start < curr_end:
             curr_speaker = ""
             next_speaker = ""
-            with lock:
-                for utt in list:
-                    if utt.start == next_start and utt.flexible_info == next_id:
-                        next_speaker = utt.speaker
-                        next_flexible_info = utt.flexible_info
+            for utt in list:
+                if utt.start == next_start and utt.flexible_info == next_id:
+                    next_speaker = utt.speaker
+                    next_flexible_info = utt.flexible_info
 
-                    if utt.end == curr_end and utt.flexible_info == curr_id:
-                        curr_speaker = utt.speaker
-                        curr_flexible_info = utt.flexible_info
+                if utt.end == curr_end and utt.flexible_info == curr_id:
+                    curr_speaker = utt.speaker
+                    curr_flexible_info = utt.flexible_info
 
             # set overlap start marker
             overlap_start_time = max(curr_start, next_start)

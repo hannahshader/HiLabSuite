@@ -2,40 +2,63 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-13 08:55:30
+# @Last Modified time: 2023-07-25 11:25:20
 # @Description: Creates the text output for our plugins
 
 import re
 import io
 import os
-from typing import Dict, Any, List, Tuple
-import threading
+from typing import Dict, Any, List, Tuple, IO
+import logging
+from HiLabSuite.src.data_structures.data_objects import UttObj
 
 from gailbot import Plugin
 from gailbot import GBPluginMethods
-from Plugin_Development.src.data_structures.structure_interact import (
+from HiLabSuite.src.data_structures.structure_interact import (
     StructureInteract,
 )
-from Plugin_Development.src.configs.configs import (
-    INTERNAL_MARKER,
-    load_label,
-    PLUGIN_NAME,
-    OUTPUT_FILE,
-    CON_FORMATTER,
-    TEXT_FORMATTER,
+from HiLabSuite.src.configs.configs import (
+    load_formatter,
+    load_output_file,
 )
 
-lock = threading.Lock()
+OUTPUT_FILE = load_output_file()
+INTERNAL_MARKER = load_formatter().INTERNAL
+CON_FORMATTER = load_formatter().CON
+TEXT_FORMATTER = load_formatter().TEXT
 
 
 ###############################################################################
 # CLASS DEFINITIONS                                                           #
 ###############################################################################
 
+
 class TextPlugin(Plugin):
     """
     Calls the functions to print our output to a text file
     """
+
+    def __init__(self) -> None:
+        super().__init__()
+
+    def apply(self, dependency_outputs: Dict[str, Any], methods: GBPluginMethods) -> None:
+        """
+        Populates the data structure with plugins
+
+        Parameters
+        ----------
+        dependency_outputs : a dictionary of dependency outputs
+        methods: the methods being used, currently GBPluginMethods
+
+        Returns
+        -------
+        none
+        """
+        # overlap plugin has the most dependencies, i.e. the version of the data
+        # structure with the most and all of the markers
+        structure_interact_instance = dependency_outputs["OverlapPlugin"]
+        self.run(structure_interact_instance)
+        self.successful = True
 
     def run(self, structure_interact_instance) -> None:
         """
@@ -50,8 +73,8 @@ class TextPlugin(Plugin):
         -------
         none
         """
-        logging.info("creating Text output")
-        
+        logging.info("start TEXT output")
+
         path = os.path.join(
             structure_interact_instance.output_path, OUTPUT_FILE.CON_TXT
         )
@@ -62,7 +85,7 @@ class TextPlugin(Plugin):
                 self.format_markers, outfile, self.formatter
             )
 
-    def convert_to_string(self, sentence_obj, outfile) -> None:
+    def convert_to_string(self, sentence_obj, outfile: IO[str]) -> None:
         """
         Converts the given outfile to a string so it may be written to a
         text file
@@ -99,7 +122,7 @@ class TextPlugin(Plugin):
             0x15,
         )
 
-    def format_markers(self, curr) -> str:
+    def format_markers(self, curr: UttObj) -> str:
         """
         Properly formats our markers before appending them to the string
 
@@ -111,15 +134,45 @@ class TextPlugin(Plugin):
         -------
         A string of the properly formatted pause or gap
         """
-        with lock:
-            if curr.speaker == INTERNAL_MARKER.PAUSES:
-                return TEXT_FORMATTER.PAUSES + str(round((curr.end - curr.start), 2)) + ") "
-            elif curr.speaker == INTERNAL_MARKER.GAPS:
-                return TEXT_FORMATTER.GAPS + str(round((curr.end - curr.start), 2)) + ") "
-            else:
-                return self.add_trailing_whitespace(curr.text)
+        
+        if curr.text == INTERNAL_MARKER.PAUSES:
+            return TEXT_FORMATTER.PAUSES + str(round((curr.end - curr.start), 2)) + "> "
+        elif curr.text == INTERNAL_MARKER.MICROPAUSE:
+            return (
+                TEXT_FORMATTER.MICROPAUSE
+                + str(round((curr.end - curr.start), 2))
+                + "> "
+            )
+        
+        elif curr.text == INTERNAL_MARKER.GAPS:
+            return TEXT_FORMATTER.GAPS + str(round((curr.end - curr.start), 2)) + "> "
+        elif curr.text == INTERNAL_MARKER.LATCH_START:
+            return TEXT_FORMATTER.LATCH_START
+        elif curr.text == INTERNAL_MARKER.LATCH_END:
+            return TEXT_FORMATTER.LATCH_END
+        
+        elif curr.text == INTERNAL_MARKER.OVERLAP_FIRST_START:
+            return TEXT_FORMATTER.OVERLAP_FIRST_START
+        elif curr.text == INTERNAL_MARKER.OVERLAP_SECOND_START:
+            return TEXT_FORMATTER.OVERLAP_SECOND_START
+        elif curr.text == INTERNAL_MARKER.OVERLAP_FIRST_END:
+            return TEXT_FORMATTER.OVERLAP_FIRST_END
+        elif curr.text == INTERNAL_MARKER.OVERLAP_SECOND_END:
+            return TEXT_FORMATTER.OVERLAP_SECOND_END
+        
+        elif curr.text == INTERNAL_MARKER.SLOWSPEECH_START:
+            return TEXT_FORMATTER.SLOWSPEECH_START
+        elif curr.text == INTERNAL_MARKER.SLOWSPEECH_END:
+            return TEXT_FORMATTER.SLOWSPEECH_END
+        
+        elif curr.text == INTERNAL_MARKER.FASTSPEECH_START:
+            return TEXT_FORMATTER.FASTSPEECH_START
+        elif curr.text == INTERNAL_MARKER.FASTSPEECH_END:
+            return TEXT_FORMATTER.FASTSPEECH_END
+        else:
+            return self.add_trailing_whitespace(curr.text)
 
-    def text_file_helper(self, curr) -> str:
+    def text_file_helper(self, curr: UttObj) -> str:
         """
         Helper function which creates the text we want to append to the
         text file
@@ -138,18 +191,17 @@ class TextPlugin(Plugin):
 
         speaker = ""
         result = []
-        with lock:
-            if (curr.speaker != TEXT_FORMATTER.PAUSES_CAPS 
-                and curr.speaker != TEXT_FORMATTER.GAPS_CAPS):
-                result = [
-                    curr.speaker,
-                    txt,
-                    curr.start,
-                    curr.end,
-                ]
-            else:
-                result = ["", txt, curr.start, curr.end]
-            return result
+        if (curr.speaker != TEXT_FORMATTER.PAUSES_CAPS 
+            and curr.speaker != TEXT_FORMATTER.GAPS_CAPS):
+            result = [
+                curr.speaker,
+                txt,
+                curr.start,
+                curr.end,
+            ]
+        else:
+            result = ["", txt, curr.start, curr.end]
+        return result
 
     def item_to_output(
         self, prev_item, start_time: float, speaker_sentence: str
@@ -170,9 +222,8 @@ class TextPlugin(Plugin):
         -------
         A properly formatted string of the current speaker's turn
         """
-        with lock:
-            prev_item[2] = start_time
-            prev_item[1] = speaker_sentence
+        prev_item[2] = start_time
+        prev_item[1] = speaker_sentence
         turn = CON_FORMATTER.TURN.format(
             prev_item[0],
             prev_item[1],

@@ -2,37 +2,61 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-13 08:58:04
+# @Last Modified time: 2023-07-25 11:24:27
 # @Description: Creates the csv output for our plugins
 
 import os
 import csv
 from typing import Dict, Any
-import threading
+import logging
+from HiLabSuite.src.data_structures.data_objects import UttObj
 
-from Plugin_Development.src.configs.configs import (
-    INTERNAL_MARKER,
-    load_label,
-    PLUGIN_NAME,
-    OUTPUT_FILE,
-    CSV_FORMATTER,
+from HiLabSuite.src.configs.configs import (
+    load_formatter,
+    load_output_file,
 )
 from gailbot import Plugin
 from gailbot import GBPluginMethods
-from Plugin_Development.src.data_structures.structure_interact import (
+from HiLabSuite.src.data_structures.structure_interact import (
     StructureInteract,
 )
 
-lock = threading.Lock()
+OUTPUT_FILE = load_output_file()
+INTERNAL_MARKER = load_formatter().INTERNAL
+CSV_FORMATTER = load_formatter().CSV
 
 ###############################################################################
 # CLASS DEFINITIONS                                                           #
 ###############################################################################
 
-class CSVPlugin:
+class CSVPlugin(Plugin):
     """
     Generates a CSV file based on the given specifications
     """
+
+    def __init__(self) -> None:
+        super().__init__()
+
+    def apply(self, dependency_outputs: Dict[str, Any], methods: GBPluginMethods):
+        """
+        Applies the structure of most of the markers
+
+        Parameters
+        ----------
+        dependency_outputs : a dictionary of dependency outputs
+        methods: the methods being used, currently GBPluginMethods
+
+        Returns
+        -------
+        none
+        """
+
+        structure_interact_instance = dependency_outputs["OverlapPlugin"]
+
+        # testing
+        structure_interact_instance.testing_print()
+        self.run(structure_interact_instance)
+        self.successful = True
 
     def run(self, structure_interact_instance) -> None:
         """
@@ -47,7 +71,7 @@ class CSVPlugin:
         -------
         none
         """
-        logging.info("creating CSV output")
+        logging.info("start CSV output")
 
         self._utterance_level(structure_interact_instance)
         self._word_level(structure_interact_instance)
@@ -74,12 +98,12 @@ class CSVPlugin:
             writer = csv.writer(outfile)
             writer.writerow(CSV_FORMATTER.HEADER)
 
-            # calls apply function to get results of each row and outputs it
+            # Calls apply function to get results of each row and outputs it
             result = structure_interact_instance.apply_function(self.word_level_helper)
             for item in result:
                 writer.writerow(item)
 
-    def word_level_helper(self, curr) -> list:
+    def word_level_helper(self, curr: UttObj) -> list:
         """
         Appends the text of the current node to the end of the sentence
 
@@ -89,12 +113,12 @@ class CSVPlugin:
 
         Returns
         -------
-        A list which comprises the necessary node information:
+        A list which compr
+        ises the necessary node information:
         speaker, text, start, and end times.
         """
         l = []
-        with lock:
-            l.append(curr.text)
+        l.append(curr.text)
         txt = CSV_FORMATTER.TXT_SEP.join(l)
 
         speaker = ""
@@ -103,13 +127,13 @@ class CSVPlugin:
             return [
                 "",
                 curr.speaker,
-                curr.start,
-                curr.end,
+                round(curr.start, 2),
+                round(curr.end, 2),
             ]
-        result = [curr.speaker, txt, curr.start, curr.end]
+        result = [curr.speaker, txt, round(curr.start, 2), round(curr.end, 2)]
         return result
 
-    def format_markers(self, curr) -> str:
+    def format_markers(self, curr: UttObj) -> str:
         """
         Formats the given markers appropriately given csv file conventions.
         Returns what we actually want to concatenate to the end of the string
@@ -123,22 +147,24 @@ class CSVPlugin:
         A string with the appropriate format of pause/gap/overlap/syllable rate
         to append to the csv output
         """
-        with lock:
-            if (
-                curr.text == "pauses"
-                or curr.text == "gaps"
-                or curr.text == "overlap-secondStart"
-                or curr.text == "overlap-firstStart"
-                or curr.text == "overlap-firstEnd"
-                or curr.text == "overlap-secondEnd"
-                or curr.text == "slowspeech_start"
-                or curr.text == "slowspeech_end"
-                or curr.text == "fastspeech_start"
-                or curr.text == "fastspeech_end"
-            ):
-                return " (" + curr.text + ") "
-            else:
-                return " " + curr.text + " "
+        if (
+            curr.text == INTERNAL_MARKER.PAUSES
+            or curr.text == INTERNAL_MARKER.GAPS
+            or curr.text == INTERNAL_MARKER.OVERLAP_FIRST_START
+            or curr.text == INTERNAL_MARKER.OVERLAP_SECOND_START
+            or curr.text == INTERNAL_MARKER.OVERLAP_FIRST_END
+            or curr.text == INTERNAL_MARKER.OVERLAP_SECOND_END
+            or curr.text == INTERNAL_MARKER.SLOWSPEECH_START
+            or curr.text == INTERNAL_MARKER.SLOWSPEECH_END
+            or curr.text == INTERNAL_MARKER.FASTSPEECH_START
+            or curr.text == INTERNAL_MARKER.FASTSPEECH_END
+            or curr.text == INTERNAL_MARKER.LATCH_START
+            or curr.text == INTERNAL_MARKER.LATCH_END
+            or curr.text == INTERNAL_MARKER.MICROPAUSE
+        ):
+            return " (" + curr.text + ") "
+        else:
+            return " " + curr.text + " "
 
     def _utterance_level(self, structure_interact_instance) -> None:
         """
@@ -164,7 +190,7 @@ class CSVPlugin:
                 writer.writerow, self.format_markers
             )
 
-    def is_speaker_utt(self, string) -> bool:
+    def is_speaker_utt(self, string: str) -> bool:
         """
         Checks if the given input is a speaker marker. If not, returns False
 
@@ -179,22 +205,3 @@ class CSVPlugin:
         """
         internal_marker_set = INTERNAL_MARKER.INTERNAL_MARKER_SET
         return string not in internal_marker_set
-
-    def get_first_speaker(self, result) -> str:
-        """
-        Returns the first speaker, or false if none is found
-
-        Parameters
-        ----------
-        result : The resulting output of this
-
-        Returns
-        -------
-        str: a string of the first speaker or false.
-        """
-        for x, row in enumerate(result):
-            for y, value in enumerate(result[x]):
-                if self.is_speaker_utt(value[0]):
-                    return value[0]
-
-            break

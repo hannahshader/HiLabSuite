@@ -2,34 +2,60 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-13 08:56:39
+# @Last Modified time: 2023-08-01 11:49:53
 # @Description: Creates the xml output for our plugins
 
-import logging
-import os
 from typing import Dict, Any
-import xml.etree.ElementTree as ET
-import xml.dom.minidom
-import threading
-
-from Plugin_Development.src.configs.configs import (
-    INTERNAL_MARKER,
-    load_label,
-    PLUGIN_NAME,
-    OUTPUT_FILE,
-    XML_FORMATTER,
+import os
+import logging
+from HiLabSuite.src.configs.configs import (
+    load_formatter,
+    load_output_file,
 )
 from gailbot import Plugin
 from gailbot import GBPluginMethods
+import xml.etree.ElementTree as ET
+import xml.dom.minidom
+from HiLabSuite.src.data_structures.data_objects import UttObj
 
-lock = threading.Lock()
+
+OUTPUT_FILE = load_output_file()
+INTERNAL_MARKER = load_formatter().INTERNAL
+INTERNAL_MARKER = load_formatter().INTERNAL
+
 
 ###############################################################################
 # CLASS DEFINITIONS                                                           #
 ###############################################################################
 
-class XmlPlugin:
+
+class XmlPlugin(Plugin):
     """Creates the XML file"""
+
+    def __init__(self) -> None:
+        super().__init__()
+
+    def apply(
+        self, dependency_outputs: Dict[str, Any], methods: GBPluginMethods
+    ) -> None:
+        """
+        Populates the data structure with plugins
+
+        Parameters
+        ----------
+        dependency_outputs : a dictionary of dependency outputs
+        methods: the methods being used, currently GBPluginMethods
+
+        Returns
+        -------
+        none
+        """
+        # overlap plugin has the most dependencies, i.e. the version of the data
+        # structure with the most and all of the markers
+        structure_interact_instance = dependency_outputs["OverlapPlugin"]
+        self.run(structure_interact_instance)
+        self.successful = True
+        return structure_interact_instance
 
     def run(self, structure_interact_instance) -> None:
         """
@@ -44,8 +70,8 @@ class XmlPlugin:
         -------
         none
         """
-        logging.info("creating XML output")
-        
+        logging.info("start XML output")
+
         # Gets filepath
         path = os.path.join(
             structure_interact_instance.output_path, OUTPUT_FILE.NATIVE_XML
@@ -67,41 +93,47 @@ class XmlPlugin:
         )
 
         # Gets a list of the speaker names
-        with lock:
-            self.speaker_list = structure_interact_instance.get_speakers()
+        self.speaker_list = structure_interact_instance.get_speakers()
 
         # Generate a dictionary that has the speaker names and attributes
-        # filled out that are needed for the xml file
+        # Filled out needed for the xml file
         speaker_data = []
-        with lock:
-            for i, speaker in enumerate(self.speaker_list):
-                speaker_data.append({})
-                speaker_data[i]["id"] = "SP" + str(i)
-                speaker_data[i]["name"] = self.speaker_list[i]
-                speaker_data[i]["role"] = "Adult"
-                speaker_data[i]["language"] = "eng"
+        for i, speaker in enumerate(self.speaker_list):
+            speaker_data.append({})
+            speaker_data[i]["id"] = "SP" + str(i)
+            speaker_data[i]["name"] = self.speaker_list[i]
+            speaker_data[i]["role"] = "Adult"
+            speaker_data[i]["language"] = "eng"
 
+        speaker_data.append({})
+        speaker_data[-1]["id"] = INTERNAL_MARKER.GAP
+        speaker_data[-1]["name"] = INTERNAL_MARKER.GAP
+        speaker_data[-1]["role"] = "Adult"
+        speaker_data[-1]["language"] = "eng"
+
+        speaker_data.append({})
+        speaker_data[-1]["id"] = INTERNAL_MARKER.PAUSE
+        speaker_data[-1]["name"] = INTERNAL_MARKER.PAUSE
+        speaker_data[-1]["role"] = "Adult"
+        speaker_data[-1]["language"] = "eng"
         root_elem = ET.SubElement(self.root, "Participants")
 
         # Counter for setting utterance ids
         self.counter = 0
 
         # Initializes participants section of xml file
-        with lock:
-            for speaker_data_elem in speaker_data:
-                speaker_elem = ET.SubElement(
-                    root_elem, "participant", attrib=speaker_data_elem
-                )
+        for speaker_data_elem in speaker_data:
+            speaker_elem = ET.SubElement(
+                root_elem, "participant", attrib=speaker_data_elem
+            )
 
         # Fill out speaker fields in the xml files
         # Iterate through speaker names
-        with lock:
-            structure_interact_instance.print_all_rows_xml(
-                self.apply_subelement_root,
-                self.apply_subelement_word,
-                self.apply_sentence_end,
-            )
-
+        structure_interact_instance.print_all_rows_xml(
+            self.apply_subelement_root,
+            self.apply_subelement_word,
+            self.apply_sentence_end,
+        )
         xml_str = ET.tostring(self.root, encoding="utf-8")
         dom = xml.dom.minidom.parseString(xml_str)  ## parse the XML string
         pretty_xml_str = dom.toprettyxml(
@@ -112,7 +144,7 @@ class XmlPlugin:
         with open(path, "w") as file:
             file.write(pretty_xml_str)
 
-    def apply_subelement_root(self, speaker) -> ET.SubElement:
+    def apply_subelement_root(self, speaker: str) -> ET.SubElement:
         """
         Creates xml formatting for the beginning of a sentence
 
@@ -125,16 +157,21 @@ class XmlPlugin:
         ET.SubElement: the xml element for a sentence
         """
         # Get speaker index
-        with lock:
-            index = self.get_string_index(self.speaker_list, speaker)
+        index = self.get_string_index(self.speaker_list, speaker)
 
         # Creates the xml element for a sentence
         counter_temp = self.counter
         self.counter = self.counter + 1
+        if speaker == INTERNAL_MARKER.GAPS:
+            return_string = INTERNAL_MARKER.GAP
+        elif speaker == INTERNAL_MARKER.PAUSES:
+            return_string = INTERNAL_MARKER.PAUSE
+        else:
+            return_string = "SP" + str(index)
         return ET.SubElement(
             self.root,
             "u",
-            attrib={"who": ("SP" + str(index)), "uID": "u{}".format(counter_temp)},
+            attrib={"who": return_string, "uID": "u{}".format(counter_temp)},
         )
 
     def apply_subelement_word(self, sentence: str, word: str) -> None:
@@ -150,16 +187,12 @@ class XmlPlugin:
         -------
         none
         """
-        if (
-            (word.text).strip() != "slowspeech_start"
-            and (word.text).strip() != "slowspeech_end"
-            and (word.text).strip() != "fastspeech_start"
-            and (word.text).strip() != "fastspeech_end"
-        ):
-            word_elem = ET.SubElement(sentence, "w")
-            word_elem.text = self.format_markers(word)
+        word_elem = ET.SubElement(sentence, "w")
+        word_elem.text = self.format_markers(word)
 
-    def apply_sentence_end(self, sentence, sentence_start, sentence_end):
+    def apply_sentence_end(
+        self, sentence: str, sentence_start: str, sentence_end: str
+    ) -> None:
         """
         xml formatting for terminating the sentence
 
@@ -201,7 +234,7 @@ class XmlPlugin:
         except ValueError:
             return -1
 
-    def format_markers(self, curr) -> str:
+    def format_markers(self, curr: UttObj) -> str:
         """
         Formats the non-utterance markers
 
@@ -213,15 +246,47 @@ class XmlPlugin:
         -------
         a string of the properly formatted overlap, pause, or gap.
         """
-        if curr.text == "overlap-secondStart" or curr.text == "overlap-firstStart":
-            return XML_FORMATTER.OVERLAP_START
-        elif curr.text == "overlap-firstEnd":
-            return XML_FORMATTER.OVERLAP_FIRSTEND
-        elif curr.text == "overlap-secondEnd":
-            return XML_FORMATTER.OVERLAP_SECONDEND
-        elif (curr.text == INTERNAL_MARKER.PAUSES 
-              or curr.text == INTERNAL_MARKER.GAPS):
+        # case for if curr is an overlap marker
+
+        if (
+            curr.text == INTERNAL_MARKER.OVERLAP_FIRST_START
+            or curr.text == INTERNAL_MARKER.OVERLAP_SECOND_START
+        ):
+            return " < "
+        elif curr.text == INTERNAL_MARKER.OVERLAP_FIRST_END:
+            return " > [<" + str(curr.overlap_id) + "]"
+
+        elif curr.text == INTERNAL_MARKER.OVERLAP_SECOND_END:
+            return " > [>" + str(curr.overlap_id) + "]"
+        elif curr.text == INTERNAL_MARKER.PAUSES or curr.text == INTERNAL_MARKER.GAPS:
             time_difference = "{:.2f}".format(curr.end - curr.start)
             return "(" + time_difference + ")"
+        elif (
+            curr.text == INTERNAL_MARKER.SLOWSPEECH_START
+            or curr.text == INTERNAL_MARKER.SLOWSPEECH_END
+        ):
+            return INTERNAL_MARKER.SLOWSPEECH_DELIM
+        elif (
+            curr.text == INTERNAL_MARKER.FASTSPEECH_START
+            or curr.text == INTERNAL_MARKER.FASTSPEECH_END
+        ):
+            return INTERNAL_MARKER.FASTSPEECH_DELIM
+        elif curr.text == INTERNAL_MARKER.LATCH_START:
+            return " +... "
+        elif curr.text == INTERNAL_MARKER.LATCH_END:
+            return " ++ "
+        elif curr.text == INTERNAL_MARKER.MICROPAUSE:
+            return " (.) "
+        
+        elif curr.text in INTERNAL_MARKER.FRAGMENT_LIST:
+            return "&-" + curr.text
+        
+        elif curr.text in INTERNAL_MARKER.TITLE_LIST:
+            index_of_string = INTERNAL_MARKER.TITLE_LIST.index(curr.text)
+            return INTERNAL_MARKER.TITLE_LIST_FULL[index_of_string]
+        
+        elif (len(curr.text) == 2 and curr.text[1] == "."):
+            return curr.text[0].lower() + "@l"
+        
         else:
             return curr.text
