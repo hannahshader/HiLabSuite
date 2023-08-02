@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-12 14:50:28
+# @Last Modified time: 2023-07-20 11:15:18
 # @Description: Manages the output files created by our plugins
 
 import re
@@ -13,20 +13,20 @@ from typing import Dict, Any, List, Tuple
 
 from gailbot import Plugin
 from gailbot import GBPluginMethods
-from Plugin_Development.src.data_structures.structure_interact import (
+from HiLabSuite.src.data_structures.structure_interact import (
     StructureInteract,
 )
-from Plugin_Development.src.configs.configs import (
-    INTERNAL_MARKER,
-    load_label,
-    PLUGIN_NAME,
-    OUTPUT_FILE,
-    CON_FORMATTER,
+from HiLabSuite.src.configs.configs import (
+    load_output_file,
 )
-from Plugin_Development.src.format.csv import CSVPlugin
-from Plugin_Development.src.format.text import TextPlugin
-from Plugin_Development.src.format.xml import XmlPlugin
-from Plugin_Development.src.format.chat import ChatPlugin
+from HiLabSuite.src.format.csv import CSVPlugin
+from HiLabSuite.src.format.text import TextPlugin
+from HiLabSuite.src.format.xml import XmlPlugin
+from HiLabSuite.src.format.chat import ChatPlugin
+from HiLabSuite.src.data_structures.data_objects import UttObj
+
+
+OUTPUT_FILE = load_output_file()
 
 ###############################################################################
 # CLASS DEFINITIONS                                                           #
@@ -42,13 +42,25 @@ class OutputFileManager(Plugin):
 
     def apply(self, dependency_outputs: Dict[str, Any], methods: GBPluginMethods):
         """
-        Populate the data structure with plugins
+        Populates the data structure with plugins
+
+        Parameters
+        ----------
+        dependency_outputs : a dictionary of dependency outputs
+        methods: the methods being used, currently GBPluginMethods
+
+        Returns
+        -------
+        none
         """
-        # Populate data structure with plugins
         structure_interact_instance = StructureInteract()
         structure_interact_instance = structure_interact_instance.apply(methods)
 
-        # Creates all files
+        self.successful = True
+        return structure_interact_instance
+
+        # creates all files
+        """
         csv_init = CSVPlugin()
         csv_init.run(structure_interact_instance)
 
@@ -62,8 +74,9 @@ class OutputFileManager(Plugin):
         chat_init.run(structure_interact_instance)
 
         audio_file_path = methods.output_path.replace(
-            "/Analysis/Plugin_Development", "/Raw/Media/merged.wav"
+            "/Analysis/HiLabSuite", "/Raw/Media/merged.wav"
         )
         shutil.copy2(audio_file_path, methods.output_path)
 
         self.successful = True
+        """
