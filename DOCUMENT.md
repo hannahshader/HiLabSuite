@@ -11,13 +11,12 @@ analyzed result is finally output into a variety of different formats.
 Version: 0.0.1a
 
 Developers:
+
 1. Hannah Shader | Tufts University | Summer 2023
 2. Jason Wu | Tufts University | Summer 2023
 3. Jacob Boyar | Tufts University | Summer 2023
-
 4. Vivian Li | Tufts University | Spring 2023
 5. Siara Small | Tufts University | Spring 2023
-
 6. Annika Tanner | Tufts University | Spring 2022
 7. Muyin Yao | Tufts University | Spring 2022
 8. Muhammad Umair | Tufts University
@@ -50,7 +49,7 @@ following interface:
 The output of plugin suite will be files that contains both the original 
 transcription data and the markers added throughout analysis, properly 
 formatted based on the specifications of the given output. Currently, this
-suite outputs in CSV, Text, CHAT, and XML formats.  
+suite outputs in CSV, Text, XML, and CHAT formats.  
 
 ## Layer00
 Layer00 is responsible for the construction and implementation of the data 
@@ -68,7 +67,6 @@ Objects. There are two lists in use: one where each word is its own utterance,
 and another where sentences are grouped together as their own utterances. 
 These lists are created within the data_structures folder.
 
-
 ## Layer02
 The lists are processed through the apply_plugins suite, where additional
 markers are added within the list of individual word utterances to mark
@@ -85,21 +83,27 @@ and end time of the gap, which is used for certain output formatting.
 
 Algorithm:
 1.  An utterance pair is provided to the GapPlugin class.
-2.  Check the FTO of the utterance pair. If the fto is longer than 0.3 second,
+2.  Check that the utterances provided are between different speakers
+3.  Check the FTO of the utterance pair. If the fto is longer than 0.3 seconds,
     and it is between two different speakers, insert a gap marker into the 
-    utterance tree. Else do nothing.
+    utterance tree. If the FTO is within the latch threshold, then a latch is 
+    inserted instead. Else do nothing.
 
 ## Pauses
 Pauses are similar to gaps, except that they occur within one speakers 
 turn between two utterances from the same speaker. There are also a variety
 of pauses, unlike gaps, where differing lengths of pause are represented by
-different symbols. These are Latches, Pauses, Micro Pauses, and Large Pauses.
-At the moment, all are represented by parentheses surrounding a value which
-indicates the length of the pause, (0.5) being a half second pause.
+different symbols. Both Pauses and Micropauses are implemented here.
+Pauses represented by parentheses surrounding a value which indicates the 
+length of the pause, with (0.5) being a half second pause. Micropauses are
+indicated by (.).
 
 Algorithm:
 1.  An utterance pair is provided to the PausePlugin class.
-2.  Check the FTO of the utterance pair. If the fto is longer than 0.3 second,
+2.  Check that the utterances provided are between the same speaker
+2.  Check if the length is greater than the minimum turn ending threshold time.
+    If this is the case, continue.
+3.  Check the FTO of the utterance pair. If the fto is longer than 0.3 seconds,
     and it is between the same speaker, insert a pause marker into the 
     utterance tree. Else do nothing.
 
@@ -123,8 +127,8 @@ Algorithm:
     the whole utterance to detect fast and slow speech. It the syllable rate 
     (stored as utt_dict["syllRate"] ) of the single utterance is smaller
     than the upper limit of the (stored as statsDic['upperLimit'] ) whole 
-    utterance, insert makers for fast speech. It the syllable rate 
-    (stored as utt_dict["syllRate"] ) of the single utterance is lager
+    utterance, insert makers for fast speech. If the syllable rate 
+    (stored as utt_dict["syllRate"] ) of the single utterance is larger
     than the lower limit of the (stored as statsDic['lowerLimit'] ) whole
     utterance, insert makers for slow speech.  
 
@@ -133,7 +137,7 @@ First, overlaps markers for the start and end of a section of overlap
 are inserted into a list organized by start time. Overlap is detected via the 
 sentences list. We check if there are two sentences that have start and end 
 times that overlap. If this is the case, the later start time of the two
-sentences is markes as the time of the start of the overlap, while the earlier 
+sentences is marked as the time of the start of the overlap, while the earlier 
 end time of the two sentences is marked as the time of end of the overlap.
 
 From there, two separate start and end markers, with the appropriate start 
@@ -142,11 +146,16 @@ meant to surround the first section of overlap, belonging to the primary
 speaker, while the other surrounds the secondary speaker. Whoever is the 
 primary or secondary speaker is based on which sentence appeared first.
 
-This section of overlap is then reeorganized based not around speaker data,
+This section of overlap is then reorganized based not around speaker data,
 but around the sentence order. All sentences within the section of overlap
 are reorganized based around the original sentences. This involves merging 
 some sentences that belong to the same speaker but were split up due to
 the overlap.
+
+It is during this step also that overlaps that start or end in the middle of a 
+word force that word to split up into two separate utterances. This splitting
+is based on the total time of the utterance itself, as we do not have access
+to syllable level data.
 
 A note: There is no Speech-To-Text transcription system just yet which can
 detect when multiple speakers are overlapping in one single transcription.
@@ -163,7 +172,9 @@ Algorithm:
 3.  Insert two start and two end overlap markers, with those start times 
     matching the start and end of the overlap, into the word level list.
 4.  Reorganize the word level list based on sentence order. This involves
-    merging sentences that may have been separated due to overlaps.
+    merging sentences that may have been separated due to overlaps, as well as
+    splitting up words if the start or end of an overlap falls in the middle
+    of them.
 
 ## Layer03
 This involves printing the list of utterance objects based on the given
@@ -172,48 +183,38 @@ specifications for XML, CHAT, CSV and Text files
 ## Layer03 : csv
 Prints the entire tree on the utterance-level in a user-specified
 CSV format. Produces a word-level and utterance-level csv file.
-Replace the internal marker in the original tree with the CSV marker stored 
-in configData.toml LABEL.CSV field 
+Replaces the internal marker in the original tree with the CSV marker stored 
+in configData.toml CSV section
 
 ## Layer03 : chat
-Prints the entire tree on the utterance-level in .chat format
-Replaces the internal marker in the original tree with the CHAT markers stored 
-in configData.toml LABEL.CHAT field 
+Prints the entire tree on the utterance-level in .chat format. Based on the XML
+file, this merely transfers the XML output into the chatter.jar file in the bin
+folder.
 
 ## Layer03 : text
 Prints the entire tree on the utterance-level in .txt format
 Replaces the internal marker in the original tree with the TXT marker stored 
-in configData.toml LABEL.TXT field 
+in configData.toml TEXT field 
 
 ## Layer03 : xml
 Prints the entire tree on the utterance-level in .xml format
-Produces native, and word-bank xml file
-Replaces the internal marker in the original tree with the XML marker stored 
-in configData.toml LABEL.XML field 
-
+Produces native, and word-bank xml file.
 
 ## Configs Module
 Include configuration data for plugin suite
 
-## config.py TODO FIX THIS
-Include dataclasses for marker, threshold, output file name, and Labels 
+## config.py
+Include dataclasses variable names as well as threshold data. Those dataclasses
+include:
 
-dataclass overview:
-"____"_FORMATTER: theglobal variables for a given output file format.
-INTERNAL_MARKER: the marker used in analysis module, inserted to the 
-initial utterance tree 
-THRESHOLD: the threshold data used in analysis module to detect paralinguistic 
-speech feature, the data content is read from "configData.toml" fil
-LABEL: Label used in output file, which will replace the internal maker 
-in format module 
-ALL_LABELS: Currently used Label in plugin suite format module, the data 
-            content will be read from "configData.toml" file 
+Formatters for text and CSV outputs, as well as the internal markers
+Exceptions, being hesitations
+Thresholds for the gaps, pauses, overlaps, and syllable rate files
+Names for output files
 
 ## configData.toml
-THRESHOLD: stores the threshold data 
-LABEL: stores the label data for CSV, XML, CHAT, and TXT plugin in format 
-       module
-
+Converts the data in config.py to a format that allows it to be used in other 
+files.
 
 ## Edge cases:
 empty overlaps: occur when one word completely envelops another word in

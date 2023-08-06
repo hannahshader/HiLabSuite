@@ -2,7 +2,7 @@
 # @Author: Hannah Shader
 # @Date:   2023-07-12 12:16:59
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-19 15:44:56
+# @Last Modified time: 2023-08-04 16:08:11
 
 """
 import re
@@ -19,7 +19,7 @@ from HiLabSuite.src.data_structures.structure_interact import (
 from HiLabSuite.src.configs.configs import (
     INTERNAL_MARKER,
     OUTPUT_FILE,
-    CON_FORMATTER,
+    FORMATTER,
 )
 from HiLabSuite.src.format.csv import CSVPlugin
 from HiLabSuite.src.format.text import TextPlugin
