@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-27 12:16:07
-# @Last Modified by:   Hannah Shader
-# @Last Modified time: 2023-08-03 15:22:39
+# @Last Modified by:   Jacob Boyar
+# @Last Modified time: 2023-08-06 13:59:45
 from typing import Dict, Any, List
 from HiLabSuite.src.configs.configs import (
     load_formatter,
@@ -24,7 +24,6 @@ logger = logging.getLogger(__name__)
 
 THRESHOLD = load_threshold().GAPS
 INTERNAL_MARKER = load_formatter().INTERNAL
-
 
 ###############################################################################
 # CLASS DEFINITIONS                                                           #
@@ -135,20 +134,4 @@ class GapPlugin(Plugin):
                 text=INTERNAL_MARKER.GAPS,
                 flexible_info=curr_utt.flexible_info,
             )
-        """
-        elif fto >= load_threshold().GAPS_LB and curr_utt.speaker != next_utt.speaker:
-            # if fto >= load_threshold().GAPS_LB and curr_utt.speaker != next_utt.speaker:
-            logging.debug(f"get fto : {fto}")
-            # format marker text
-            markerText = INTERNAL_MARKER.TYPE_INFO_SP.format(
-                INTERNAL_MARKER.GAPS, str(round(fto, 1)), str(curr_utt.speaker)
-            )
-            # create instance of marker
-            return UttObj(
-                start=curr_utt.end,
-                end=next_utt.start,
-                speaker=curr_utt.speaker,
-                text=INTERNAL_MARKER.GAPS,
-                flexible_info=curr_utt.flexible_info,
-            )
-        """
+    

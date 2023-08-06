@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-# @Last Modified by:   Hannah Shader
-# @Last Modified time: 2023-08-05 15:31:50
+# @Last Modified by:   Jacob Boyar
+# @Last Modified time: 2023-08-06 13:59:29
 # @Description: Checks for overlaps between multiple speakers
 
 from typing import Dict, Any, List
@@ -16,9 +16,6 @@ from gailbot import Plugin
 from gailbot import GBPluginMethods
 
 INTERNAL_MARKER = load_formatter().INTERNAL
-# uable to add these to the configs file
-# INTERNAL_MARKER.SELF_LATCH_START = "self_latch_start"
-# INTERNAL_MARKER.SELF_LATCH_END = "self_latch_end"
 
 
 ###############################################################################
@@ -63,19 +60,10 @@ class OverlapPlugin(Plugin):
             OverlapPlugin.OverlapMarker
         )
         self.structure_interact_instance.group_overlapping_sentences()
-        # print("\n self.list overlap markers after group_overlapping_sentences")
-        # for item in self.structure_interact_instance.data_structure.list:
-        #    if item.overlap_id != None:
-        #        print(item)
-
+    
         # FIX: in this step, an addiitonal overlap marker is being inserted
         self.structure_interact_instance.insert_overlap_markers_character_level()
-        # print(
-        #    "\n self.list overlap markers after insert_overlap_markers_character_level"
-        # )
-        # for item in self.structure_interact_instance.data_structure.list:
-        #    if item.overlap_id != None:
-        #        print(item)
+        
         self.structure_interact_instance.remove_empty_overlaps()
         self.structure_interact_instance.call_add_self_latch(self.self_latch_marker)
 
@@ -106,7 +94,7 @@ class OverlapPlugin(Plugin):
         """
 
         logging.info("start overlap analysis")
-        # define markers
+        # Define markers
         curr_start, curr_end, curr_id = (
             curr_sentence[0],
             curr_sentence[1],
@@ -118,7 +106,7 @@ class OverlapPlugin(Plugin):
             next_sentence[2],
         )
 
-        # overlap exist when next_start < curr_end
+        # Overlap exist when next_start < curr_end
         if next_start < curr_end:
             curr_speaker = ""
             next_speaker = ""
@@ -132,7 +120,7 @@ class OverlapPlugin(Plugin):
                     curr_speaker = utt.speaker
                     curr_flexible_info = utt.flexible_info
 
-            # set overlap start marker
+            # Set overlap start marker
             overlap_start_time = max(curr_start, next_start)
             overlap_start_one = UttObj(
                 overlap_start_time,
@@ -165,15 +153,6 @@ class OverlapPlugin(Plugin):
                 next_flexible_info,
             )
 
-            # print("overlap start one is")
-            # print(overlap_start_one)
-            # print("overlap end one is")
-            # print(overlap_end_one)
-            # print("overlap start two is")
-            # print(overlap_start_two)
-            # print("overlap end two is")
-            # print(overlap_end_two)
-
             return [
                 overlap_start_two,
                 overlap_start_one,
@@ -187,8 +166,8 @@ class OverlapPlugin(Plugin):
 
     def self_latch_marker(self, overlap_start_one, overlap_end_one):
         self_latch_one = UttObj(
-            # start and end times represent start and end of the latch
-            # start and end times are not used to sort these markers in list
+            # Start and end times represent start and end of the latch
+            # Start and end times are not used to sort these markers in list
             overlap_start_one.start,
             overlap_end_one.start,
             overlap_start_one.speaker,
@@ -197,8 +176,8 @@ class OverlapPlugin(Plugin):
             overlap_start_one.overlap_id,
         )
         self_latch_two = UttObj(
-            # start and end times represent start and end of the latch
-            # start and end times are not used to sort these markers in list
+            # Start and end times represent start and end of the latch
+            # Start and end times are not used to sort these markers in list
             overlap_start_one.start,
             overlap_end_one.start,
             overlap_end_one.speaker,
