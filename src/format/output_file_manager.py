@@ -32,6 +32,7 @@ OUTPUT_FILE = load_output_file()
 # CLASS DEFINITIONS                                                           #
 ###############################################################################
 
+
 class OutputFileManager(Plugin):
     """
     Creates file objects and runs drivers

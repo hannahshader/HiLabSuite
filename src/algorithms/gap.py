@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-27 12:16:07
-# @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-25 11:16:24
+# @Last Modified by:   Hannah Shader
+# @Last Modified time: 2023-08-03 15:22:39
 from typing import Dict, Any, List
 from HiLabSuite.src.configs.configs import (
     load_formatter,
@@ -24,6 +24,7 @@ logger = logging.getLogger(__name__)
 
 THRESHOLD = load_threshold().GAPS
 INTERNAL_MARKER = load_formatter().INTERNAL
+
 
 ###############################################################################
 # CLASS DEFINITIONS                                                           #
@@ -61,11 +62,13 @@ class GapPlugin(Plugin):
         """
         self.structure_interact_instance = dependency_outputs["SyllableRatePlugin"]
 
-        # TODO fix apply marker so you don't need to pass through a list
-        functions_list = [GapPlugin.gap_marker]
-        self.structure_interact_instance.apply_markers(functions_list)
-
         logging.info("start gap analysis")
+
+        # this variable stores what latch we are currently on
+        # allows client to match latch start to latch ends
+        self.latch_id = 0
+
+        self.structure_interact_instance.apply_markers(GapPlugin.gap_marker)
 
         self.successful = True
         return self.structure_interact_instance
@@ -102,17 +105,25 @@ class GapPlugin(Plugin):
             logging.debug(f"get fto : {fto}")
             marker1 = UttObj(
                 start=curr_utt.end,
-                end=curr_utt.end,
+                end=next_utt.start,
                 speaker=curr_utt.speaker,
                 text=INTERNAL_MARKER.LATCH_START,
                 flexible_info=curr_utt.flexible_info,
+                overlap_id=None,
+                # -1 is used as a signal to the apply function that this field
+                # needs to be filled
+                latch_id=-1,
             )
             marker2 = UttObj(
-                start=next_utt.start,
+                start=curr_utt.end,
                 end=next_utt.start,  # fix so this is inserted before the word
-                speaker=curr_utt.speaker,
+                speaker=next_utt.speaker,
                 text=INTERNAL_MARKER.LATCH_END,
                 flexible_info=next_utt.flexible_info,
+                overlap_id=None,
+                # -1 is used as a signal to the apply function that this field
+                # needs to be filled
+                latch_id=-1,
             )
             return marker1, marker2
         if THRESHOLD.TURN_END_THRESHOLD_SECS <= fto:

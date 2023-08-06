@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-# @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-25 11:23:41
+# @Last Modified by:   Hannah Shader
+# @Last Modified time: 2023-08-05 16:46:57
 # @Description: Contains our structures for running our plugins and creating
 #   their output.
 
@@ -64,7 +64,7 @@ class StructureInteract(Plugin):
 
         # Get the path for the xml to csv converter
         # TODO: change this
-        self.chatter_path = "/Users/hannahshader/Desktop/chatter/chatter.jar"
+        # self.chatter_path = "/Users/hannahshader/Desktop/chatter/chatter.jar"
 
         # Pass data to marker_utterance_dict to interact with the underlying
         # Data structure
@@ -126,6 +126,21 @@ class StructureInteract(Plugin):
         """
         if item != None:
             self.data_structure.insert_marker(item)
+
+    def interact_insert_marker_syllab_rate(self, item: UttObj) -> None:
+        """
+        Inserts and marker and maintains the organization of the data structure
+
+        Parameters
+        ----------
+        Item: the item to insert
+
+        Returns
+        -------
+        none
+        """
+        if item != None:
+            self.data_structure.insert_marker_syllab_rate(item)
 
     # general apply function list for items data structure
     def apply_functions(self, apply_functions: list[callable]):
@@ -204,16 +219,16 @@ class StructureInteract(Plugin):
             apply_subelement_root, apply_subelement_word, apply_sentence_end
         )
 
-    def apply_markers(self, apply_functions: List[callable]) -> None:
+    def apply_markers(self, func) -> None:
         """
         Takes an instance of structure interact, which holds a MarkerUtterance
         object.
         Calls apply_insert_marker, which takes an instance of MarkerUtterance
-        and a list of functions
+        and a function
 
         Parameters
         ----------
-        apply_functions: Takes a list of functions, which take two sequential
+        apply_functions: Takes a function, which take two sequential
         utterances as parameters.
 
         Returns
@@ -221,7 +236,7 @@ class StructureInteract(Plugin):
         none
 
         """
-        self.data_structure.apply_insert_marker(apply_functions)
+        self.data_structure.apply_insert_marker(func)
 
     def apply_markers_overlap(self, apply_function) -> None:
         """
@@ -275,3 +290,15 @@ class StructureInteract(Plugin):
 
     def new_turn_with_gap_and_pause(self):
         return self.data_structure.new_turn_with_gap_and_pause()
+
+    def new_turn_with_latch(self):
+        return self.data_structure.new_turn_with_latch()
+
+    def call_add_self_latch(self, func):
+        return self.data_structure.add_self_latch(func)
+
+    def new_turn_with_self_latch(self):
+        return self.data_structure.new_turn_with_self_latch()
+
+    def remove_empty_overlaps(self):
+        return self.data_structure.remove_empty_overlaps()

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-# @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-25 11:25:20
+# @Last Modified by:   Hannah Shader
+# @Last Modified time: 2023-08-06 13:26:18
 # @Description: Creates the text output for our plugins
 
 import re
@@ -24,8 +24,14 @@ from HiLabSuite.src.configs.configs import (
 
 OUTPUT_FILE = load_output_file()
 INTERNAL_MARKER = load_formatter().INTERNAL
+# add these to the config data file
+INTERNAL_MARKER.SELF_LATCH_START = "Self_Latch_Start"
+INTERNAL_MARKER.SELF_LATCH_END = "Self_Latch_End"
 CON_FORMATTER = load_formatter().CON
 TEXT_FORMATTER = load_formatter().TEXT
+# add these to the config data file
+TEXT_FORMATTER.SELF_LATCH_START = "<SELF_LATCH:type=start&Duration="
+TEXT_FORMATTER.SELF_LATCH_END = "<SELF_LATCH:type=end&id="
 
 
 ###############################################################################
@@ -41,7 +47,9 @@ class TextPlugin(Plugin):
     def __init__(self) -> None:
         super().__init__()
 
-    def apply(self, dependency_outputs: Dict[str, Any], methods: GBPluginMethods) -> None:
+    def apply(
+        self, dependency_outputs: Dict[str, Any], methods: GBPluginMethods
+    ) -> None:
         """
         Populates the data structure with plugins
 
@@ -134,7 +142,7 @@ class TextPlugin(Plugin):
         -------
         A string of the properly formatted pause or gap
         """
-        
+
         if curr.text == INTERNAL_MARKER.PAUSES:
             return TEXT_FORMATTER.PAUSES + str(round((curr.end - curr.start), 2)) + "> "
         elif curr.text == INTERNAL_MARKER.MICROPAUSE:
@@ -143,28 +151,46 @@ class TextPlugin(Plugin):
                 + str(round((curr.end - curr.start), 2))
                 + "> "
             )
-        
+
         elif curr.text == INTERNAL_MARKER.GAPS:
             return TEXT_FORMATTER.GAPS + str(round((curr.end - curr.start), 2)) + "> "
         elif curr.text == INTERNAL_MARKER.LATCH_START:
-            return TEXT_FORMATTER.LATCH_START
+            return (
+                TEXT_FORMATTER.LATCH_START
+                + str(round((curr.end - curr.start), 2))
+                + "&id="
+                + str(curr.latch_id)
+                + "> "
+            )
         elif curr.text == INTERNAL_MARKER.LATCH_END:
-            return TEXT_FORMATTER.LATCH_END
-        
+            return TEXT_FORMATTER.LATCH_END + str(curr.latch_id) + "> "
+        elif curr.text == INTERNAL_MARKER.SELF_LATCH_START:
+            print("get to self latch start")
+            print("curr is" + str(curr))
+            return (
+                TEXT_FORMATTER.SELF_LATCH_START
+                + str(round((curr.end - curr.start), 2))
+                + "&id="
+                + str(curr.overlap_id)
+                + "> "
+            )
+        elif curr.text == INTERNAL_MARKER.SELF_LATCH_END:
+            print("get to self latch end")
+            return TEXT_FORMATTER.SELF_LATCH_END + str(curr.overlap_id) + "> "
         elif curr.text == INTERNAL_MARKER.OVERLAP_FIRST_START:
-            return TEXT_FORMATTER.OVERLAP_FIRST_START
+            return TEXT_FORMATTER.OVERLAP_FIRST_START + str(curr.overlap_id) + "> "
         elif curr.text == INTERNAL_MARKER.OVERLAP_SECOND_START:
-            return TEXT_FORMATTER.OVERLAP_SECOND_START
+            return TEXT_FORMATTER.OVERLAP_SECOND_START + str(curr.overlap_id) + "> "
         elif curr.text == INTERNAL_MARKER.OVERLAP_FIRST_END:
-            return TEXT_FORMATTER.OVERLAP_FIRST_END
+            return TEXT_FORMATTER.OVERLAP_FIRST_END + str(curr.overlap_id) + "> "
         elif curr.text == INTERNAL_MARKER.OVERLAP_SECOND_END:
-            return TEXT_FORMATTER.OVERLAP_SECOND_END
-        
+            return TEXT_FORMATTER.OVERLAP_SECOND_END + str(curr.overlap_id) + "> "
+
         elif curr.text == INTERNAL_MARKER.SLOWSPEECH_START:
             return TEXT_FORMATTER.SLOWSPEECH_START
         elif curr.text == INTERNAL_MARKER.SLOWSPEECH_END:
             return TEXT_FORMATTER.SLOWSPEECH_END
-        
+
         elif curr.text == INTERNAL_MARKER.FASTSPEECH_START:
             return TEXT_FORMATTER.FASTSPEECH_START
         elif curr.text == INTERNAL_MARKER.FASTSPEECH_END:
@@ -191,8 +217,10 @@ class TextPlugin(Plugin):
 
         speaker = ""
         result = []
-        if (curr.speaker != TEXT_FORMATTER.PAUSES_CAPS 
-            and curr.speaker != TEXT_FORMATTER.GAPS_CAPS):
+        if (
+            curr.speaker != TEXT_FORMATTER.PAUSES_CAPS
+            and curr.speaker != TEXT_FORMATTER.GAPS_CAPS
+        ):
             result = [
                 curr.speaker,
                 txt,

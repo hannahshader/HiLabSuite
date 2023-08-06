@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-# @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-25 11:24:27
+# @Last Modified by:   Hannah Shader
+# @Last Modified time: 2023-08-06 13:26:06
 # @Description: Creates the csv output for our plugins
 
 import os
@@ -23,11 +23,19 @@ from HiLabSuite.src.data_structures.structure_interact import (
 
 OUTPUT_FILE = load_output_file()
 INTERNAL_MARKER = load_formatter().INTERNAL
+# add these to the config data file
+# INTERNAL_MARKER.SELF_LATCH_START = "Self_Latch_Start"
+# INTERNAL_MARKER.SELF_LATCH_END = "Self_Latch_End"
 CSV_FORMATTER = load_formatter().CSV
+TEXT_FORMATTER = load_formatter().TEXT
+# add these to the config data file
+# TEXT_FORMATTER.SELF_LATCH_START = "<SELF_LATCH:type=start&Duration="
+# TEXT_FORMATTER.SELF_LATCH_END = "<SELF_LATCH:type=end&id="
 
 ###############################################################################
 # CLASS DEFINITIONS                                                           #
 ###############################################################################
+
 
 class CSVPlugin(Plugin):
     """
@@ -54,7 +62,7 @@ class CSVPlugin(Plugin):
         structure_interact_instance = dependency_outputs["OverlapPlugin"]
 
         # testing
-        structure_interact_instance.testing_print()
+        # structure_interact_instance.testing_print()
         self.run(structure_interact_instance)
         self.successful = True
 
@@ -135,36 +143,68 @@ class CSVPlugin(Plugin):
 
     def format_markers(self, curr: UttObj) -> str:
         """
-        Formats the given markers appropriately given csv file conventions.
-        Returns what we actually want to concatenate to the end of the string
+        Properly formats our markers before appending them to the string
 
         Parameters
         ----------
-        curr: the current node.
+        curr: the current node
 
         Returns
         -------
-        A string with the appropriate format of pause/gap/overlap/syllable rate
-        to append to the csv output
+        A string of the properly formatted pause or gap
         """
-        if (
-            curr.text == INTERNAL_MARKER.PAUSES
-            or curr.text == INTERNAL_MARKER.GAPS
-            or curr.text == INTERNAL_MARKER.OVERLAP_FIRST_START
-            or curr.text == INTERNAL_MARKER.OVERLAP_SECOND_START
-            or curr.text == INTERNAL_MARKER.OVERLAP_FIRST_END
-            or curr.text == INTERNAL_MARKER.OVERLAP_SECOND_END
-            or curr.text == INTERNAL_MARKER.SLOWSPEECH_START
-            or curr.text == INTERNAL_MARKER.SLOWSPEECH_END
-            or curr.text == INTERNAL_MARKER.FASTSPEECH_START
-            or curr.text == INTERNAL_MARKER.FASTSPEECH_END
-            or curr.text == INTERNAL_MARKER.LATCH_START
-            or curr.text == INTERNAL_MARKER.LATCH_END
-            or curr.text == INTERNAL_MARKER.MICROPAUSE
-        ):
-            return " (" + curr.text + ") "
+
+        if curr.text == INTERNAL_MARKER.PAUSES:
+            return TEXT_FORMATTER.PAUSES + str(round((curr.end - curr.start), 2)) + "> "
+        elif curr.text == INTERNAL_MARKER.MICROPAUSE:
+            return (
+                TEXT_FORMATTER.MICROPAUSE
+                + str(round((curr.end - curr.start), 2))
+                + "> "
+            )
+
+        elif curr.text == INTERNAL_MARKER.GAPS:
+            return TEXT_FORMATTER.GAPS + str(round((curr.end - curr.start), 2)) + "> "
+        elif curr.text == INTERNAL_MARKER.LATCH_START:
+            return (
+                TEXT_FORMATTER.LATCH_START
+                + str(round((curr.end - curr.start), 2))
+                + "&id="
+                + str(curr.latch_id)
+                + "> "
+            )
+        elif curr.text == INTERNAL_MARKER.LATCH_END:
+            return TEXT_FORMATTER.LATCH_END + str(curr.latch_id) + "> "
+        elif curr.text == INTERNAL_MARKER.SELF_LATCH_START:
+            return (
+                TEXT_FORMATTER.SELF_LATCH_START
+                + str(round((curr.end - curr.start), 2))
+                + "&id="
+                + str(curr.overlap_id)
+                + "> "
+            )
+        elif curr.text == INTERNAL_MARKER.SELF_LATCH_END:
+            return TEXT_FORMATTER.SELF_LATCH_END + str(curr.overlap_id) + "> "
+        elif curr.text == INTERNAL_MARKER.OVERLAP_FIRST_START:
+            return TEXT_FORMATTER.OVERLAP_FIRST_START + str(curr.overlap_id) + "> "
+        elif curr.text == INTERNAL_MARKER.OVERLAP_SECOND_START:
+            return TEXT_FORMATTER.OVERLAP_SECOND_START + str(curr.overlap_id) + "> "
+        elif curr.text == INTERNAL_MARKER.OVERLAP_FIRST_END:
+            return TEXT_FORMATTER.OVERLAP_FIRST_END + str(curr.overlap_id) + "> "
+        elif curr.text == INTERNAL_MARKER.OVERLAP_SECOND_END:
+            return TEXT_FORMATTER.OVERLAP_SECOND_END + str(curr.overlap_id) + "> "
+
+        elif curr.text == INTERNAL_MARKER.SLOWSPEECH_START:
+            return TEXT_FORMATTER.SLOWSPEECH_START
+        elif curr.text == INTERNAL_MARKER.SLOWSPEECH_END:
+            return TEXT_FORMATTER.SLOWSPEECH_END
+
+        elif curr.text == INTERNAL_MARKER.FASTSPEECH_START:
+            return TEXT_FORMATTER.FASTSPEECH_START
+        elif curr.text == INTERNAL_MARKER.FASTSPEECH_END:
+            return TEXT_FORMATTER.FASTSPEECH_END
         else:
-            return " " + curr.text + " "
+            return self.add_trailing_whitespace(curr.text)
 
     def _utterance_level(self, structure_interact_instance) -> None:
         """
@@ -205,3 +245,9 @@ class CSVPlugin(Plugin):
         """
         internal_marker_set = INTERNAL_MARKER.INTERNAL_MARKER_SET
         return string not in internal_marker_set
+
+    def add_trailing_whitespace(self, string):
+        if string.endswith(" "):
+            return string
+        else:
+            return string + " "

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-# @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-25 11:19:34
+# @Last Modified by:   Hannah Shader
+# @Last Modified time: 2023-08-06 13:16:16
 # @Description: Calculates the average syllable rate for all speakers
 #   Denotes any sections of especially fast or slow speech.
 
@@ -70,8 +70,8 @@ class SyllableRatePlugin(Plugin):
 
     def apply(self, dependency_outputs: Dict[str, Any], methods: GBPluginMethods):
         structure_interact_instance = dependency_outputs["OutputFileManager"]
-        print("dependency outputs is: \n")
-        print(dependency_outputs)
+        # print("dependency outputs is: \n")
+        # print(dependency_outputs)
         """
         Parameters
         ----------
@@ -110,8 +110,17 @@ class SyllableRatePlugin(Plugin):
             if self.syllab_markers(sentence) is not None:
                 marker1, marker2 = self.syllab_markers(sentence)
                 if marker1 is not None and marker2 is not None:
-                    self.structure_interact_instance.interact_insert_marker(marker1)
-                    self.structure_interact_instance.interact_insert_marker(marker2)
+                    self.structure_interact_instance.interact_insert_marker_syllab_rate(
+                        marker1
+                    )
+                    self.structure_interact_instance.interact_insert_marker_syllab_rate(
+                        marker2
+                    )
+
+        # print("after syllab rate plugin")
+        # for item in self.structure_interact_instance.data_structure.list:
+        #    if item.start == 134.8:
+        #        print(item)
 
     def get_utt_syllable_rate(
         self, utt_list: List, sentence_start: float, sentence_end: float
@@ -133,14 +142,11 @@ class SyllableRatePlugin(Plugin):
         None
         """
         sentence_syllab_count = 0
+        # redo these so they're accurate
+        # TO DO: FIX THIS!!
         speaker = utt_list[0].speaker
         flexible_info = utt_list[0].flexible_info
         for curr_utt in utt_list:
-            # Doesn't include other paralinguistic markers data
-            # in the speaker rate data
-            # Assumes all feature text starts with non numberic char
-            if (curr_utt.text[0].isalpha()) == False:
-                continue
             sentence_syllab_count += syllables.estimate(curr_utt.text)
 
         time_diff = abs(sentence_start - sentence_end)
@@ -230,6 +236,15 @@ class SyllableRatePlugin(Plugin):
             )
 
             slowCount += 1
+            """
+            print(
+                "\n\nslow marker start is: "
+                + str(slowStartMarker)
+                + " and slow marker end is: "
+                + str(slowEndMarker)
+                + "\n\n"
+            )
+            """
             return slowStartMarker, slowEndMarker
         elif sentence["syllableRate"] >= 6.4:
             fastStartMarker = UttObj(
@@ -247,6 +262,15 @@ class SyllableRatePlugin(Plugin):
                 sentence["flexible_info"],
             )
             fastCount += 1
+            """
+            print(
+                "\n\nfast marker start is: "
+                + str(fastStartMarker)
+                + " and false marker end is: "
+                + str(fastEndMarker)
+                + "\n\n"
+            )
+            """
             return fastStartMarker, fastEndMarker
 
         else:

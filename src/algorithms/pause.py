@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-# @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-25 11:19:00
+# @Last Modified by:   Hannah Shader
+# @Last Modified time: 2023-08-04 14:10:25
 # @Description: Checks for pauses in speech when one speaker is speaking
 
 import logging
@@ -63,9 +63,7 @@ class PausePlugin(Plugin):
 
         # self.structure_interact_instance.testing_print()
 
-        functions_list = [PausePlugin.pause_marker]
-        self.structure_interact_instance.apply_markers(functions_list)
-
+        self.structure_interact_instance.apply_markers(PausePlugin.pause_marker)
         self.structure_interact_instance.new_turn_with_gap_and_pause()
 
         self.successful = True

@@ -14,10 +14,10 @@ TXT_SEP = " "                       #Used as a separator between utterances
 #The hardcoded formatting for TEXT output
 GAPS = "<GAP:Duration="
 PAUSES = "<PAUSE:Duration="
-OVERLAP_FIRST_START = "<OVERLAP:id=1&type=start> "
-OVERLAP_FIRST_END = "<OVERLAP:id=1&type=end> "
-OVERLAP_SECOND_START = "<OVERLAP:id=2&type=start> "
-OVERLAP_SECOND_END = "<OVERLAP:id=2&type=end> "
+OVERLAP_FIRST_START = "<OVERLAP:order_id=1&type=start&overlap_id="
+OVERLAP_FIRST_END = "<OVERLAP:order_id=1&type=end&overlap_id="
+OVERLAP_SECOND_START = "<OVERLAP:order_id=2&type=start&overlap_id="
+OVERLAP_SECOND_END = "<OVERLAP:order_id=2&type=end&overlap_id="
 SLOWSPEECH_START = "<SLOWSPEECH:type=start> "
 SLOWSPEECH_END = "<SLOWSPEECH:type=end> "
 FASTSPEECH_START = "<FASTSPEECH:type=start> "
@@ -25,7 +25,9 @@ FASTSPEECH_END = "<FASTSPEECH:type=end> "
 PAUSES_CAPS = "PAUSES"
 GAPS_CAPS = "GAPS"
 LATCH_START = "<LATCH:type=start&Duration="
-LATCH_END = "<LATCH:type=end"
+LATCH_END = "<LATCH:type=end&id="
+SELF_LATCH_START = "<SELF_LATCH:type=start&Duration="
+SELF_LATCH_END = "<SELF_LATCH:type=end"
 MICROPAUSE = "MICROPAUSE:Duration="
 
 [EXCEPTIONS]
@@ -42,6 +44,8 @@ MICROPAUSE = "micropause"
 NO_SPEAKER = " "
 LATCH_START = "latch_start"
 LATCH_END = "latch_end"
+SELF_LATCH_START = "self_latch_start"
+SELF_LATCH_END = "self_latch_end"
 
 # Marker text
 MARKERTYPE = "markerType"
@@ -68,9 +72,6 @@ DELIM_MARKER2 = "%"
 FRAGMENT_LIST = ["eh", "er", "ew", "hm", "mm", "uh", "uhm", "um"]
 TITLE_LIST = ["Mr", "Dr", "Ms", "Mrs", "St"]
 TITLE_LIST_FULL = ["Mister", "Doctor", "Miss", "Missus", "Saint"]
-
-
-
 
 UTT_PAUSE_MARKERS = ["%HESITATION"]     #Treated as a list
 

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-# @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-08-01 11:51:19
+# @Last Modified by:   Hannah Shader
+# @Last Modified time: 2023-08-05 15:10:13
 # @Description: The class configurations for formats, labels and output files
 
 
@@ -64,6 +64,10 @@ class TEXT_FORMATTER:
     LATCH_START: str = field_from_dict()
     LATCH_END: str = field_from_dict()
     MICROPAUSE: str = field_from_dict()
+    SELF_LATCH_START: str = field_from_dict()
+    SELF_LATCH_END: str = field_from_dict()
+    # SELF_START: str = "<SELF_LATCH:type=start&Duration="
+    # SELF_END: str = "<SELF_LATCH:type=end"
 
 
 @dataclass
@@ -81,6 +85,8 @@ class INTERNAL_MARKER(DataclassFromDict):
     NO_SPEAKER: str = field_from_dict()
     LATCH_START: str = field_from_dict()
     LATCH_END: str = field_from_dict()
+    SELF_LATCH_START: str = field_from_dict()
+    SELF_LATCH_END: str = field_from_dict()
 
     # Marker text
     MARKERTYPE: str = field_from_dict()
@@ -103,8 +109,7 @@ class INTERNAL_MARKER(DataclassFromDict):
     FASTSPEECH_END: str = field_from_dict()
     DELIM_MARKER1: str = field_from_dict()
     DELIM_MARKER2: str = field_from_dict()
-    GAP = ("GAP",)
-    PAUSE = ("PAS",)
+    SIL = "SIL"
 
     UTT_PAUSE_MARKERS: List[str] = field_from_dict()
     INTERNAL_MARKER_SET = {
@@ -120,14 +125,15 @@ class INTERNAL_MARKER(DataclassFromDict):
         SLOWSPEECH_END,
         FASTSPEECH_END,
         FASTSPEECH_START,
-        GAP,
-        PAUSE,
+        SIL,
+        LATCH_START,
+        LATCH_END,
+        SELF_LATCH_START,
+        SELF_LATCH_END,
     }
     FRAGMENT_LIST: list[str] = field_from_dict()
     TITLE_LIST: list[str] = field_from_dict()
     TITLE_LIST_FULL: list[str] = field_from_dict()
-
-
 
 
 @dataclass

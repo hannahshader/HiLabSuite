@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-# @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-20 10:52:46
+# @Last Modified by:   Hannah Shader
+# @Last Modified time: 2023-08-05 15:31:50
 # @Description: Checks for overlaps between multiple speakers
 
 from typing import Dict, Any, List
@@ -16,6 +16,9 @@ from gailbot import Plugin
 from gailbot import GBPluginMethods
 
 INTERNAL_MARKER = load_formatter().INTERNAL
+# uable to add these to the configs file
+# INTERNAL_MARKER.SELF_LATCH_START = "self_latch_start"
+# INTERNAL_MARKER.SELF_LATCH_END = "self_latch_end"
 
 
 ###############################################################################
@@ -60,7 +63,21 @@ class OverlapPlugin(Plugin):
             OverlapPlugin.OverlapMarker
         )
         self.structure_interact_instance.group_overlapping_sentences()
+        # print("\n self.list overlap markers after group_overlapping_sentences")
+        # for item in self.structure_interact_instance.data_structure.list:
+        #    if item.overlap_id != None:
+        #        print(item)
+
+        # FIX: in this step, an addiitonal overlap marker is being inserted
         self.structure_interact_instance.insert_overlap_markers_character_level()
+        # print(
+        #    "\n self.list overlap markers after insert_overlap_markers_character_level"
+        # )
+        # for item in self.structure_interact_instance.data_structure.list:
+        #    if item.overlap_id != None:
+        #        print(item)
+        self.structure_interact_instance.remove_empty_overlaps()
+        self.structure_interact_instance.call_add_self_latch(self.self_latch_marker)
 
         self.successful = True
 
@@ -105,6 +122,7 @@ class OverlapPlugin(Plugin):
         if next_start < curr_end:
             curr_speaker = ""
             next_speaker = ""
+
             for utt in list:
                 if utt.start == next_start and utt.flexible_info == next_id:
                     next_speaker = utt.speaker
@@ -147,6 +165,15 @@ class OverlapPlugin(Plugin):
                 next_flexible_info,
             )
 
+            # print("overlap start one is")
+            # print(overlap_start_one)
+            # print("overlap end one is")
+            # print(overlap_end_one)
+            # print("overlap start two is")
+            # print(overlap_start_two)
+            # print("overlap end two is")
+            # print(overlap_end_two)
+
             return [
                 overlap_start_two,
                 overlap_start_one,
@@ -157,3 +184,27 @@ class OverlapPlugin(Plugin):
             ]
         else:
             return []
+
+    def self_latch_marker(self, overlap_start_one, overlap_end_one):
+        self_latch_one = UttObj(
+            # start and end times represent start and end of the latch
+            # start and end times are not used to sort these markers in list
+            overlap_start_one.start,
+            overlap_end_one.start,
+            overlap_start_one.speaker,
+            INTERNAL_MARKER.SELF_LATCH_START,
+            overlap_start_one.flexible_info,
+            overlap_start_one.overlap_id,
+        )
+        self_latch_two = UttObj(
+            # start and end times represent start and end of the latch
+            # start and end times are not used to sort these markers in list
+            overlap_start_one.start,
+            overlap_end_one.start,
+            overlap_end_one.speaker,
+            INTERNAL_MARKER.SELF_LATCH_END,
+            overlap_end_one.flexible_info,
+            overlap_end_one.overlap_id,
+        )
+
+        return self_latch_one, self_latch_two

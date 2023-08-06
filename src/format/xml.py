@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-# @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-08-01 11:49:53
+# @Last Modified by:   Hannah Shader
+# @Last Modified time: 2023-08-05 14:54:58
 # @Description: Creates the xml output for our plugins
 
 from typing import Dict, Any
@@ -21,7 +21,9 @@ from HiLabSuite.src.data_structures.data_objects import UttObj
 
 OUTPUT_FILE = load_output_file()
 INTERNAL_MARKER = load_formatter().INTERNAL
-INTERNAL_MARKER = load_formatter().INTERNAL
+# Todo: remove these, add to the configs.toml file
+# INTERNAL_MARKER.SELF_LATCH_START = "Self_Latch_Start"
+# INTERNAL_MARKER.SELF_LATCH_END = "Self_Latch_End"
 
 
 ###############################################################################
@@ -106,16 +108,11 @@ class XmlPlugin(Plugin):
             speaker_data[i]["language"] = "eng"
 
         speaker_data.append({})
-        speaker_data[-1]["id"] = INTERNAL_MARKER.GAP
-        speaker_data[-1]["name"] = INTERNAL_MARKER.GAP
+        speaker_data[-1]["id"] = INTERNAL_MARKER.SIL
+        speaker_data[-1]["name"] = INTERNAL_MARKER.SIL
         speaker_data[-1]["role"] = "Adult"
         speaker_data[-1]["language"] = "eng"
 
-        speaker_data.append({})
-        speaker_data[-1]["id"] = INTERNAL_MARKER.PAUSE
-        speaker_data[-1]["name"] = INTERNAL_MARKER.PAUSE
-        speaker_data[-1]["role"] = "Adult"
-        speaker_data[-1]["language"] = "eng"
         root_elem = ET.SubElement(self.root, "Participants")
 
         # Counter for setting utterance ids
@@ -163,9 +160,9 @@ class XmlPlugin(Plugin):
         counter_temp = self.counter
         self.counter = self.counter + 1
         if speaker == INTERNAL_MARKER.GAPS:
-            return_string = INTERNAL_MARKER.GAP
+            return_string = INTERNAL_MARKER.SIL
         elif speaker == INTERNAL_MARKER.PAUSES:
-            return_string = INTERNAL_MARKER.PAUSE
+            return_string = INTERNAL_MARKER.SIL
         else:
             return_string = "SP" + str(index)
         return ET.SubElement(
@@ -271,22 +268,22 @@ class XmlPlugin(Plugin):
             or curr.text == INTERNAL_MARKER.FASTSPEECH_END
         ):
             return INTERNAL_MARKER.FASTSPEECH_DELIM
+        elif curr.text == INTERNAL_MARKER.SELF_LATCH_START:
+            return " +/ [" + str(curr.overlap_id) + "]"
+        elif curr.text == INTERNAL_MARKER.SELF_LATCH_END:
+            return " +, [" + str(curr.overlap_id) + "]"
         elif curr.text == INTERNAL_MARKER.LATCH_START:
-            return " +... "
+            return " +... [" + str(curr.latch_id) + "]"
         elif curr.text == INTERNAL_MARKER.LATCH_END:
-            return " ++ "
+            return " ++ [" + str(curr.latch_id) + "]"
         elif curr.text == INTERNAL_MARKER.MICROPAUSE:
             return " (.) "
-        
         elif curr.text in INTERNAL_MARKER.FRAGMENT_LIST:
             return "&-" + curr.text
-        
         elif curr.text in INTERNAL_MARKER.TITLE_LIST:
             index_of_string = INTERNAL_MARKER.TITLE_LIST.index(curr.text)
             return INTERNAL_MARKER.TITLE_LIST_FULL[index_of_string]
-        
-        elif (len(curr.text) == 2 and curr.text[1] == "."):
+        elif len(curr.text) == 2 and curr.text[1] == ".":
             return curr.text[0].lower() + "@l"
-        
         else:
             return curr.text
