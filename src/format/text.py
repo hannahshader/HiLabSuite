@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-25 11:25:20
+# @Last Modified time: 2023-08-04 16:08:07
 # @Description: Creates the text output for our plugins
 
 import re
@@ -24,8 +24,7 @@ from HiLabSuite.src.configs.configs import (
 
 OUTPUT_FILE = load_output_file()
 INTERNAL_MARKER = load_formatter().INTERNAL
-CON_FORMATTER = load_formatter().CON
-TEXT_FORMATTER = load_formatter().TEXT
+FORMATTER = load_formatter().TEXT
 
 
 ###############################################################################
@@ -114,7 +113,7 @@ class TextPlugin(Plugin):
         -------
         A string of the properly formatted text
         """
-        return CON_FORMATTER.TURN.format(
+        return FORMATTER.TURN.format(
             item1,
             item2,
             item3,
@@ -136,39 +135,39 @@ class TextPlugin(Plugin):
         """
         
         if curr.text == INTERNAL_MARKER.PAUSES:
-            return TEXT_FORMATTER.PAUSES + str(round((curr.end - curr.start), 2)) + "> "
+            return FORMATTER.PAUSES + str(round((curr.end - curr.start), 2)) + "> "
         elif curr.text == INTERNAL_MARKER.MICROPAUSE:
             return (
-                TEXT_FORMATTER.MICROPAUSE
+                FORMATTER.MICROPAUSE
                 + str(round((curr.end - curr.start), 2))
                 + "> "
             )
         
         elif curr.text == INTERNAL_MARKER.GAPS:
-            return TEXT_FORMATTER.GAPS + str(round((curr.end - curr.start), 2)) + "> "
+            return FORMATTER.GAPS + str(round((curr.end - curr.start), 2)) + "> "
         elif curr.text == INTERNAL_MARKER.LATCH_START:
-            return TEXT_FORMATTER.LATCH_START
+            return FORMATTER.LATCH_START
         elif curr.text == INTERNAL_MARKER.LATCH_END:
-            return TEXT_FORMATTER.LATCH_END
+            return FORMATTER.LATCH_END
         
         elif curr.text == INTERNAL_MARKER.OVERLAP_FIRST_START:
-            return TEXT_FORMATTER.OVERLAP_FIRST_START
+            return FORMATTER.OVERLAP_FIRST_START
         elif curr.text == INTERNAL_MARKER.OVERLAP_SECOND_START:
-            return TEXT_FORMATTER.OVERLAP_SECOND_START
+            return FORMATTER.OVERLAP_SECOND_START
         elif curr.text == INTERNAL_MARKER.OVERLAP_FIRST_END:
-            return TEXT_FORMATTER.OVERLAP_FIRST_END
+            return FORMATTER.OVERLAP_FIRST_END
         elif curr.text == INTERNAL_MARKER.OVERLAP_SECOND_END:
-            return TEXT_FORMATTER.OVERLAP_SECOND_END
+            return FORMATTER.OVERLAP_SECOND_END
         
         elif curr.text == INTERNAL_MARKER.SLOWSPEECH_START:
-            return TEXT_FORMATTER.SLOWSPEECH_START
+            return FORMATTER.SLOWSPEECH_START
         elif curr.text == INTERNAL_MARKER.SLOWSPEECH_END:
-            return TEXT_FORMATTER.SLOWSPEECH_END
+            return FORMATTER.SLOWSPEECH_END
         
         elif curr.text == INTERNAL_MARKER.FASTSPEECH_START:
-            return TEXT_FORMATTER.FASTSPEECH_START
+            return FORMATTER.FASTSPEECH_START
         elif curr.text == INTERNAL_MARKER.FASTSPEECH_END:
-            return TEXT_FORMATTER.FASTSPEECH_END
+            return FORMATTER.FASTSPEECH_END
         else:
             return self.add_trailing_whitespace(curr.text)
 
@@ -187,12 +186,12 @@ class TextPlugin(Plugin):
         """
         l = []
         l.append(curr.text)
-        txt = CON_FORMATTER.TXT_SEP.join(l)
+        txt = FORMATTER.TXT_SEP.join(l)
 
         speaker = ""
         result = []
-        if (curr.speaker != TEXT_FORMATTER.PAUSES_CAPS 
-            and curr.speaker != TEXT_FORMATTER.GAPS_CAPS):
+        if (curr.speaker != FORMATTER.PAUSES_CAPS 
+            and curr.speaker != FORMATTER.GAPS_CAPS):
             result = [
                 curr.speaker,
                 txt,
@@ -224,7 +223,7 @@ class TextPlugin(Plugin):
         """
         prev_item[2] = start_time
         prev_item[1] = speaker_sentence
-        turn = CON_FORMATTER.TURN.format(
+        turn = FORMATTER.TURN.format(
             prev_item[0],
             prev_item[1],
             prev_item[2],

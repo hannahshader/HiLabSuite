@@ -1,9 +1,3 @@
-
-[FORMATTER.CON]
-#The hardcoded formatting for CON, used in TEXT
-TURN = "{0}\t{1} {2}{4}_{3}{4}\n"   
-TXT_SEP = " "                       #Used as a separator between utterances
-
 [FORMATTER.CSV]
 #The hardcoded formatting for CSV output
 HEADER = ["SPEAKER LABEL", "TEXT", "START TIME", "END TIME"]
@@ -28,8 +22,8 @@ LATCH_START = "<LATCH:type=start&Duration="
 LATCH_END = "<LATCH:type=end"
 MICROPAUSE = "MICROPAUSE:Duration="
 
-[EXCEPTIONS]
-HESITATION = "%HESITATION"
+TURN = "{0}\t{1} {2}{4}_{3}{4}\n"   
+TXT_SEP = " "                       #Used as a separator between utterances
 
 [FORMATTER.INTERNAL]
 # Class for an internal marker node. Contains appropriate attributes for gap,
@@ -69,10 +63,10 @@ FRAGMENT_LIST = ["eh", "er", "ew", "hm", "mm", "uh", "uhm", "um"]
 TITLE_LIST = ["Mr", "Dr", "Ms", "Mrs", "St"]
 TITLE_LIST_FULL = ["Mister", "Doctor", "Miss", "Missus", "Saint"]
 
-
-
-
 UTT_PAUSE_MARKERS = ["%HESITATION"]     #Treated as a list
+
+[EXCEPTIONS]
+HESITATION = "%HESITATION"
 
 # Minimum thresholds for overlaps, pauses, and gaps.
 [THRESHOLD.GAPS]
@@ -108,3 +102,4 @@ WORD_CSV = "words.csv"
 UTT_CSV = "conversation.csv"
 CON_TXT = "conversation.txt"
 CHAT_ERROR = "chat_error.txt"
+FORMAT_MD = "format.md"

@@ -9,7 +9,6 @@ plugin suite.
 This suite provides four main capabilities, each of which can be turned on/off
 individually and configured internally. These capabilities are:
 
-
 Gaps: Gaps occur when there is an excess of time between the turns of different
 speakers. What defines an 'excess' is defined both by cultural standards, as
 language naturally follows a certain back-and-forth pattern, as well as in our
