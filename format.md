@@ -22,6 +22,7 @@ example_name_gb_output_month_day_year-time
         |-- conversation.txt
         |-- merged.wav
         |-- words.csv
+        |-- format.md
     |-- format.md
     |-- meta.json   
 |-- Raw/

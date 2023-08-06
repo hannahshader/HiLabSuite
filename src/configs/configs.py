@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-# @Last Modified by:   Hannah Shader
-# @Last Modified time: 2023-08-05 15:10:13
+# @Last Modified by:   Jacob Boyar
+# @Last Modified time: 2023-08-06 13:39:20
 # @Description: The class configurations for formats, labels and output files
 
 
@@ -12,15 +12,6 @@ from dataclasses import dataclass
 from typing import List
 from dict_to_dataclass import DataclassFromDict, field_from_dict
 
-
-@dataclass
-class CON_FORMATTER:
-    """
-    Dataclass that defines string template for an utterance turn
-    """
-
-    TURN: str = field_from_dict()
-    TXT_SEP: str = field_from_dict()
 
 
 @dataclass
@@ -33,14 +24,6 @@ class CSV_FORMATTER:
     TXT_SEP: str = field_from_dict()
 
 
-@dataclass
-class EXCEPTIONS(DataclassFromDict):
-    """
-    Dataclass defining exceptions, or terms to omit
-    from the engine
-    """
-
-    HESITATION: str = field_from_dict()
 
 
 @dataclass
@@ -68,6 +51,9 @@ class TEXT_FORMATTER:
     SELF_LATCH_END: str = field_from_dict()
     # SELF_START: str = "<SELF_LATCH:type=start&Duration="
     # SELF_END: str = "<SELF_LATCH:type=end"
+    
+    TURN: str = field_from_dict()
+    TXT_SEP: str = field_from_dict()
 
 
 @dataclass
@@ -141,7 +127,16 @@ class FORMATTER(DataclassFromDict):
     INTERNAL: INTERNAL_MARKER = field_from_dict()
     TEXT: TEXT_FORMATTER = field_from_dict()
     CSV: CSV_FORMATTER = field_from_dict()
-    CON: CON_FORMATTER = field_from_dict()
+
+@dataclass
+class EXCEPTIONS(DataclassFromDict):
+    """
+    Dataclass defining exceptions, or terms to omit
+    from the engine
+    """
+
+    HESITATION: str = field_from_dict()
+
 
 
 @dataclass
@@ -211,6 +206,7 @@ class OUTPUT_FILE(DataclassFromDict):
     UTT_CSV: str = field_from_dict()
     CON_TXT: str = field_from_dict()
     CHAT_ERROR: str = field_from_dict()
+    FORMAT_MD: str = field_from_dict()
 
 
 def load_threshold():

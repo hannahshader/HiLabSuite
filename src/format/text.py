@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-# @Last Modified by:   Hannah Shader
-# @Last Modified time: 2023-08-06 13:26:18
+# @Last Modified by:   Jacob Boyar
+# @Last Modified time: 2023-08-06 13:40:21
 # @Description: Creates the text output for our plugins
 
 import re
@@ -122,7 +122,7 @@ class TextPlugin(Plugin):
         -------
         A string of the properly formatted text
         """
-        return CON_FORMATTER.TURN.format(
+        return FORMATTER.TURN.format(
             item1,
             item2,
             item3,
@@ -144,16 +144,16 @@ class TextPlugin(Plugin):
         """
 
         if curr.text == INTERNAL_MARKER.PAUSES:
-            return TEXT_FORMATTER.PAUSES + str(round((curr.end - curr.start), 2)) + "> "
+            return FORMATTER.PAUSES + str(round((curr.end - curr.start), 2)) + "> "
         elif curr.text == INTERNAL_MARKER.MICROPAUSE:
             return (
-                TEXT_FORMATTER.MICROPAUSE
+                FORMATTER.MICROPAUSE
                 + str(round((curr.end - curr.start), 2))
                 + "> "
             )
 
         elif curr.text == INTERNAL_MARKER.GAPS:
-            return TEXT_FORMATTER.GAPS + str(round((curr.end - curr.start), 2)) + "> "
+            return FORMATTER.GAPS + str(round((curr.end - curr.start), 2)) + "> "
         elif curr.text == INTERNAL_MARKER.LATCH_START:
             return (
                 TEXT_FORMATTER.LATCH_START
@@ -187,7 +187,7 @@ class TextPlugin(Plugin):
             return TEXT_FORMATTER.OVERLAP_SECOND_END + str(curr.overlap_id) + "> "
 
         elif curr.text == INTERNAL_MARKER.SLOWSPEECH_START:
-            return TEXT_FORMATTER.SLOWSPEECH_START
+            return FORMATTER.SLOWSPEECH_START
         elif curr.text == INTERNAL_MARKER.SLOWSPEECH_END:
             return TEXT_FORMATTER.SLOWSPEECH_END
 
@@ -213,7 +213,7 @@ class TextPlugin(Plugin):
         """
         l = []
         l.append(curr.text)
-        txt = CON_FORMATTER.TXT_SEP.join(l)
+        txt = TEXT_FORMATTER.TXT_SEP.join(l)
 
         speaker = ""
         result = []
@@ -252,7 +252,7 @@ class TextPlugin(Plugin):
         """
         prev_item[2] = start_time
         prev_item[1] = speaker_sentence
-        turn = CON_FORMATTER.TURN.format(
+        turn = FORMATTER.TURN.format(
             prev_item[0],
             prev_item[1],
             prev_item[2],
