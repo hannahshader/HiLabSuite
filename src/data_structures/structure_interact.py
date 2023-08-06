@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-# @Last Modified by:   Hannah Shader
-# @Last Modified time: 2023-08-05 16:46:57
+# @Last Modified by:   Jacob Boyar
+# @Last Modified time: 2023-08-06 13:43:55
 # @Description: Contains our structures for running our plugins and creating
 #   their output.
 
@@ -18,7 +18,6 @@ from HiLabSuite.src.data_structures.marker_utterance_dict import (
     MarkerUtteranceDict,
 )
 from HiLabSuite.src.data_structures.data_objects import UttObj
-from HiLabSuite.src.algorithms.apply_plugins import ApplyPlugins
 from gailbot import Plugin
 from gailbot import GBPluginMethods
 
@@ -63,8 +62,6 @@ class StructureInteract(Plugin):
         self.output_path = methods.output_path
 
         # Get the path for the xml to csv converter
-        # TODO: change this
-        # self.chatter_path = "/Users/hannahshader/Desktop/chatter/chatter.jar"
 
         # Pass data to marker_utterance_dict to interact with the underlying
         # Data structure
@@ -73,10 +70,6 @@ class StructureInteract(Plugin):
 
         # Gets the sentence data
         self.sentence_data = marker_utterance_obj.sentences
-
-        # Applies plugins
-        # apply_plugins_instance = ApplyPlugins()
-        # apply_plugins_instance.apply_plugins(self)
 
         # Returns a version of itself
         return self

@@ -54,6 +54,8 @@ added markers for gaps, pauses, overlap, and syllable rate based on the selected
 | conversation.txt   | Text output for the suite; A more basic presentation of how and where each marker is added.|
 | merged.wav   | Identical to merged.wav in the Raw/Media folder, the merged audio input.|
 | words.csv   | The combined csv word output for all provided audio inputs. Contains csv organization at a word level|
+| format.md   | This file|
+
 
 ## Acknowledgements
 

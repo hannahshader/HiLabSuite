@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-08-06 13:40:21
+# @Last Modified time: 2023-08-06 13:48:02
 # @Description: Creates the text output for our plugins
 
 import re
@@ -27,7 +27,6 @@ INTERNAL_MARKER = load_formatter().INTERNAL
 # add these to the config data file
 INTERNAL_MARKER.SELF_LATCH_START = "Self_Latch_Start"
 INTERNAL_MARKER.SELF_LATCH_END = "Self_Latch_End"
-CON_FORMATTER = load_formatter().CON
 TEXT_FORMATTER = load_formatter().TEXT
 # add these to the config data file
 TEXT_FORMATTER.SELF_LATCH_START = "<SELF_LATCH:type=start&Duration="
@@ -122,7 +121,7 @@ class TextPlugin(Plugin):
         -------
         A string of the properly formatted text
         """
-        return FORMATTER.TURN.format(
+        return TEXT_FORMATTER.TURN.format(
             item1,
             item2,
             item3,
@@ -144,16 +143,16 @@ class TextPlugin(Plugin):
         """
 
         if curr.text == INTERNAL_MARKER.PAUSES:
-            return FORMATTER.PAUSES + str(round((curr.end - curr.start), 2)) + "> "
+            return TEXT_FORMATTER.PAUSES + str(round((curr.end - curr.start), 2)) + "> "
         elif curr.text == INTERNAL_MARKER.MICROPAUSE:
             return (
-                FORMATTER.MICROPAUSE
+                TEXT_FORMATTER.MICROPAUSE
                 + str(round((curr.end - curr.start), 2))
                 + "> "
             )
 
         elif curr.text == INTERNAL_MARKER.GAPS:
-            return FORMATTER.GAPS + str(round((curr.end - curr.start), 2)) + "> "
+            return TEXT_FORMATTER.GAPS + str(round((curr.end - curr.start), 2)) + "> "
         elif curr.text == INTERNAL_MARKER.LATCH_START:
             return (
                 TEXT_FORMATTER.LATCH_START
@@ -187,7 +186,7 @@ class TextPlugin(Plugin):
             return TEXT_FORMATTER.OVERLAP_SECOND_END + str(curr.overlap_id) + "> "
 
         elif curr.text == INTERNAL_MARKER.SLOWSPEECH_START:
-            return FORMATTER.SLOWSPEECH_START
+            return TEXT_FORMATTER.SLOWSPEECH_START
         elif curr.text == INTERNAL_MARKER.SLOWSPEECH_END:
             return TEXT_FORMATTER.SLOWSPEECH_END
 
@@ -252,7 +251,7 @@ class TextPlugin(Plugin):
         """
         prev_item[2] = start_time
         prev_item[1] = speaker_sentence
-        turn = FORMATTER.TURN.format(
+        turn = TEXT_FORMATTER.TURN.format(
             prev_item[0],
             prev_item[1],
             prev_item[2],
