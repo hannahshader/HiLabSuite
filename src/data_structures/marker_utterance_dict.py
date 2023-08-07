@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-# @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-08-06 15:13:15
+# @Last Modified by:   Hannah Shader
+# @Last Modified time: 2023-08-07 11:29:33
 # @Description: Creates a marker utterance dictionary
 
 import copy
@@ -102,7 +102,7 @@ class MarkerUtteranceDict:
             # set the speaker label to be the same for all files when
             # there is are overlaps and multiple files are uploaded
             counter_equal_speaker = 1
-            
+
             if self.overlaps == True:
                 for key, utt_list in utterance_map.items():
                     for utt in utt_list:
@@ -115,8 +115,7 @@ class MarkerUtteranceDict:
                 for utt_dict in value:
                     if utt_dict.text != load_exception().HESITATION:
                         if (utt_dict.speaker != speaker) or (
-                            self.overlaps == True
-                            and self.turn_criteria_overlaps(utt_dict, prev_utt)
+                            self.turn_criteria_overlaps(utt_dict, prev_utt)
                         ):
                             self.counter_sentence_overlaps += 1
 
@@ -169,7 +168,6 @@ class MarkerUtteranceDict:
             # Create a deep copy for the class
             self.list = copy.deepcopy(utterances)
             self.sentences = copy.deepcopy(sentence_data)
-
 
     def testing_print(self):
         """
@@ -231,7 +229,7 @@ class MarkerUtteranceDict:
     def insert_marker_syllab_rate(self, value: Any) -> None:
         """
         Inserts a marker into the data structure while maintaining the order
-        for syllable rate specifically. When two markers have the same start 
+        for syllable rate specifically. When two markers have the same start
         time, inserts new marker after the original one. Includes extra checks
         for syllable rate specifically
 
