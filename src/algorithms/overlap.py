@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-08-06 13:59:29
+# @Last Modified time: 2023-08-06 14:09:20
 # @Description: Checks for overlaps between multiple speakers
 
 from typing import Dict, Any, List
@@ -71,7 +71,7 @@ class OverlapPlugin(Plugin):
 
         return self.structure_interact_instance
 
-    def OverlapMarker(curr_sentence, next_sentence, list: List[UttObj]) -> List[str]:
+    def OverlapMarker(curr_sentence, next_sentence, list: List[UttObj]) -> List[UttObj]:
         """
         curr_sentence: the first sentence in the overlap
         next_sentence: the next sentence in the overlap
@@ -164,7 +164,7 @@ class OverlapPlugin(Plugin):
         else:
             return []
 
-    def self_latch_marker(self, overlap_start_one, overlap_end_one):
+    def self_latch_marker(self, overlap_start_one, overlap_end_one) -> tuple[UttObj, UttObj]:
         self_latch_one = UttObj(
             # Start and end times represent start and end of the latch
             # Start and end times are not used to sort these markers in list

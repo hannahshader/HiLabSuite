@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-08-06 13:39:20
+# @Last Modified time: 2023-08-06 14:53:30
 # @Description: The class configurations for formats, labels and output files
 
 
@@ -15,7 +15,7 @@ from dict_to_dataclass import DataclassFromDict, field_from_dict
 
 
 @dataclass
-class CSV_FORMATTER:
+class CSV_FORMATTER(DataclassFromDict):
     """
     Dataclass for header texts in a csv file
     """
@@ -27,7 +27,7 @@ class CSV_FORMATTER:
 
 
 @dataclass
-class TEXT_FORMATTER:
+class TEXT_FORMATTER(DataclassFromDict):
     """
     Dataclass for text file output
     """
@@ -49,8 +49,6 @@ class TEXT_FORMATTER:
     MICROPAUSE: str = field_from_dict()
     SELF_LATCH_START: str = field_from_dict()
     SELF_LATCH_END: str = field_from_dict()
-    # SELF_START: str = "<SELF_LATCH:type=start&Duration="
-    # SELF_END: str = "<SELF_LATCH:type=end"
     
     TURN: str = field_from_dict()
     TXT_SEP: str = field_from_dict()
@@ -208,6 +206,16 @@ class OUTPUT_FILE(DataclassFromDict):
     CHAT_ERROR: str = field_from_dict()
     FORMAT_MD: str = field_from_dict()
 
+def load_formatter():
+    """
+    Load output file names from config.toml file
+    """
+    d = toml.load(os.path.join(os.path.dirname(__file__), "configData.toml"))
+    return FORMATTER.from_dict(d["FORMATTER"])
+
+def load_exception():
+    d = toml.load(os.path.join(os.path.dirname(__file__), "configData.toml"))
+    return EXCEPTIONS.from_dict(d["EXCEPTIONS"])
 
 def load_threshold():
     """
@@ -223,16 +231,3 @@ def load_output_file():
     """
     d = toml.load(os.path.join(os.path.dirname(__file__), "configData.toml"))
     return OUTPUT_FILE.from_dict(d["OUTPUT_FILE"])
-
-
-def load_formatter():
-    """
-    Load output file names from config.toml file
-    """
-    d = toml.load(os.path.join(os.path.dirname(__file__), "configData.toml"))
-    return FORMATTER.from_dict(d["FORMATTER"])
-
-
-def load_exception():
-    d = toml.load(os.path.join(os.path.dirname(__file__), "configData.toml"))
-    return EXCEPTIONS.from_dict(d["EXCEPTIONS"])

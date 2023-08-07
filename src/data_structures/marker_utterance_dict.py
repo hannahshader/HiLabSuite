@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-# @Last Modified by:   Hannah Shader
-# @Last Modified time: 2023-08-06 13:22:30
+# @Last Modified by:   Jacob Boyar
+# @Last Modified time: 2023-08-06 15:13:15
 # @Description: Creates a marker utterance dictionary
 
 import copy
@@ -60,8 +60,6 @@ class MarkerUtteranceDict:
         a dictionary of strings and utterance objects
         """
 
-        # print("utterance map is")
-        # print(utterance_map)
         if utterance_map is None:
             # Holds data about words spoken by each speaker
             self.list = []
@@ -104,8 +102,7 @@ class MarkerUtteranceDict:
             # set the speaker label to be the same for all files when
             # there is are overlaps and multiple files are uploaded
             counter_equal_speaker = 1
-            # print("utternace map is")
-            # print(utterance_map)
+            
             if self.overlaps == True:
                 for key, utt_list in utterance_map.items():
                     for utt in utt_list:
@@ -134,7 +131,7 @@ class MarkerUtteranceDict:
                             sentence_data_plain.append(utt_dict.start)
                             speaker = utt_dict.speaker
 
-                        # strip the utterance text value of any
+                        # Strips the utterance text value of any
                         # non alphanumeric values
                         # when using the google engine, extra
                         # punctuation will be used that isn't needed
@@ -173,13 +170,6 @@ class MarkerUtteranceDict:
             self.list = copy.deepcopy(utterances)
             self.sentences = copy.deepcopy(sentence_data)
 
-            # print("at the end of the init function, self.list is: ")
-            # for item in self.list:
-            #    print(item)
-
-            # print("at the end of the init function, self.sentences is: ")
-            # for item in self.sentences:
-            #    print(item)
 
     def testing_print(self):
         """
@@ -203,12 +193,6 @@ class MarkerUtteranceDict:
         a boolean
 
         """
-        # print(
-        #    "in turn citeria overlaps, item is "
-        #    + str(utt_dict)
-        #    + " and prev_utt is"
-        #    + str(prev_utt)
-        # )
         if prev_utt == None:
             return False
         return (utt_dict.start - prev_utt.end) >= THRESHOLD.TURN_END_THRESHOLD_SECS
@@ -229,6 +213,7 @@ class MarkerUtteranceDict:
         """
         Inserts a marker into the data structure while maintaining the order
         When two markers have the same start time, inserts new marker after
+        the original one
 
         Parameters
         ----------
@@ -244,6 +229,20 @@ class MarkerUtteranceDict:
         self.list.insert(index, value)
 
     def insert_marker_syllab_rate(self, value: Any) -> None:
+        """
+        Inserts a marker into the data structure while maintaining the order
+        for syllable rate specifically. When two markers have the same start 
+        time, inserts new marker after the original one. Includes extra checks
+        for syllable rate specifically
+
+        Parameters
+        ----------
+        value: the marker to insert
+
+        Returns
+        -------
+        none
+        """
         if value is None:
             return
 
@@ -285,7 +284,6 @@ class MarkerUtteranceDict:
         -------
         the next utterance
         """
-        # with self.lock:
         if current_item in self.list:
             current_index = self.list.index(current_item)
             next_index = current_index + 1
@@ -312,24 +310,7 @@ class MarkerUtteranceDict:
         -------
         a boolean of whether said string is a speaker utterance.
         """
-        internal_marker_set = [
-            INTERNAL_MARKER.PAUSES,
-            INTERNAL_MARKER.GAPS,
-            INTERNAL_MARKER.OVERLAP_FIRST_START,
-            INTERNAL_MARKER.OVERLAP_SECOND_START,
-            INTERNAL_MARKER.OVERLAP_FIRST_END,
-            INTERNAL_MARKER.OVERLAP_SECOND_END,
-            INTERNAL_MARKER.SLOWSPEECH_START,
-            INTERNAL_MARKER.SLOWSPEECH_END,
-            INTERNAL_MARKER.FASTSPEECH_START,
-            INTERNAL_MARKER.FASTSPEECH_END,
-            INTERNAL_MARKER.LATCH_START,
-            INTERNAL_MARKER.LATCH_END,
-            INTERNAL_MARKER.SELF_LATCH_START,
-            INTERNAL_MARKER.SELF_LATCH_END,
-            INTERNAL_MARKER.MICROPAUSE,
-        ]
-        if curr.text in internal_marker_set:
+        if curr.text in INTERNAL_MARKER.INTERNAL_MARKER_SET:
             return False
         else:
             return True

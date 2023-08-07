@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-# @Last Modified by:   Hannah Shader
-# @Last Modified time: 2023-08-06 13:16:16
+# @Last Modified by:   Jacob Boyar
+# @Last Modified time: 2023-08-06 14:31:22
 # @Description: Calculates the average syllable rate for all speakers
 #   Denotes any sections of especially fast or slow speech.
 
@@ -70,8 +70,6 @@ class SyllableRatePlugin(Plugin):
 
     def apply(self, dependency_outputs: Dict[str, Any], methods: GBPluginMethods):
         structure_interact_instance = dependency_outputs["OutputFileManager"]
-        # print("dependency outputs is: \n")
-        # print(dependency_outputs)
         """
         Parameters
         ----------
@@ -98,8 +96,12 @@ class SyllableRatePlugin(Plugin):
         """
         Creates a syllable marker to get the overall syllable rate
 
+        Parameters
+        ----------
+        None
+
         """
-        logging.info("start syllable rate  analysis")
+        logging.info("start syllable rate analysis")
         self.structure_interact_instance.apply_for_syllab_rate(
             self.get_utt_syllable_rate
         )
@@ -117,16 +119,13 @@ class SyllableRatePlugin(Plugin):
                         marker2
                     )
 
-        # print("after syllab rate plugin")
-        # for item in self.structure_interact_instance.data_structure.list:
-        #    if item.start == 134.8:
-        #        print(item)
 
     def get_utt_syllable_rate(
         self, utt_list: List, sentence_start: float, sentence_end: float
     ) -> None:
         """
-        Gets the syllable rates for each utterance
+        Gets the syllable rates for each utterance, and populates the dictionary
+        to be used as reference
 
         Parameters
         ----------
@@ -154,7 +153,7 @@ class SyllableRatePlugin(Plugin):
         if time_diff == 0:
             logging.warn(f"no time difference between sentence start and end")
             time_diff = 0.001
-        # Compute syllable rate
+        # Computes syllable rate
         syllable_rate = round(sentence_syllab_count / time_diff, 2)
         # Create utterance syllable data and append to dictionary
         utt_syllable: SYLLAB_DICT = {
@@ -236,15 +235,7 @@ class SyllableRatePlugin(Plugin):
             )
 
             slowCount += 1
-            """
-            print(
-                "\n\nslow marker start is: "
-                + str(slowStartMarker)
-                + " and slow marker end is: "
-                + str(slowEndMarker)
-                + "\n\n"
-            )
-            """
+            
             return slowStartMarker, slowEndMarker
         elif sentence["syllableRate"] >= 6.4:
             fastStartMarker = UttObj(
@@ -262,15 +253,7 @@ class SyllableRatePlugin(Plugin):
                 sentence["flexible_info"],
             )
             fastCount += 1
-            """
-            print(
-                "\n\nfast marker start is: "
-                + str(fastStartMarker)
-                + " and false marker end is: "
-                + str(fastEndMarker)
-                + "\n\n"
-            )
-            """
+            
             return fastStartMarker, fastEndMarker
 
         else:

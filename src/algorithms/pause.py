@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-# @Last Modified by:   Hannah Shader
-# @Last Modified time: 2023-08-04 14:10:25
+# @Last Modified by:   Jacob Boyar
+# @Last Modified time: 2023-08-06 14:11:44
 # @Description: Checks for pauses in speech when one speaker is speaking
 
 import logging
@@ -96,29 +96,11 @@ class PausePlugin(Plugin):
         if curr_utt.speaker == next_utt.speaker:
             logging.info("start pause analysis")
             fto = round(next_utt.start - curr_utt.end, 2)
-            # check for latch threshold
+            # Check for latch threshold
             if THRESHOLDGAPS.TURN_END_THRESHOLD_SECS <= fto:
                 pass
-            """
-            elif (load_threshold().LB_LATCH <= fto) and (
-                fto <= load_threshold().UB_LATCH
-            ):
-                logging.debug(f"latch detected with fto {fto}")
-                # format marker text
-                markerText = INTERNAL_MARKER.TYPE_INFO_SP.format(
-                    INTERNAL_MARKER.PAUSES, str(round(fto, 2)), str(curr_utt.speaker)
-                )
-                logging.debug(f"generating latch marker: {markerText}")
-                return UttObj(
-                    curr_utt.end,
-                    next_utt.start,
-                    curr_utt.speaker,
-                    INTERNAL_MARKER.PAUSES,
-                    curr_utt.flexible_info,
-                )
-                logging.debug(f"latch marker ({markerText}) generated")
-            """
-            # check for pause threshold
+        
+            # Check for pause threshold
             if THRESHOLD.LB_PAUSE <= fto < THRESHOLD.UB_PAUSE:
                 logging.debug(f"generating pause marker")
                 return UttObj(
@@ -128,7 +110,7 @@ class PausePlugin(Plugin):
                     INTERNAL_MARKER.PAUSES,
                     curr_utt.flexible_info,
                 )
-            # check for micro pause threshold
+            # Check for micro pause threshold
             elif THRESHOLD.LB_MICROPAUSE <= fto < THRESHOLD.UB_MICROPAUSE:
                 logging.debug(f"generating micropause marker")
                 return UttObj(
@@ -139,21 +121,5 @@ class PausePlugin(Plugin):
                     curr_utt.flexible_info,
                 )
                 logging.debug(f"micro pause marker  generated")
-            """
-            # check for large pause threshold
-            elif fto >= load_threshold().LB_LARGE_PAUSE:
-                logging.debug(f"large pause detected with fto {fto}")
-                markerText = INTERNAL_MARKER.TYPE_INFO_SP.format(
-                    INTERNAL_MARKER.PAUSES, str(round(fto, 1)), str(curr_utt.speaker)
-                )
-                logging.debug(f"generating larger pause marker: {markerText}")
-                return_marker = UttObj(
-                    curr_utt.end,
-                    next_utt.start,
-                    curr_utt.speaker,
-                    INTERNAL_MARKER.PAUSES,
-                    curr_utt.flexible_info,
-                )
-                logging.debug(f"larger pause marker ({markerText}) generated")
-            """
+          
         return
