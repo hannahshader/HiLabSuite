@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-08-06 13:48:02
+# @Last Modified time: 2023-08-07 14:37:59
 # @Description: Creates the text output for our plugins
 
 import re
@@ -44,6 +44,17 @@ class TextPlugin(Plugin):
     """
 
     def __init__(self) -> None:
+        """
+        Initializes the Text plugin
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        None
+        """
         super().__init__()
 
     def apply(
@@ -108,7 +119,6 @@ class TextPlugin(Plugin):
         """
         outfile.write(sentence_obj[1])
 
-    #
     def formatter(self, item1, item2, item3, item4) -> str:
         """
         Provides the formatter of the text file. Purpose of 0x15 is unknown

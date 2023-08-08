@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-# @Last Modified by:   Hannah Shader
-# @Last Modified time: 2023-08-06 13:26:06
+# @Last Modified by:   Jacob Boyar
+# @Last Modified time: 2023-08-07 14:34:41
 # @Description: Creates the csv output for our plugins
 
 import os
@@ -43,6 +43,17 @@ class CSVPlugin(Plugin):
     """
 
     def __init__(self) -> None:
+        """
+        Initializes the CSV plugin
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        None
+        """
         super().__init__()
 
     def apply(self, dependency_outputs: Dict[str, Any], methods: GBPluginMethods):
@@ -208,8 +219,7 @@ class CSVPlugin(Plugin):
 
     def _utterance_level(self, structure_interact_instance) -> None:
         """
-        Determines the path for the utterance level
-        Parameters
+        Determines the path for the utterance level parameters
         ----------
         structure_interact_instance :
         An instance of the structure interact class

@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-08-06 15:13:15
+# @Last Modified time: 2023-08-07 14:18:19
 # @Description: Creates a marker utterance dictionary
 
 import copy
@@ -357,7 +357,7 @@ class MarkerUtteranceDict:
 
     def apply_for_overlap(self, apply_function: callable) -> None:
         """
-        Iterates through list of sentence data and inserts markers
+        Iterates through the list of sentence data and inserts markers
         Will always be used to add overlap plugin markers
 
         Parameters
@@ -389,7 +389,7 @@ class MarkerUtteranceDict:
 
     def apply_for_syllab_rate(self, func: callable) -> None:
         """
-        Iterates through list of sentence data and inserts pairs of markers
+        Iterates through the list of sentence data and inserts pairs of markers
         for the start and end of fast/slow speech
 
         Parameters
@@ -573,7 +573,7 @@ class MarkerUtteranceDict:
         apply_subelement_root: callable,
         apply_subelement_word: callable,
         apply_sentence_end: callable,
-    ):
+    ) -> None:
         """
         Creates the xml output for Gailbot, separating each line by its speaker
 
@@ -606,9 +606,9 @@ class MarkerUtteranceDict:
             sentence_end = self.list[index].end
         apply_sentence_end(sentence, sentence_start, sentence_end)
 
-    def order_overlap(self):
+    def order_overlap(self) -> None:
         """
-        Reorders the list based on the overlap specifications
+        Reorders the list based on the overlap specifications for utterances
 
         Parameters
         ----------
@@ -651,7 +651,19 @@ class MarkerUtteranceDict:
 
     def order_overlapping_sentences(
         self, first_sentence_overlap_id, second_sentence_overlap_id
-    ):
+    ) -> None:
+        """
+        Reorders the list based on the overlap specifications for sentences
+
+        Parameters
+        ----------
+        first_sentence_overlap_id: the ID of the first sentence
+        second_sentence_overlap_id: the ID of the second overlap sentence
+
+        Returns
+        -------
+        none
+        """
         new_list = []
         start_time = float("inf")
 
@@ -675,10 +687,6 @@ class MarkerUtteranceDict:
                 ),
             )
 
-            # print("sorted list is: ")
-            # for item in sorted_list:
-            #    print(item)
-
             self.list = [
                 item
                 for item in self.list
@@ -690,7 +698,20 @@ class MarkerUtteranceDict:
 
             self.insert_small_list(start_time, sorted_list)
 
-    def insert_small_list(self, start_time, small_list):
+    def insert_small_list(self, start_time, small_list) -> None:
+        """
+        Inserts a small list of items into the larger list
+
+        Parameters
+        ----------
+        start_time: where to insert the small list in the larger list
+        small_list: the list to insert
+
+        Returns
+        -------
+        none
+        """
+        
         # Find the correct index to insert
         insert_index = None
         for index in range(len(self.list)):
@@ -709,7 +730,7 @@ class MarkerUtteranceDict:
         if insert_index is not None:
             self.list = self.list[:insert_index] + small_list + self.list[insert_index:]
 
-    def insert_overlap_markers_character_level(self):
+    def insert_overlap_markers_character_level(self) -> None:
         """
         Gets the word before the overlap marker and checks to see if it needs
         to be split, with the overlap marker inserted within.
@@ -883,7 +904,19 @@ class MarkerUtteranceDict:
         # return two utt in place of the original utt
         return utt_head, utt_butt
 
-    def new_turn_with_gap_and_pause(self):
+    def new_turn_with_gap_and_pause(self) -> None:
+        """
+        Additional formatting for gaps and overlaps.
+        Creates a new turn if the gap or overlap is large enough.
+
+        Parameters
+        ----------
+        None.
+
+        Returns
+        -------
+        None.
+        """
         curr_flexible_info = 0
         got_to_marker = False
         for counter, item in enumerate(self.list):
@@ -904,7 +937,18 @@ class MarkerUtteranceDict:
                 else:
                     item.speaker = INTERNAL_MARKER.PAUSES
 
-    def remove_empty_overlaps(self):
+    def remove_empty_overlaps(self) -> None:
+        """
+        Removes empty , where an overlap surrounds no utterances.
+        
+        Parameters
+        ----------
+        None.
+
+        Returns
+        -------
+        None.
+        """
         overlap_ids = []
 
         # create a list of invalid ids
@@ -958,15 +1002,26 @@ class MarkerUtteranceDict:
                 new_list.append(item)
 
         self.list = new_list
+        
+    def add_self_latch(self, func) -> None:
+        """
+        If someone is found talking immediately after an overlap, creates a 
+        self latch
 
-    # we're saying that someone starts talking immediately after an overlap,
-    # it means they're probably finishing their thought
-    # identify the overlap start
-    # identify the word from the original speaker after the overlap end
-    # identify the word from the overlapping speaker before the overlap end
-    # compare timing to see if self latch criteria is met
-    # if so, insert a latch, therefore, a new turn for each
-    def add_self_latch(self, func):
+        1. Identify the overlap start
+        2. Identify the word from the original speaker after the overlap end
+        3. Identify the word from the overlapping speaker before the overlap end
+        4. Compare timing to see if self latch criteria is met
+        5. If so, insert a latch, therefore, a new turn for each
+        
+        Parameters
+        ----------
+        None.
+
+        Returns
+        -------
+        None.
+        """
         # stores the new list updated with the self latch markers
         new_list = []
 

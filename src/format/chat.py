@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-07-20 11:15:53
+# @Last Modified time: 2023-08-07 14:31:37
 # @Description: Creates the CHAT output for our plugins based on TalkBank format
 
 import subprocess
@@ -28,9 +28,32 @@ class ChatPlugin(Plugin):
     """Generates a chat file as an output"""
 
     def __init__(self) -> None:
+        """
+        Initializes the Chat plugin
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        None
+        """
         super().__init__()
 
-    def apply(self, dependency_outputs: Dict[str, Any], methods: GBPluginMethods):
+    def apply(self, dependency_outputs: Dict[str, Any], methods: GBPluginMethods) -> None:
+        """
+        Creates the output file
+
+        Parameters
+        ----------
+        dependency_outputs : a dictionary of dependency outputs
+        methods: the methods being used, currently GBPluginMethods
+
+        Returns
+        -------
+        none
+        """
         # overlap plugin has the most dependencies, i.e. the version of the data
         # structure with the most and all of the markers
         structure_interact_instance = dependency_outputs["XmlPlugin"]
@@ -46,7 +69,7 @@ class ChatPlugin(Plugin):
 
     def run(self, structure_interact_instance) -> None:
         """
-        Returns the input and output paths
+        Determines the input and output paths
 
         Parameters
         ----------

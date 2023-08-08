@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
-# @Last Modified by:   Hannah Shader
-# @Last Modified time: 2023-08-05 14:54:58
+# @Last Modified by:   Jacob Boyar
+# @Last Modified time: 2023-08-07 14:39:27
 # @Description: Creates the xml output for our plugins
 
 from typing import Dict, Any
@@ -32,9 +32,20 @@ INTERNAL_MARKER = load_formatter().INTERNAL
 
 
 class XmlPlugin(Plugin):
-    """Creates the XML file"""
+    """Creates the XML file used for CHAT output"""
 
     def __init__(self) -> None:
+        """
+        Initializes the XML plugin
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        None
+        """
         super().__init__()
 
     def apply(

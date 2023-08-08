@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-08-06 13:23:04
+# @Last Modified time: 2023-08-07 14:36:01
 # @Description: Manages the output files created by our plugins
 
 import re
@@ -39,6 +39,17 @@ class OutputFileManager(Plugin):
     """
 
     def __init__(self):
+        """
+        Initializes the OutputFileManager plugin
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        None
+        """
         super().__init__()
 
     def apply(self, dependency_outputs: Dict[str, Any], methods: GBPluginMethods):

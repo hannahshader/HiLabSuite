@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-08-06 13:43:55
+# @Last Modified time: 2023-08-07 14:28:05
 # @Description: Contains our structures for running our plugins and creating
 #   their output.
 
@@ -75,6 +75,9 @@ class StructureInteract(Plugin):
         return self
 
     def testing_print(self):
+        """
+        A testing function to print the data structure
+        """
         self.data_structure.testing_print()
 
     def sort_list(self) -> None:
@@ -135,11 +138,22 @@ class StructureInteract(Plugin):
         if item != None:
             self.data_structure.insert_marker_syllab_rate(item)
 
-    # general apply function list for items data structure
     def apply_functions(self, apply_functions: list[callable]):
-        return self.data_structure.apply_functions(apply_functions)
+        """
+        General apply function list for items data structure
 
-    def apply_function(self, apply_function: callable) -> None:
+        Parameters
+        ----------
+        apply_functions: the list of apply functions
+
+        Returns
+        -------
+        the applied functions
+        """
+        return self.data_structure.apply_functions(apply_functions)
+        
+
+    def apply_function(self, apply_function: callable):
         """
         A general apply function to apply one function to items in list
         Changed the () from (self, apply_functionS) to the current
@@ -275,23 +289,101 @@ class StructureInteract(Plugin):
 
     # Sorts the data structure to keep overlapping sentences together
     def group_overlapping_sentences(self):
+        """
+        The apply function for the order_overlap function
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        The function call 
+        """
         return self.data_structure.order_overlap()
 
     # inserts the overlap markers into character level
     def insert_overlap_markers_character_level(self):
+        """
+        the apply function for the insert_overlap_markers_character_level
+        Tunction
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        The function call 
+        """
         return self.data_structure.insert_overlap_markers_character_level()
 
     def new_turn_with_gap_and_pause(self):
+        """
+        The apply function for the new_turn_with_gap_and_pause function
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        The function call 
+        """
         return self.data_structure.new_turn_with_gap_and_pause()
 
     def new_turn_with_latch(self):
+        """
+        The apply function for the new_turn_with_latch function
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        The function call 
+        """
         return self.data_structure.new_turn_with_latch()
 
     def call_add_self_latch(self, func):
+        """
+        The apply function for the add_self_latch function
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        The function call 
+        """
         return self.data_structure.add_self_latch(func)
 
     def new_turn_with_self_latch(self):
+        """
+        The apply function for the new_turn_with_self_latch function
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        The function call 
+        """
         return self.data_structure.new_turn_with_self_latch()
 
     def remove_empty_overlaps(self):
+        """
+        The apply function for the remove_empty_overlaps function
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        The function call 
+        """
         return self.data_structure.remove_empty_overlaps()
