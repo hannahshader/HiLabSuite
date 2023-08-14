@@ -2,7 +2,7 @@
 # @Author: Hannah Shader, Jason Wu, Jacob Boyar
 # @Date:   2023-06-26 12:15:56
 # @Last Modified by:   Jacob Boyar
-# @Last Modified time: 2023-08-07 14:34:41
+# @Last Modified time: 2023-08-11 12:56:10
 # @Description: Creates the csv output for our plugins
 
 import os
@@ -132,8 +132,7 @@ class CSVPlugin(Plugin):
 
         Returns
         -------
-        A list which compr
-        ises the necessary node information:
+        A list which comprises the necessary node information:
         speaker, text, start, and end times.
         """
         l = []
