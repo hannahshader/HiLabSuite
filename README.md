@@ -1,6 +1,6 @@
 README.md
 Developed by Hannah Shader, Jason Wu, and Jacob Boyar
-as a part of the Tufts hi-lab
+as a part of the Tufts HiLab.
 
 This Tufts Hi-Lab plugin suite is meant to work in conjunction with Gailbot,
 and serve as both an example of a proper plugin suite as well as its primary
@@ -21,3 +21,8 @@ Overlap: Overlap occurs when 2 separate speakers have turns which coincide.
 
 Syllable Rate: The average syllable rate of the entire conversation is used to
 calculate where speech occurs at an accelerated or decelerated rate.
+
+Latches: Marks the completion of one speaker's utterance by another speaker.
+
+Self-Latches: Marks the completion of an utterance by one speaker after 
+interruption by another speaker. 
