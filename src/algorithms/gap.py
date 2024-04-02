@@ -10,7 +10,7 @@ from HiLabSuite.src.configs.configs import (
 )
 from HiLabSuite.src.data_structures.data_objects import UttObj
 
-import logging
+import ging
 from gailbot import Plugin
 from gailbot import GBPluginMethods
 
@@ -24,6 +24,7 @@ logger = logging.getLogger(__name__)
 
 THRESHOLD = load_threshold().GAPS
 INTERNAL_MARKER = load_formatter().INTERNAL
+
 
 ###############################################################################
 # CLASS DEFINITIONS                                                           #
@@ -134,4 +135,3 @@ class GapPlugin(Plugin):
                 text=INTERNAL_MARKER.GAPS,
                 flexible_info=curr_utt.flexible_info,
             )
-    

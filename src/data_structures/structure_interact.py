@@ -6,7 +6,7 @@
 # @Description: Contains our structures for running our plugins and creating
 #   their output.
 
-
+import logging
 import copy
 import os
 from typing import Any, Dict, List, IO
@@ -20,6 +20,13 @@ from HiLabSuite.src.data_structures.marker_utterance_dict import (
 from HiLabSuite.src.data_structures.data_objects import UttObj
 from gailbot import Plugin
 from gailbot import GBPluginMethods
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    handlers=[logging.StreamHandler()],
+)
+logger = logging.getLogger(__name__)
 
 OUT_PATH = "Temporary"
 
@@ -60,6 +67,11 @@ class StructureInteract(Plugin):
 
         # Gets the output path
         self.output_path = methods.output_path
+
+        # Gets the input path?
+        logging.info("Get input path")
+        self.wav_file = methods.data_files
+        logging.info("Data files is:", self.wav_file)
 
         # Get the path for the xml to csv converter
 
@@ -151,7 +163,6 @@ class StructureInteract(Plugin):
         the applied functions
         """
         return self.data_structure.apply_functions(apply_functions)
-        
 
     def apply_function(self, apply_function: callable):
         """
@@ -298,7 +309,7 @@ class StructureInteract(Plugin):
 
         Returns
         -------
-        The function call 
+        The function call
         """
         return self.data_structure.order_overlap()
 
@@ -314,7 +325,7 @@ class StructureInteract(Plugin):
 
         Returns
         -------
-        The function call 
+        The function call
         """
         return self.data_structure.insert_overlap_markers_character_level()
 
@@ -328,7 +339,7 @@ class StructureInteract(Plugin):
 
         Returns
         -------
-        The function call 
+        The function call
         """
         return self.data_structure.new_turn_with_gap_and_pause()
 
@@ -342,7 +353,7 @@ class StructureInteract(Plugin):
 
         Returns
         -------
-        The function call 
+        The function call
         """
         return self.data_structure.new_turn_with_latch()
 
@@ -356,7 +367,7 @@ class StructureInteract(Plugin):
 
         Returns
         -------
-        The function call 
+        The function call
         """
         return self.data_structure.add_self_latch(func)
 
@@ -370,7 +381,7 @@ class StructureInteract(Plugin):
 
         Returns
         -------
-        The function call 
+        The function call
         """
         return self.data_structure.new_turn_with_self_latch()
 
@@ -384,6 +395,6 @@ class StructureInteract(Plugin):
 
         Returns
         -------
-        The function call 
+        The function call
         """
         return self.data_structure.remove_empty_overlaps()
