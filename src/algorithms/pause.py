@@ -58,7 +58,7 @@ class PausePlugin(Plugin):
         -------
         A structure interact instance
         """
-        # testing
+        # Testing a change
         self.structure_interact_instance = dependency_outputs["GapPlugin"]
 
         # self.structure_interact_instance.testing_print()
@@ -99,7 +99,7 @@ class PausePlugin(Plugin):
             # Check for latch threshold
             if THRESHOLDGAPS.TURN_END_THRESHOLD_SECS <= fto:
                 pass
-        
+
             # Check for pause threshold
             if THRESHOLD.LB_PAUSE <= fto < THRESHOLD.UB_PAUSE:
                 logging.debug(f"generating pause marker")
@@ -121,5 +121,5 @@ class PausePlugin(Plugin):
                     curr_utt.flexible_info,
                 )
                 logging.debug(f"micro pause marker  generated")
-          
+
         return
