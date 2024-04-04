@@ -68,10 +68,10 @@ class StructureInteract(Plugin):
         # Gets the output path
         self.output_path = methods.output_path
 
-        # Gets the input path?
-        logging.info("Get input path")
-        self.wav_file = methods.data_files
-        logging.info("Data files is:", self.wav_file)
+        # Gets the input path
+        # data_files: List[str]
+        # Ex format: ['/Users/yike/GailBot/gailbot_workspace/temporary/hello3_0402_16_32_48_028695/data_copy/hello3.wav']
+        self.wav_files = methods.data_files
 
         # Get the path for the xml to csv converter
 
@@ -236,6 +236,26 @@ class StructureInteract(Plugin):
         return self.data_structure.print_all_rows_xml(
             apply_subelement_root, apply_subelement_word, apply_sentence_end
         )
+
+    def apply_markers_audio_files(self, func) -> None:
+        """
+        Takes an instance of structure interact, which holds a MarkerUtterance
+        object.
+        Calls apply_insert_marker_audio_files, which takes an instance of MarkerUtterance,
+        a function, and the input files.
+        This allows the a function to run with to update the data structure with the
+        markers created with the original wav files.
+
+        Parameters
+        ----------
+        apply_functions: Takes a function.
+
+        Returns
+        -------
+        none
+
+        """
+        self.data_structure.apply_insert_marker_audio_files(func, self.wav_files)
 
     def apply_markers(self, func) -> None:
         """

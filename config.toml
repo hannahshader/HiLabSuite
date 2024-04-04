@@ -26,17 +26,17 @@ module_name = "syllab_rate"
 hidden = "False"
 
 [[plugins]]
-plugin_name = "GapPlugin"
-dependencies = [ "OutputFileManager", "SyllableRatePlugin",]
-rel_path = "src/algorithms/gap.py"
-module_name = "gap"
+plugin_name = "PitchPlugin"
+dependencies = [ "OutputFileManager", "SyllableRatePlugin", "GapPlugin",]
+rel_path = "src/algorithms/pause.py"
+module_name = "pause"
 hidden = "False"
 
 [[plugins]]
 plugin_name = "PausePlugin"
-dependencies = [ "OutputFileManager", "SyllableRatePlugin", "GapPlugin",]
-rel_path = "src/algorithms/pause.py"
-module_name = "pause"
+dependencies = [ "OutputFileManager", "PitchPlugin", "SyllableRatePlugin", "GapPlugin",]
+rel_path = "src/algorithms/pitch.py"
+module_name = "pitch"
 hidden = "False"
 
 [[plugins]]

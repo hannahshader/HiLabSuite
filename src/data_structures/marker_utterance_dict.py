@@ -432,6 +432,26 @@ class MarkerUtteranceDict:
         if utt_list:
             func(utt_list, sentences_copy[-1][0], sentences_copy[-1][1])
 
+    def apply_insert_marker_audio_files(self, func, wav_files) -> None:
+        """
+        Takes a function to apply that has arguments as two utterances
+        These functions return either one or four marker values
+        These marker values are added one by one to the list in
+        MarkerUtteranceDict
+
+        Parameters
+        ----------
+        apply_functions: a list of functions to run and add their marker values
+        to the list in MarkerUtteranceDict
+
+        Returns
+        -------
+        none
+        """
+
+        # Gets a list of markers from the function
+        func(wav_files, self.insert_marker)
+
     def apply_insert_marker(self, func) -> None:
         """
         Takes a function to apply that has arguments as two utterances
@@ -1061,9 +1081,9 @@ class MarkerUtteranceDict:
                 self_latch_dict[
                     (overlap_start_one.text, overlap_start_one.overlap_id)
                 ] = marker1
-                self_latch_dict[
-                    overlap_end_one.text, overlap_end_one.overlap_id
-                ] = marker2
+                self_latch_dict[overlap_end_one.text, overlap_end_one.overlap_id] = (
+                    marker2
+                )
 
         for item in self.list:
             if (item.text, item.overlap_id) in self_latch_dict:
