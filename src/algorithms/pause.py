@@ -10,11 +10,11 @@ import io
 from typing import Dict, Any, List
 from dataclasses import dataclass
 
-from HiLabSuite.src.configs.configs import (
+from src.configs.configs import (
     load_formatter,
     load_threshold,
 )
-from HiLabSuite.src.data_structures.data_objects import UttObj
+from src.data_structures.data_objects import UttObj
 
 from gailbot import Plugin
 from gailbot import GBPluginMethods

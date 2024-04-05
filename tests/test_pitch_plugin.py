@@ -1,16 +1,24 @@
 import pytest
 from unittest.mock import MagicMock
+from src.data_structures.structure_interact import StructureInteract
+from src.data_structures.marker_utterance_dict import MarkerUtteranceDict
+
 from src.algorithms.pause import (
     PausePlugin,
-)  # Adjust this import based on your actual module path
+)
+from src.algorithms.pitch import (
+    PitchPlugin,
+)
+from gailbot import plugin
 
 
 @pytest.fixture
 def setup_dependencies():
     # Mock dependencies and GBPluginMethods here
-    dependency_outputs = {"GapPlugin": []}
-    dependency_outputs["GapPlugin"].apply_markers.return_value = None
-    dependency_outputs["GapPlugin"].new_turn_with_gap_and_pause.return_value = None
+    marker_utterance_object = MarkerUtteranceDict()
+    structure_interact_object = StructureInteract()
+    structure_interact_object.data_structure = marker_utterance_object
+    dependency_outputs = {"GapPlugin": structure_interact_object}
 
     # Mock any methods from GBPluginMethods that you use
 
@@ -19,14 +27,14 @@ def setup_dependencies():
 
 def test_apply_success(setup_dependencies):
     dependency_outputs, methods = setup_dependencies
-    pause_plugin = PausePlugin()
+    pause_plugin = PitchPlugin()
 
     # Execute the apply method
-    result = pause_plugin.apply(dependency_outputs, None)
 
-    # Verify that apply_markers and new_turn_with_gap_and_pause are called
-    assert dependency_outputs["GapPlugin"].apply_markers.called
-    assert dependency_outputs["GapPlugin"].new_turn_with_gap_and_pause.called
+    result = pause_plugin.apply(dependency_outputs, None)
+    print("Result is:")
+    print(result)
+
     assert pause_plugin.successful
     assert (
         result == dependency_outputs["GapPlugin"]

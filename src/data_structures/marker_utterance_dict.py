@@ -16,10 +16,10 @@ from collections import OrderedDict
 from typing import Any, Dict, List, IO, Tuple
 from typing import OrderedDict as OrderedDictType, TypeVar
 
-from HiLabSuite.src.data_structures.data_objects import UttObj
-from HiLabSuite.src.configs.configs import load_formatter
-from HiLabSuite.src.configs.configs import load_threshold
-from HiLabSuite.src.configs.configs import load_exception
+from src.data_structures.data_objects import UttObj
+from src.configs.configs import load_formatter
+from src.configs.configs import load_threshold
+from src.configs.configs import load_exception
 
 
 from gailbot import Plugin

@@ -35,7 +35,7 @@ INTERNAL_MARKER = load_formatter().INTERNAL
 ###############################################################################
 # CLASS DEFINITIONS                                                           #
 ###############################################################################
-class PausePlugin(Plugin):
+class PitchPlugin(Plugin):
     """
     Wrapper class for the Pitch plugin. Contains functionality that inserts
     pitch markers
@@ -68,7 +68,9 @@ class PausePlugin(Plugin):
         """
         self.structure_interact_instance = dependency_outputs["GapPlugin"]
 
-        self.structure_interact_instance.apply_markers(PausePlugin.pitch_marker)
+        self.structure_interact_instance.apply_markers_audio_files(
+            PitchPlugin.pitch_marker, self.structure_interact_instance.insert_marker
+        )
 
         self.successful = True
         return self.structure_interact_instance

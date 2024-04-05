@@ -14,10 +14,10 @@ from typing import OrderedDict as OrderedDictType, TypeVar
 from pydantic import BaseModel
 from collections import OrderedDict
 
-from HiLabSuite.src.data_structures.marker_utterance_dict import (
+from src.data_structures.marker_utterance_dict import (
     MarkerUtteranceDict,
 )
-from HiLabSuite.src.data_structures.data_objects import UttObj
+from src.data_structures.data_objects import UttObj
 from gailbot import Plugin
 from gailbot import GBPluginMethods
 
