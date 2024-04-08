@@ -11,15 +11,14 @@ import copy
 import os
 from typing import Any, Dict, List, IO
 from typing import OrderedDict as OrderedDictType, TypeVar
-from pydantic import BaseModel
 from collections import OrderedDict
 
-from src.data_structures.marker_utterance_dict import (
+from data_structures.marker_utterance_dict import (
     MarkerUtteranceDict,
 )
-from src.data_structures.data_objects import UttObj
-from gailbot import Plugin
-from gailbot import GBPluginMethods
+from data_structures.data_objects import UttObj
+from GailBot import Plugin
+from GailBot import GBPluginMethods
 
 logging.basicConfig(
     level=logging.INFO,

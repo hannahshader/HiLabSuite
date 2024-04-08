@@ -11,22 +11,22 @@ import sys
 import threading
 import os
 import itertools
-from pydantic import BaseModel
 from collections import OrderedDict
 from typing import Any, Dict, List, IO, Tuple
 from typing import OrderedDict as OrderedDictType, TypeVar
 
-from src.data_structures.data_objects import UttObj
-from src.configs.configs import load_formatter
-from src.configs.configs import load_threshold
-from src.configs.configs import load_exception
+from data_structures.data_objects import UttObj
+
+# from configs.configs import load_formatter
+# from configs.configs import load_threshold
+# from configs.configs import load_exception
 
 
-from gailbot import Plugin
-from gailbot import GBPluginMethods
+from GailBot import Plugin
+from GailBot import GBPluginMethods
 
-THRESHOLD = load_threshold().GAPS
-INTERNAL_MARKER = load_formatter().INTERNAL
+# THRESHOLD = load_threshold().GAPS
+# INTERNAL_MARKER = load_formatter().INTERNAL
 # these need to be added to the config file
 # INTERNAL_MARKER.SELF_LATCH_START = "self_latch_start"
 # INTERNAL_MARKER.SELF_LATCH_END = "self_latch_end"
@@ -113,40 +113,38 @@ class MarkerUtteranceDict:
             for key, value in utterance_map.items():
                 # Loops through each word in each file
                 for utt_dict in value:
-                    if utt_dict.text != load_exception().HESITATION:
-                        if (utt_dict.speaker != speaker) or (
-                            self.turn_criteria_overlaps(utt_dict, prev_utt)
-                        ):
-                            self.counter_sentence_overlaps += 1
+                    # if utt_dict.text != load_exception().HESITATION:
+                    if (utt_dict.speaker != speaker) or (
+                        self.turn_criteria_overlaps(utt_dict, prev_utt)
+                    ):
+                        self.counter_sentence_overlaps += 1
 
-                            # populate list of speakers
-                            if utt_dict.speaker not in self.speakers:
-                                self.speakers.append(utt_dict.speaker)
+                        # populate list of speakers
+                        if utt_dict.speaker not in self.speakers:
+                            self.speakers.append(utt_dict.speaker)
 
-                            # Add data for each sentence start and end to
-                            # temporary list of sentence data
-                            if prev_utt != None:
-                                sentence_data_plain.append(prev_utt.end)
-                            sentence_data_plain.append(utt_dict.start)
-                            speaker = utt_dict.speaker
+                        # Add data for each sentence start and end to
+                        # temporary list of sentence data
+                        if prev_utt != None:
+                            sentence_data_plain.append(prev_utt.end)
+                        sentence_data_plain.append(utt_dict.start)
+                        speaker = utt_dict.speaker
 
-                        # Strips the utterance text value of any
-                        # non alphanumeric values
-                        # when using the google engine, extra
-                        # punctuation will be used that isn't needed
-                        utt_dict.text = "".join(
-                            ch for ch in utt_dict.text if ch.isalnum()
-                        )
+                    # Strips the utterance text value of any
+                    # non alphanumeric values
+                    # when using the google engine, extra
+                    # punctuation will be used that isn't needed
+                    utt_dict.text = "".join(ch for ch in utt_dict.text if ch.isalnum())
 
-                        utt = UttObj(
-                            utt_dict.start,
-                            utt_dict.end,
-                            utt_dict.speaker,
-                            utt_dict.text,
-                            self.counter_sentence_overlaps,
-                        )
-                        utterances.append(utt)
-                        prev_utt = utt_dict
+                    utt = UttObj(
+                        utt_dict.start,
+                        utt_dict.end,
+                        utt_dict.speaker,
+                        utt_dict.text,
+                        self.counter_sentence_overlaps,
+                    )
+                    utterances.append(utt)
+                    prev_utt = utt_dict
 
                 # Get the end time of the sentence
                 sentence_data_plain.append((value[-1]).end)

@@ -7,11 +7,11 @@
 
 
 import os
+
 import toml
 from dataclasses import dataclass
 from typing import List
 from dict_to_dataclass import DataclassFromDict, field_from_dict
-
 
 
 @dataclass
@@ -22,8 +22,6 @@ class CSV_FORMATTER(DataclassFromDict):
 
     HEADER: List[str] = field_from_dict()
     TXT_SEP: str = field_from_dict()
-
-
 
 
 @dataclass
@@ -49,7 +47,7 @@ class TEXT_FORMATTER(DataclassFromDict):
     MICROPAUSE: str = field_from_dict()
     SELF_LATCH_START: str = field_from_dict()
     SELF_LATCH_END: str = field_from_dict()
-    
+
     TURN: str = field_from_dict()
     TXT_SEP: str = field_from_dict()
 
@@ -126,6 +124,7 @@ class FORMATTER(DataclassFromDict):
     TEXT: TEXT_FORMATTER = field_from_dict()
     CSV: CSV_FORMATTER = field_from_dict()
 
+
 @dataclass
 class EXCEPTIONS(DataclassFromDict):
     """
@@ -134,7 +133,6 @@ class EXCEPTIONS(DataclassFromDict):
     """
 
     HESITATION: str = field_from_dict()
-
 
 
 @dataclass
@@ -206,6 +204,7 @@ class OUTPUT_FILE(DataclassFromDict):
     CHAT_ERROR: str = field_from_dict()
     FORMAT_MD: str = field_from_dict()
 
+
 def load_formatter():
     """
     Load output file names from config.toml file
@@ -213,9 +212,11 @@ def load_formatter():
     d = toml.load(os.path.join(os.path.dirname(__file__), "configData.toml"))
     return FORMATTER.from_dict(d["FORMATTER"])
 
+
 def load_exception():
     d = toml.load(os.path.join(os.path.dirname(__file__), "configData.toml"))
     return EXCEPTIONS.from_dict(d["EXCEPTIONS"])
+
 
 def load_threshold():
     """

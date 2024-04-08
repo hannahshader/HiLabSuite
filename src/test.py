@@ -1,18 +1,16 @@
-import pytest
 from unittest.mock import MagicMock
-from HiLabSuite.src.data_structures.structure_interact import StructureInteract
-from HiLabSuite.src.data_structures.marker_utterance_dict import MarkerUtteranceDict
+from data_structures.structure_interact import StructureInteract
+from data_structures.marker_utterance_dict import MarkerUtteranceDict
 
-from HiLabSuite.src.algorithms.pause import (
+from algorithms.pause import (
     PausePlugin,
 )
-from HiLabSuite.src.algorithms.pitch import (
+from algorithms.pitch import (
     PitchPlugin,
 )
-from GailBot import plugin
+from gailbot import plugin
 
 
-@pytest.fixture
 def setup_dependencies():
     # Mock dependencies and GBPluginMethods here
     marker_utterance_object = MarkerUtteranceDict()

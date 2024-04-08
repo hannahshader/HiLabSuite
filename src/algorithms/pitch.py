@@ -5,6 +5,12 @@
 # @Last Modified time: 2023-08-06 14:11:44
 # @Description: Checks for pauses in speech when one speaker is speaking
 
+# Create modules seperately, import them
+# Give Vivian my updates
+# Do a code review with the other RAs
+# Monday morning 9am meeting for code review
+# Meeting with Vivian and resolve importing by Monday
+
 import logging
 import io
 from typing import Dict, Any, List
@@ -26,6 +32,9 @@ from HiLabSuite.src.data_structures.data_objects import UttObj
 
 from gailbot import Plugin
 from gailbot import GBPluginMethods
+
+# get into the root folder
+# pip install .
 
 THRESHOLD = load_threshold().PAUSES
 THRESHOLDGAPS = load_threshold().GAPS
