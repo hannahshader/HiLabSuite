@@ -79,9 +79,10 @@ class PitchPlugin(Plugin):
         self.structure_interact_instance = dependency_outputs["GapPlugin"]
         self.timestamp_pairs = []
 
-        self.wav_files = 
-        self.structure_interact_instance.apply_markers(
-            PitchPlugin.pitch_marker)
+        self.wav_files = methods.data_files
+        self.markers_for_file(self.wav_files)
+
+        self.structure_interact_instance.apply_markers(PitchPlugin.pitch_marker)
 
         self.successful = True
         return self.structure_interact_instance
@@ -331,37 +332,41 @@ class PitchPlugin(Plugin):
             cross_window_data, local_window_hyperparameter, K
         )
 
-    def pitch_marker(curr_utt: UttObj, next_utt: UttObj) -> UttObj:
-            """
-            Parameters
-            ----------
-            wav files : List[str]
-                Fill paths to the input files
+    def pitch_marker(self, curr_utt: UttObj, next_utt: UttObj) -> UttObj:
+        """
+        Parameters
+        ----------
+        wav files : List[str]
+            Fill paths to the input files
 
-            Returns
-            -------
-            An list utterance objects representing marker nodes
+        Returns
+        -------
+        An list utterance objects representing marker nodes
 
-            Algorithm:
-            ----------
-            1.  Takes in curr_node and get curr_next_node
-            2.  Assert that the nodes are by the same speaker. If they are by
-                different speakers, return false
-            3.  Subtract start time of curr_next_node from end time of curr_node
-                assert that there is "significant gap" between curr_node and
-                curr_next_node with given threshold
-            4.  If there is a "significant pause," return Pause Marker
-            """
-            
-            to_insert_list = [timestamp for timestamp in self.timestamps if curr_utt.start < inner_list[0] < param2]
+        Algorithm:
+        ----------
+        1.  Takes in curr_node and get curr_next_node
+        2.  Assert that the nodes are by the same speaker. If they are by
+            different speakers, return false
+        3.  Subtract start time of curr_next_node from end time of curr_node
+            assert that there is "significant gap" between curr_node and
+            curr_next_node with given threshold
+        4.  If there is a "significant pause," return Pause Marker
+        """
 
+        to_insert_list = [
+            timestamp
+            for timestamp in self.timestamp_pairs
+            if curr_utt.start < self.timestamp_pairs[0] < curr_utt.end
+        ]
+
+        for timestamp in to_insert_list:
             return UttObj(
-                curr_utt.end,
-                next_utt.start,
+                timestamp[1],
+                timestamp[0],
                 curr_utt.speaker,
-                INTERNAL_MARKER.MICROPAUSE,
+                "Pitch Change",
                 curr_utt.flexible_info,
-                    )
-                    logging.debug(f"micro pause marker  generated")
+            )
 
-            return
+        return
