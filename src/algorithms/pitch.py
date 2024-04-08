@@ -322,9 +322,7 @@ class PitchPlugin(Plugin):
             curr += shift_size
 
         # Cross window analysis to find unusual pitch changes
-        cross_window_analysis_timestamps = self.cross_window_analysis(
-            cross_window_data, local_window_hyperparameter, K
-        )
+        self.cross_window_analysis(cross_window_data, local_window_hyperparameter, K)
 
         for item in significant_points:
             func(
