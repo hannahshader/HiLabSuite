@@ -39,6 +39,7 @@ from gailbot import GBPluginMethods
 THRESHOLD = load_threshold().PAUSES
 THRESHOLDGAPS = load_threshold().GAPS
 INTERNAL_MARKER = load_formatter().INTERNAL
+WAV_FILES = load_formatter
 
 
 ###############################################################################
@@ -76,10 +77,11 @@ class PitchPlugin(Plugin):
         A structure interact instance
         """
         self.structure_interact_instance = dependency_outputs["GapPlugin"]
+        self.timestamp_pairs = []
 
-        self.structure_interact_instance.apply_markers_audio_files(
-            PitchPlugin.pitch_marker, self.structure_interact_instance.insert_marker
-        )
+        self.wav_files = 
+        self.structure_interact_instance.apply_markers(
+            PitchPlugin.pitch_marker)
 
         self.successful = True
         return self.structure_interact_instance
@@ -167,6 +169,7 @@ class PitchPlugin(Plugin):
                 )
                 if marked_data_point not in significant_points:
                     significant_points.append(marked_data_point)
+                    self.timestamp_pairs.append([marked_data_point, marked_data_point])
         return [mean_pitch_of_window, start_time, end_time], significant_points
 
     def cross_window_analysis(self, cross_window_data, scope_hyperparam, K):
@@ -189,7 +192,9 @@ class PitchPlugin(Plugin):
             mad = statistics.mean([abs(item - mean) for item in means])
 
             if abs(cross_window_data[i][0] - mean) > (K * mad):
-                timestamps.append([cross_window_data[i][1], cross_window_data[i][2]])
+                self.timestamp_pairs.append(
+                    [cross_window_data[i][1], cross_window_data[i][2]]
+                )
             num_windows += 1
 
         return timestamps
@@ -289,7 +294,7 @@ class PitchPlugin(Plugin):
             filtered_confident_pitch_values_hz,
         )
 
-    def markers_for_file(self, audio_file_path, func):
+    def markers_for_file(self, audio_file_path):
         # Params for shifting
         k = 30
         K = 1.5
@@ -308,7 +313,7 @@ class PitchPlugin(Plugin):
         cross_window_data = []
         curr = min(filtered_pitch_outputs_x)
         while curr < max(filtered_confident_pitch_values_hz):
-            curr_window_data, self.significant_points = self.inner_window_analysis(
+            curr_window_data, significant_points = self.inner_window_analysis(
                 cs,
                 cs_prime,
                 curr,
@@ -326,18 +331,7 @@ class PitchPlugin(Plugin):
             cross_window_data, local_window_hyperparameter, K
         )
 
-        for item in significant_points:
-            func(
-                UttObj(
-                    item[0],
-                    item[0],
-                    "Pitch Value is {item[1]}",
-                    "Pitch",
-                    0,
-                )
-            )
-
-    def pitch_marker(self, wav_files, func) -> UttObj:
+    def pitch_marker(curr_utt: UttObj, next_utt: UttObj) -> UttObj:
         """
         Parameters
         ----------
@@ -358,5 +352,8 @@ class PitchPlugin(Plugin):
             curr_next_node with given threshold
         4.  If there is a "significant pause," return Pause Marker
         """
+
         for wav_file in wav_files:
+            self.markers_for_file
+
             self.markers_for_file(self, wav_file, func)
