@@ -332,28 +332,36 @@ class PitchPlugin(Plugin):
         )
 
     def pitch_marker(curr_utt: UttObj, next_utt: UttObj) -> UttObj:
-        """
-        Parameters
-        ----------
-        wav files : List[str]
-            Fill paths to the input files
+            """
+            Parameters
+            ----------
+            wav files : List[str]
+                Fill paths to the input files
 
-        Returns
-        -------
-        An list utterance objects representing marker nodes
+            Returns
+            -------
+            An list utterance objects representing marker nodes
 
-        Algorithm:
-        ----------
-        1.  Takes in curr_node and get curr_next_node
-        2.  Assert that the nodes are by the same speaker. If they are by
-            different speakers, return false
-        3.  Subtract start time of curr_next_node from end time of curr_node
-            assert that there is "significant gap" between curr_node and
-            curr_next_node with given threshold
-        4.  If there is a "significant pause," return Pause Marker
-        """
+            Algorithm:
+            ----------
+            1.  Takes in curr_node and get curr_next_node
+            2.  Assert that the nodes are by the same speaker. If they are by
+                different speakers, return false
+            3.  Subtract start time of curr_next_node from end time of curr_node
+                assert that there is "significant gap" between curr_node and
+                curr_next_node with given threshold
+            4.  If there is a "significant pause," return Pause Marker
+            """
+            
+            to_insert_list = [timestamp for timestamp in self.timestamps if curr_utt.start < inner_list[0] < param2]
 
-        for wav_file in wav_files:
-            self.markers_for_file
+            return UttObj(
+                curr_utt.end,
+                next_utt.start,
+                curr_utt.speaker,
+                INTERNAL_MARKER.MICROPAUSE,
+                curr_utt.flexible_info,
+                    )
+                    logging.debug(f"micro pause marker  generated")
 
-            self.markers_for_file(self, wav_file, func)
+            return
