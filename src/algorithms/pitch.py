@@ -76,11 +76,13 @@ class PitchPlugin(Plugin):
         -------
         A structure interact instance
         """
-        self.structure_interact_instance = dependency_outputs["GapPlugin"]
+        self.structure_interact_instance = dependency_outputs["PausePlugin"]
         self.timestamp_pairs = []
 
+        # Get input file from gailbot methods
         self.wav_files = methods.data_files
-        self.markers_for_file(self.wav_files)
+        for audio_file in self.wav_files:
+            self.markers_for_file(audio_file)
 
         self.structure_interact_instance.apply_markers(PitchPlugin.pitch_marker)
 
@@ -169,9 +171,8 @@ class PitchPlugin(Plugin):
                     filtered_pitch_outputs_x, filtered_confident_pitch_values_hz, t
                 )
                 if marked_data_point not in significant_points:
-                    significant_points.append(marked_data_point)
                     self.timestamp_pairs.append([marked_data_point, marked_data_point])
-        return [mean_pitch_of_window, start_time, end_time], significant_points
+        return [mean_pitch_of_window, start_time, end_time]
 
     def cross_window_analysis(self, cross_window_data, scope_hyperparam, K):
         assert scope_hyperparam <= len(cross_window_data)
@@ -197,50 +198,6 @@ class PitchPlugin(Plugin):
                     [cross_window_data[i][1], cross_window_data[i][2]]
                 )
             num_windows += 1
-
-        return timestamps
-
-    def plot_data(self, timestamps, pitch_values, significant_points, cs):
-        plt.figure(figsize=(20, 10))
-        plt.scatter(timestamps, pitch_values, color="r", label="Original Data (Hz)")
-        plt.plot(
-            timestamps, cs(timestamps), label="Smooth Pitch Curve (Hz)", color="blue"
-        )
-        t_values, pitch_values = zip(*significant_points)
-        plt.scatter(
-            t_values,
-            pitch_values,
-            color="green",
-            label="Significant Points",
-            marker="x",
-        )
-        plt.title("Pitch Analysis in Hz")
-        plt.xlabel("Time")
-        plt.ylabel("Pitch (Hz)")
-        plt.legend()
-        plt.show()
-
-    def output_data_to_file(
-        self,
-        significant_points,
-        cross_window_analysis_timestamps,
-        filename="data_output.txt",
-    ):
-        with open(filename, "w") as file:
-            file.write("Inner window analysis\n")
-            file.write(
-                "(All points with usual pitch change in a window as timestamp and pitch)\n"
-            )
-            for item in significant_points:
-                file.write(f"Time stamp: {item[0]}, Pitch value: {item[1]}\n")
-            file.write("Cross window analysis\n")
-            file.write(
-                "(All start and end timestamps of windows with unusual pitch changes)\n"
-            )
-            for item in cross_window_analysis_timestamps:
-                file.write(
-                    f"Window start time: {item[0]}, Window end time: {item[1]}\n"
-                )
 
     def get_curves_and_data(self, audio_file_path):
 
@@ -297,6 +254,7 @@ class PitchPlugin(Plugin):
 
     def markers_for_file(self, audio_file_path):
         # Params for shifting
+        # Change to importing these from .toml
         k = 30
         K = 1.5
         window_size = 5
@@ -314,7 +272,7 @@ class PitchPlugin(Plugin):
         cross_window_data = []
         curr = min(filtered_pitch_outputs_x)
         while curr < max(filtered_confident_pitch_values_hz):
-            curr_window_data, significant_points = self.inner_window_analysis(
+            curr_window_data = self.inner_window_analysis(
                 cs,
                 cs_prime,
                 curr,
@@ -328,9 +286,7 @@ class PitchPlugin(Plugin):
             curr += shift_size
 
         # Cross window analysis to find unusual pitch changes
-        cross_window_analysis_timestamps = self.cross_window_analysis(
-            cross_window_data, local_window_hyperparameter, K
-        )
+        self.cross_window_analysis(cross_window_data, local_window_hyperparameter, K)
 
     def pitch_marker(self, curr_utt: UttObj, next_utt: UttObj) -> UttObj:
         """
@@ -345,13 +301,7 @@ class PitchPlugin(Plugin):
 
         Algorithm:
         ----------
-        1.  Takes in curr_node and get curr_next_node
-        2.  Assert that the nodes are by the same speaker. If they are by
-            different speakers, return false
-        3.  Subtract start time of curr_next_node from end time of curr_node
-            assert that there is "significant gap" between curr_node and
-            curr_next_node with given threshold
-        4.  If there is a "significant pause," return Pause Marker
+        1.
         """
 
         to_insert_list = [
@@ -360,6 +310,7 @@ class PitchPlugin(Plugin):
             if curr_utt.start < self.timestamp_pairs[0] < curr_utt.end
         ]
 
+        # Change to importing label for pitch change from configs file
         for timestamp in to_insert_list:
             return UttObj(
                 timestamp[1],

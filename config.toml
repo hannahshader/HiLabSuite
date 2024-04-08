@@ -36,8 +36,20 @@ rel_path = "src/algorithms/pause.py"
 module_name = "pause"
 
 [[plugins]]
+plugin_name = "PitchPlugin"
+dependencies = [ "OutputFileManager", "SyllableRatePlugin", "GapPlugin", "PausePlugin"]
+rel_path = "src/algorithms/pitch.py"
+module_name = "pitch"
+
+[[plugins]]
+plugin_name = "PitchPlugin"
+dependencies = [ "OutputFileManager", "SyllableRatePlugin", "GapPlugin", "PausePlugin", "PitchPlugin"]
+rel_path = "src/algorithms/laughter.py"
+module_name = "laughter"
+
+[[plugins]]
 plugin_name = "OverlapPlugin"
-dependencies = [ "OutputFileManager", "SyllableRatePlugin", "GapPlugin", "PausePlugin",]
+dependencies = [ "OutputFileManager", "SyllableRatePlugin", "GapPlugin", "PausePlugin", "PitchPlugin", "LaughterPlugin"]
 rel_path = "src/algorithms/overlap.py"
 module_name = "overlap"
 

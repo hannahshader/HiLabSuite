@@ -54,16 +54,16 @@ class OverlapPlugin(Plugin):
         -------
         A structure interact instance
         """
-        self.structure_interact_instance = dependency_outputs["PausePlugin"]
+        self.structure_interact_instance = dependency_outputs["LaughterPlugin"]
 
         self.structure_interact_instance.apply_markers_overlap(
             OverlapPlugin.OverlapMarker
         )
         self.structure_interact_instance.group_overlapping_sentences()
-    
+
         # FIX: in this step, an addiitonal overlap marker is being inserted
         self.structure_interact_instance.insert_overlap_markers_character_level()
-        
+
         self.structure_interact_instance.remove_empty_overlaps()
         self.structure_interact_instance.call_add_self_latch(self.self_latch_marker)
 
@@ -164,7 +164,9 @@ class OverlapPlugin(Plugin):
         else:
             return []
 
-    def self_latch_marker(self, overlap_start_one, overlap_end_one) -> tuple[UttObj, UttObj]:
+    def self_latch_marker(
+        self, overlap_start_one, overlap_end_one
+    ) -> tuple[UttObj, UttObj]:
         self_latch_one = UttObj(
             # Start and end times represent start and end of the latch
             # Start and end times are not used to sort these markers in list
