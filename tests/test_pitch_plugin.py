@@ -13,33 +13,76 @@ from HiLabSuite.src.algorithms.pause import (
 from HiLabSuite.src.algorithms.pitch import (
     PitchPlugin,
 )
-from gailbot import plugin
+from gailbot import GailBot
+from gailbot import GBPluginMethods
+from gailbot import ProfileSetting
+from gailbot.shared.utils.general import read_csv
+
+# def read_csv(path: str) -> List[Dict[str, str]]:
+#     """
+#     Read data from a CSV file and return it as a list of dictionaries.
+
+#     Args:
+#         path (str): Path to the CSV file.
+
+#     Returns:
+#         List[Dict[str, str]]: List of dictionaries containing the data from the CSV file.
+#     """
+#     data = []
+#     with open(path, mode="r") as file:
+#         reader = csv.DictReader(file)
+#         for row in reader:
+#             data.append(row)
+#     return data
 
 
-@pytest.fixture
 def setup_dependencies():
-    # Mock dependencies and GBPluginMethods here
-    marker_utterance_object = MarkerUtteranceDict()
-    structure_interact_object = StructureInteract()
-    structure_interact_object.data_structure = marker_utterance_object
-    dependency_outputs = {"GapPlugin": structure_interact_object}
+    gb = GailBot()
 
-    # Mock any methods from GBPluginMethods that you use
+    google_api = "/Users/hannahshader/Desktop/google.json"
+    input = "/Users/hannahshader/Desktop/Creep_By_Radiohead.wav"
+    output = "/Users/hannahshader/Desktop"
 
-    return dependency_outputs, None
+    # source_id = gb.add_source(input, output)
+    # gb.apply_profile_to_source(source_id=source_id, profile_name="Default")
+    # google_transcription_result = gb.transcribe()
+
+    # methods = GBPluginMethods(None)
+    # utterances_map = methods.get_utterance_objects()
+    # print(utterances_map)
+
+    # Get a list of the new requirements
+
+    # Plan 1
+    gb.register_suite("/Users/hannahshader/Desktop/HiLabSuite/HiLabSuite")
+
+    new_setting = ProfileSetting(
+        engine_setting_name="google",
+        plugin_suite_setting={
+            "NewSuite": [
+                "Pause",
+                "Gap",
+                "Pitch",
+                "Laughter",
+                "XmlPlugin",
+                "ChatPlugin",
+                "TextPlugin",
+                "CSVPlugin",
+            ]
+        },
+    )
+    new_profile_name = "new profile"
+    gb.create_profile(name=new_profile_name, setting=new_setting)
+
+    source_id = gb.add_source(input, output)
+    gb.apply_profile_to_source(source_id=source_id, profile_name=new_profile_name)
+    google_transcription_result = gb.transcribe()
+
+    # Plan 2
+    # Generate CVS file
+    # Read in CVS to utterances
+    # Test from there
 
 
-def test_apply_success(setup_dependencies):
-    dependency_outputs, methods = setup_dependencies
-    pause_plugin = PitchPlugin()
-
-    # Execute the apply method
-
-    result = pause_plugin.apply(dependency_outputs, None)
-    print("Result is:")
-    print(result)
-
-    assert pause_plugin.successful
-    assert (
-        result == dependency_outputs["GapPlugin"]
-    )  # or however you expect your method to manipulate the structure_interact_instance
+if __name__ == "__main__":
+    setup_dependencies()
