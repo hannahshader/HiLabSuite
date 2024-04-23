@@ -1,3 +1,8 @@
+import logging
+import io
+from typing import Dict, Any, List
+from dataclasses import dataclass
+
 import numpy as np, csv
 from collections import defaultdict
 import os, sys, pickle, time, librosa, torch, numpy as np
@@ -13,15 +18,12 @@ from tensorboardX import SummaryWriter
 import sys
 import os
 
-from models import ResNetBigger
+from HiLabSuite.src.algorithms.models import ResNetBigger
 import json
-import models
-import configs
-
-import models
-import data_loaders
-import audio_utils
-import laugh_segmenter
+import HiLabSuite.src.algorithms.configs
+import HiLabSuite.src.algorithms.utils.data_loaders
+import HiLabSuite.src.algorithms.utils.audio_utils
+import HiLabSuite.src.algorithms.laugh_segmenter
 from functools import partial
 from tqdm import tqdm
 import tgt

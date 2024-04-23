@@ -102,7 +102,7 @@ class MarkerUtteranceDict:
             # set the speaker label to be the same for all files when
             # there is are overlaps and multiple files are uploaded
             counter_equal_speaker = 1
-            
+
             if self.overlaps == True:
                 for key, utt_list in utterance_map.items():
                     for utt in utt_list:
@@ -170,7 +170,6 @@ class MarkerUtteranceDict:
             self.list = copy.deepcopy(utterances)
             self.sentences = copy.deepcopy(sentence_data)
 
-
     def testing_print(self):
         """
         Testing function that prints a given output
@@ -231,7 +230,7 @@ class MarkerUtteranceDict:
     def insert_marker_syllab_rate(self, value: Any) -> None:
         """
         Inserts a marker into the data structure while maintaining the order
-        for syllable rate specifically. When two markers have the same start 
+        for syllable rate specifically. When two markers have the same start
         time, inserts new marker after the original one. Includes extra checks
         for syllable rate specifically
 
@@ -1009,9 +1008,9 @@ class MarkerUtteranceDict:
                 self_latch_dict[
                     (overlap_start_one.text, overlap_start_one.overlap_id)
                 ] = marker1
-                self_latch_dict[
-                    overlap_end_one.text, overlap_end_one.overlap_id
-                ] = marker2
+                self_latch_dict[overlap_end_one.text, overlap_end_one.overlap_id] = (
+                    marker2
+                )
 
         for item in self.list:
             if (item.text, item.overlap_id) in self_latch_dict:

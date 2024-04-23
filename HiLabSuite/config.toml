@@ -23,74 +23,47 @@ plugin_name = "SyllableRatePlugin"
 dependencies = [ "OutputFileManager",]
 rel_path = "src/algorithms/syllab_rate.py"
 module_name = "syllab_rate"
-hidden = false
+hidden = true
 
 [[plugins]]
 plugin_name = "GapPlugin"
 dependencies = [ "OutputFileManager", "SyllableRatePlugin",]
 rel_path = "src/algorithms/gap.py"
 module_name = "gap"
-hidden = false
+hidden = true
 
 [[plugins]]
 plugin_name = "PausePlugin"
 dependencies = [ "OutputFileManager", "SyllableRatePlugin", "GapPlugin",]
 rel_path = "src/algorithms/pause.py"
 module_name = "pause"
-hidden = false
+hidden = true
 
 [[plugins]]
 plugin_name = "PitchPlugin"
 dependencies = [ "OutputFileManager", "SyllableRatePlugin", "GapPlugin", "PausePlugin"]
 rel_path = "src/algorithms/pitch.py"
 module_name = "pitch"
-hidden = false
+hidden = true
 
 [[plugins]]
-plugin_name = "PitchPlugin"
+plugin_name = "LaughterPlugin"
 dependencies = [ "OutputFileManager", "SyllableRatePlugin", "GapPlugin", "PausePlugin", "PitchPlugin"]
 rel_path = "src/algorithms/laughter.py"
 module_name = "laughter"
-hidden = false
+hidden = true
 
-[[plugins]]
-plugin_name = "OverlapPlugin"
-dependencies = [ "OutputFileManager", "SyllableRatePlugin", "GapPlugin", "PausePlugin", "PitchPlugin", "LaughterPlugin"]
-rel_path = "src/algorithms/overlap.py"
-module_name = "overlap"
-hidden = false
 
 [[plugins]]
 # Relies on all of the previous plugins to be run in order to work
 # However, each of the CSV, Text, and Xml outputs can run simultaneously or at
 # any time
 plugin_name = "CSVPlugin"
-dependencies = [ "OutputFileManager", "SyllableRatePlugin", "GapPlugin", "PausePlugin", "OverlapPlugin"]
+dependencies = [ "OutputFileManager", "SyllableRatePlugin", "GapPlugin", "PausePlugin", "PitchPlugin", "LaughterPlugin"]
 rel_path = "src/format/csv.py"
 module_name = "csv"
-hidden = true
+hidden = false
 
-[[plugins]]
-plugin_name = "TextPlugin"
-dependencies = [ "OutputFileManager", "SyllableRatePlugin", "GapPlugin", "PausePlugin", "OverlapPlugin"]
-rel_path = "src/format/text.py"
-module_name = "text"
-hidden = true 
-
-[[plugins]]
-plugin_name = "XmlPlugin"
-dependencies = [ "OutputFileManager", "SyllableRatePlugin", "GapPlugin", "PausePlugin", "OverlapPlugin"]
-rel_path = "src/format/xml.py"
-module_name = "xml"
-hidden = true 
-
-[[plugins]]
-plugin_name = "ChatPlugin"
-# The creation of a CHAT output is dependent on the XML output
-dependencies = [ "OutputFileManager", "SyllableRatePlugin", "GapPlugin", "PausePlugin", "OverlapPlugin", "XmlPlugin"]
-rel_path = "src/format/chat.py"
-module_name = "chat"
-hidden = true
 
 
 

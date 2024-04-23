@@ -59,7 +59,9 @@ class CSVPlugin(Plugin):
         none
         """
 
-        structure_interact_instance = dependency_outputs["OverlapPlugin"]
+        print("Dependency outputs keys:")
+        print(dependency_outputs.keys())
+        structure_interact_instance = dependency_outputs["OutputFileManager"]
 
         # testing
         # structure_interact_instance.testing_print()

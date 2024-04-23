@@ -38,8 +38,6 @@ from gailbot.shared.utils.general import read_csv
 
 def setup_dependencies():
     gb = GailBot()
-
-    google_api = "/Users/hannahshader/Desktop/google.json"
     input = "/Users/hannahshader/Desktop/Creep_By_Radiohead.wav"
     output = "/Users/hannahshader/Desktop"
 
@@ -54,29 +52,26 @@ def setup_dependencies():
     # Get a list of the new requirements
 
     # Plan 1
+    print("Error Check: Print working.")
     gb.register_suite("/Users/hannahshader/Desktop/HiLabSuite/HiLabSuite")
-
+    print("Error Check: Registered Suite.")
     new_setting = ProfileSetting(
-        engine_setting_name="google",
+        engine_setting_name="google engine",
         plugin_suite_setting={
-            "NewSuite": [
-                "Pause",
-                "Gap",
-                "Pitch",
-                "Laughter",
-                "XmlPlugin",
-                "ChatPlugin",
-                "TextPlugin",
+            "HiLabSuite": [
                 "CSVPlugin",
             ]
         },
     )
-    new_profile_name = "new profile"
-    gb.create_profile(name=new_profile_name, setting=new_setting)
+    print("Error Check: Created new setting.")
+    gb.create_profile(name="new", setting=new_setting)
+    print("Error Check: Created profile.")
 
     source_id = gb.add_source(input, output)
-    gb.apply_profile_to_source(source_id=source_id, profile_name=new_profile_name)
-    google_transcription_result = gb.transcribe()
+    gb.apply_profile_to_source(source_id=source_id, profile_name="new")
+    print("Error Check: Applied source.")
+    whisper_transcription_result = gb.transcribe()
+    print("Error Check: Transcribed.")
 
     # Plan 2
     # Generate CVS file
