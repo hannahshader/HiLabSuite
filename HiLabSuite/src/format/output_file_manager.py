@@ -54,13 +54,14 @@ class OutputFileManager(Plugin):
         -------
         none
         """
-        
+
         structure_interact_instance = StructureInteract()
         structure_interact_instance = structure_interact_instance.apply(methods)
 
         origin_path = os.path.abspath(__file__)
-        format_in_path = origin_path.replace("src/format/output_file_manager.py", 
-                                          "format.md")
+        format_in_path = origin_path.replace(
+            "src/format/output_file_manager.py", "format.md"
+        )
 
         format_out_path = os.path.join(
             structure_interact_instance.output_path, OUTPUT_FILE.FORMAT_MD
@@ -69,8 +70,5 @@ class OutputFileManager(Plugin):
         # Creates the path where the text file will be written
         shutil.copy(format_in_path, format_out_path)
 
-
-
         self.successful = True
         return structure_interact_instance
-    

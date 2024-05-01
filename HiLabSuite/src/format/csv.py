@@ -59,10 +59,10 @@ class CSVPlugin(Plugin):
         none
         """
 
-        print("Dependency outputs keys:")
-        print(dependency_outputs.keys())
-        structure_interact_instance = dependency_outputs["OutputFileManager"]
-
+        print("Possible keys: \n")
+        for key in dependency_outputs.keys():
+            print(key)
+        structure_interact_instance = dependency_outputs["LaughterPlugin"]
         # testing
         # structure_interact_instance.testing_print()
         self.run(structure_interact_instance)

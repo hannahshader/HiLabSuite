@@ -54,7 +54,7 @@ class OverlapPlugin(Plugin):
         -------
         A structure interact instance
         """
-        self.structure_interact_instance = dependency_outputs["LaughterPlugin"]
+        self.structure_interact_instance = dependency_outputs["PausePlugin"]
 
         self.structure_interact_instance.apply_markers_overlap(
             OverlapPlugin.OverlapMarker

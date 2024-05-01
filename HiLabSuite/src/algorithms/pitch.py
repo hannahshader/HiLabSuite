@@ -84,7 +84,12 @@ class PitchPlugin(Plugin):
         for audio_file in self.wav_files:
             self.markers_for_file(audio_file)
 
-        self.structure_interact_instance.apply_markers(PitchPlugin.pitch_marker)
+        print("Timestamp pairs in pitch are:")
+        print(self.timestamp_pairs)
+        if len(self.timestamp_pairs) != 0:
+            self.structure_interact_instance.apply_markers_pitch(
+                PitchPlugin.pitch_marker, self.timestamp_pairs
+            )
 
         self.successful = True
         return self.structure_interact_instance
@@ -171,7 +176,7 @@ class PitchPlugin(Plugin):
                     filtered_pitch_outputs_x, filtered_confident_pitch_values_hz, t
                 )
                 if marked_data_point not in significant_points:
-                    self.timestamp_pairs.append([marked_data_point, marked_data_point])
+                    self.timestamp_pairs.append(marked_data_point)
         return [mean_pitch_of_window, start_time, end_time]
 
     def cross_window_analysis(self, cross_window_data, scope_hyperparam, K):
@@ -193,10 +198,11 @@ class PitchPlugin(Plugin):
             mean = statistics.mean(means)
             mad = statistics.mean([abs(item - mean) for item in means])
 
-            if abs(cross_window_data[i][0] - mean) > (K * mad):
-                self.timestamp_pairs.append(
-                    [cross_window_data[i][1], cross_window_data[i][2]]
-                )
+            # if abs(cross_window_data[i][0] - mean) > (K * mad):
+            #     self.timestamp_pairs.append(
+            #         [cross_window_data[i][1], cross_window_data[i][2]]
+            #     )
+            # TO DO: FIX CROSS WINDOW ANALYSIS
             num_windows += 1
 
     def get_curves_and_data(self, audio_file_path):
@@ -288,7 +294,7 @@ class PitchPlugin(Plugin):
         # Cross window analysis to find unusual pitch changes
         self.cross_window_analysis(cross_window_data, local_window_hyperparameter, K)
 
-    def pitch_marker(self, curr_utt: UttObj, next_utt: UttObj) -> UttObj:
+    def pitch_marker(curr_utt: UttObj, next_utt: UttObj, timestamp_pairs) -> UttObj:
         """
         Parameters
         ----------
@@ -306,17 +312,19 @@ class PitchPlugin(Plugin):
 
         to_insert_list = [
             timestamp
-            for timestamp in self.timestamp_pairs
-            if curr_utt.start < self.timestamp_pairs[0] < curr_utt.end
+            for timestamp in timestamp_pairs
+            if curr_utt.start
+            < timestamp[0]
+            < curr_utt.end  # TO DO? CHANGE THIS TO NEXT UTT?
         ]
 
         # Change to importing label for pitch change from configs file
         for timestamp in to_insert_list:
             return UttObj(
-                timestamp[1],
+                timestamp[0],
                 timestamp[0],
                 curr_utt.speaker,
-                "Pitch Change",
+                "pitch_change",
                 curr_utt.flexible_info,
             )
 

@@ -20,13 +20,12 @@ import os
 
 from HiLabSuite.src.algorithms.models import ResNetBigger
 import json
-import HiLabSuite.src.algorithms.configs
-import HiLabSuite.src.algorithms.utils.data_loaders
-import HiLabSuite.src.algorithms.utils.audio_utils
-import HiLabSuite.src.algorithms.laugh_segmenter
+import HiLabSuite.src.algorithms.configs as configs
+import HiLabSuite.src.algorithms.utils.data_loaders as data_loaders
+import HiLabSuite.src.algorithms.utils.audio_utils as audio_utils
+import HiLabSuite.src.algorithms.laugh_segmenter as laugh_segmenter
 from functools import partial
 from tqdm import tqdm
-import tgt
 import scipy
 
 # Add these to configs file or remove
@@ -88,12 +87,17 @@ class LaughterPlugin(Plugin):
         for audio_file in self.wav_files:
             self.markers_for_file(audio_file)
 
-        self.structure_interact_instance.apply_markers(LaughterPlugin.laughter_marker)
+        print("Timestamp pairs in laughter is: ")
+        print(self.timestamp_pairs)
+        if len(self.timestamp_pairs) != 0:
+            self.structure_interact_instance.apply_markers_pitch(
+                LaughterPlugin.laughter_marker, self.timestamp_pairs
+            )
 
         self.successful = True
         return self.structure_interact_instance
 
-    def laughter_marker(self, curr_utt: UttObj, next_utt: UttObj) -> UttObj:
+    def laughter_marker(curr_utt: UttObj, next_utt: UttObj, timestamp_pairs) -> UttObj:
         """
         Parameters
         ----------
@@ -112,8 +116,8 @@ class LaughterPlugin(Plugin):
         """
         to_insert_list = [
             timestamp
-            for timestamp in self.timestamp_pairs
-            if curr_utt.start < self.timestamp_pairs[0] < curr_utt.end
+            for timestamp in timestamp_pairs
+            if curr_utt.start < timestamp[0] < curr_utt.end
         ]
 
         # Change to importing label for laughter text from configs file
@@ -122,7 +126,7 @@ class LaughterPlugin(Plugin):
                 timestamp[1],
                 timestamp[0],
                 curr_utt.speaker,
-                "Laughter",
+                "laughter",
                 curr_utt.flexible_info,
             )
 
@@ -282,7 +286,7 @@ class LaughterPlugin(Plugin):
 
         if "global_step" in checkpoint:
             model.global_step = checkpoint["global_step"] + 1
-            print("Loading checkpoint at step: ", model.global_step)
+            ("Loading checkpoint at step: ", model.global_step)
 
         if "best_val_loss" in checkpoint:
             model.best_val_loss = checkpoint["best_val_loss"]
@@ -293,7 +297,7 @@ class LaughterPlugin(Plugin):
         CONFIG_MAP = {}
         CONFIG_MAP["resnet_with_augmentation"] = {
             "batch_size": 32,
-            "model": models.ResNetBigger,
+            "model": ResNetBigger,
             "feature_fn": partial(audio_utils.featurize_melspec, hop_length=186),
             "val_data_text_path": "./data/switchboard/val/switchboard_val_data.txt",
             "log_frequency": 200,

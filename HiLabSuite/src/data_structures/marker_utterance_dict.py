@@ -433,6 +433,52 @@ class MarkerUtteranceDict:
         if utt_list:
             func(utt_list, sentences_copy[-1][0], sentences_copy[-1][1])
 
+    def apply_for_pitch(self, func, timestamp_pairs) -> None:
+        """
+        Same as apply_insert_marker but passes the additional parameters of
+        timestamp_pairs.
+
+        Parameters
+        ----------
+        apply_functions: a list of functions to run and add their marker values
+        to the list in MarkerUtteranceDict
+
+        Returns
+        -------
+        none
+        """
+
+        # Deep copies the list so no infinite insertions/checks
+        copied_list = copy.deepcopy(self.list)
+
+        # creates a varible to add latch_id if applicable
+        latch_id = 0
+
+        for item in copied_list:
+            # Only inspects non marker items of the list
+            if self.is_speaker_utt(item) == False:
+                continue
+            curr = item
+            curr_next = self.get_next_utt(curr)
+            # Returns if there is no next item
+            if not curr_next:
+                continue
+            # Storing markers as a list becuase the overlap function
+            # Returns four markers
+            marker = func(curr, curr_next, timestamp_pairs)
+
+            if isinstance(marker, tuple):
+                marker1, marker2 = marker
+                if marker1.latch_id == -1 and marker2.latch_id == -1:
+                    latch_id += 1
+                    marker1.latch_id = latch_id
+                    marker2.latch_id = latch_id
+                self.insert_marker(marker1)
+                self.insert_marker(marker2)
+            else:
+                marker1 = marker
+                self.insert_marker(marker)
+
     def apply_insert_marker(self, func) -> None:
         """
         Takes a function to apply that has arguments as two utterances

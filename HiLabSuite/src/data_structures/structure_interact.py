@@ -231,6 +231,25 @@ class StructureInteract(Plugin):
         """
         self.data_structure.apply_insert_marker(func)
 
+    def apply_markers_pitch(self, func, timestamp_pairs) -> None:
+        """
+        Takes an instance of structure interact, which holds a MarkerUtterance
+        object.
+        Calls apply_insert_marker, which takes an instance of MarkerUtterance
+        and a function
+
+        Parameters
+        ----------
+        apply_functions: Takes a function, which take two sequential
+        utterances as parameters.
+
+        Returns
+        -------
+        none
+
+        """
+        self.data_structure.apply_for_pitch(func, timestamp_pairs)
+
     def apply_markers_overlap(self, apply_function) -> None:
         """
         Applies the markers for the overlap plugin

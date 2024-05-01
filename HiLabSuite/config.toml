@@ -10,7 +10,7 @@ plugin_name = "OutputFileManager"
 dependencies = []
 rel_path = "src/format/output_file_manager.py"
 module_name = "output_file_manager"
-hidden = true
+hidden = "False"
 
 [[plugins]]
 # Each of SyllableRate, Gap, Pause, and Overlap depend on the previous
@@ -23,36 +23,35 @@ plugin_name = "SyllableRatePlugin"
 dependencies = [ "OutputFileManager",]
 rel_path = "src/algorithms/syllab_rate.py"
 module_name = "syllab_rate"
-hidden = true
+hidden = "False"
 
 [[plugins]]
 plugin_name = "GapPlugin"
 dependencies = [ "OutputFileManager", "SyllableRatePlugin",]
 rel_path = "src/algorithms/gap.py"
 module_name = "gap"
-hidden = true
+hidden = "False"
 
 [[plugins]]
 plugin_name = "PausePlugin"
 dependencies = [ "OutputFileManager", "SyllableRatePlugin", "GapPlugin",]
 rel_path = "src/algorithms/pause.py"
 module_name = "pause"
-hidden = true
+hidden = "False"
 
 [[plugins]]
 plugin_name = "PitchPlugin"
 dependencies = [ "OutputFileManager", "SyllableRatePlugin", "GapPlugin", "PausePlugin"]
 rel_path = "src/algorithms/pitch.py"
 module_name = "pitch"
-hidden = true
+hidden = "False"
 
 [[plugins]]
 plugin_name = "LaughterPlugin"
 dependencies = [ "OutputFileManager", "SyllableRatePlugin", "GapPlugin", "PausePlugin", "PitchPlugin"]
 rel_path = "src/algorithms/laughter.py"
 module_name = "laughter"
-hidden = true
-
+hidden = "False"
 
 [[plugins]]
 # Relies on all of the previous plugins to be run in order to work
@@ -62,9 +61,4 @@ plugin_name = "CSVPlugin"
 dependencies = [ "OutputFileManager", "SyllableRatePlugin", "GapPlugin", "PausePlugin", "PitchPlugin", "LaughterPlugin"]
 rel_path = "src/format/csv.py"
 module_name = "csv"
-hidden = false
-
-
-
-
-
+hidden = "False"

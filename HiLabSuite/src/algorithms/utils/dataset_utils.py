@@ -1,5 +1,4 @@
 import pandas as pd, numpy as np, math, os
-from praatio import tgio
 from nltk.tokenize import word_tokenize
 from joblib import Parallel, delayed
 from HiLabSuite.src.algorithms.utils import text_utils
