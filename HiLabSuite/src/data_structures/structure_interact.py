@@ -43,6 +43,12 @@ class StructureInteract(Plugin):
         self.output_path = ""
         self.chatter_path = ""
 
+    def get_first_timestamp(self):
+        return self.data_structure.get_first_timestamp()
+
+    def get_last_timestamp(self):
+        return self.data_structure.get_last_timestamp()
+
     def apply(self, methods: GBPluginMethods):
         """
         The driver for structure_interact
@@ -295,6 +301,9 @@ class StructureInteract(Plugin):
     # Sorts the data structure to keep overlapping sentences together
     def group_overlapping_sentences(self):
         return self.data_structure.order_overlap()
+
+    def insert_single_marker(self, marker):
+        return self.data_structure.insert_marker(marker)
 
     # inserts the overlap markers into character level
     def insert_overlap_markers_character_level(self):

@@ -170,6 +170,12 @@ class MarkerUtteranceDict:
             self.list = copy.deepcopy(utterances)
             self.sentences = copy.deepcopy(sentence_data)
 
+    def get_first_timestamp(self):
+        return self.list[0].start
+
+    def get_last_timestamp(self):
+        return self.list[-1].start
+
     def testing_print(self):
         """
         Testing function that prints a given output

@@ -87,50 +87,17 @@ class LaughterPlugin(Plugin):
         for audio_file in self.wav_files:
             self.markers_for_file(audio_file)
 
-        print("Timestamp pairs in laughter is: ")
-        print(self.timestamp_pairs)
-        if len(self.timestamp_pairs) != 0:
-            self.structure_interact_instance.apply_markers_pitch(
-                LaughterPlugin.laughter_marker, self.timestamp_pairs
+        for timestamp in self.timestamp_pairs:
+            self.structure_interact_instance.insert_single_marker(
+                UttObj(
+                    timestamp[1],
+                    timestamp[0],
+                    "laughter",
+                    "laughter",
+                ),
             )
-
         self.successful = True
         return self.structure_interact_instance
-
-    def laughter_marker(curr_utt: UttObj, next_utt: UttObj, timestamp_pairs) -> UttObj:
-        """
-        Parameters
-        ----------
-        curr_utt : UttObj
-            Utterance object representing the current utterance
-        next_utt: UttObj
-            Utterance object representing the next utterance
-
-        Returns
-        -------
-        An utterance object representing a marker node
-
-        Algorithm:
-        ----------
-        1.
-        """
-        to_insert_list = [
-            timestamp
-            for timestamp in timestamp_pairs
-            if curr_utt.start < timestamp[0] < curr_utt.end
-        ]
-
-        # Change to importing label for laughter text from configs file
-        for timestamp in to_insert_list:
-            return UttObj(
-                timestamp[1],
-                timestamp[0],
-                curr_utt.speaker,
-                "laughter",
-                curr_utt.flexible_info,
-            )
-
-        return
 
     def make_vocab(
         filepaths=None,

@@ -84,11 +84,19 @@ class PitchPlugin(Plugin):
         for audio_file in self.wav_files:
             self.markers_for_file(audio_file)
 
-        print("Timestamp pairs in pitch are:")
-        print(self.timestamp_pairs)
-        if len(self.timestamp_pairs) != 0:
-            self.structure_interact_instance.apply_markers_pitch(
-                PitchPlugin.pitch_marker, self.timestamp_pairs
+        # if len(self.timestamp_pairs) != 0:
+        #     self.structure_interact_instance.apply_markers_pitch(
+        #         PitchPlugin.pitch_marker, self.timestamp_pairs
+        #     )
+
+        for timestamp in self.timestamp_pairs:
+            self.structure_interact_instance.insert_single_marker(
+                UttObj(
+                    timestamp[0],
+                    timestamp[0],
+                    "pitch",
+                    "pitch",
+                ),
             )
 
         self.successful = True
@@ -179,7 +187,15 @@ class PitchPlugin(Plugin):
                     self.timestamp_pairs.append(marked_data_point)
         return [mean_pitch_of_window, start_time, end_time]
 
-    def cross_window_analysis(self, cross_window_data, scope_hyperparam, K):
+    def cross_window_analysis(
+        self,
+        cross_window_data,
+        scope_hyperparam,
+        K,
+        filtered_pitch_outputs_x,
+        filtered_confident_pitch_values_hz,
+        significant_points,
+    ):
         assert scope_hyperparam <= len(cross_window_data)
         num_windows = 0
         timestamps = []
@@ -203,6 +219,27 @@ class PitchPlugin(Plugin):
             #         [cross_window_data[i][1], cross_window_data[i][2]]
             #     )
             # TO DO: FIX CROSS WINDOW ANALYSIS
+
+            if abs(cross_window_data[i][0] - mean) > (K * mad):
+                ## Get the closest data point to the start of the window
+                marked_data_point = self.get_closest_real_data_point(
+                    filtered_pitch_outputs_x,
+                    filtered_confident_pitch_values_hz,
+                    cross_window_data[i][1],
+                )
+                if marked_data_point not in significant_points:
+                    self.timestamp_pairs.append(marked_data_point)
+
+                ## Get the closest data point to the end of the window
+                marked_data_point = self.get_closest_real_data_point(
+                    filtered_pitch_outputs_x,
+                    filtered_confident_pitch_values_hz,
+                    cross_window_data[i][2],
+                )
+                if marked_data_point not in significant_points:
+                    self.timestamp_pairs.append(marked_data_point)
+
+            ## Keep this
             num_windows += 1
 
     def get_curves_and_data(self, audio_file_path):
@@ -292,40 +329,49 @@ class PitchPlugin(Plugin):
             curr += shift_size
 
         # Cross window analysis to find unusual pitch changes
-        self.cross_window_analysis(cross_window_data, local_window_hyperparameter, K)
+        self.cross_window_analysis(
+            cross_window_data,
+            local_window_hyperparameter,
+            K,
+            filtered_pitch_outputs_x,
+            filtered_confident_pitch_values_hz,
+            significant_points,
+        )
 
-    def pitch_marker(curr_utt: UttObj, next_utt: UttObj, timestamp_pairs) -> UttObj:
-        """
-        Parameters
-        ----------
-        wav files : List[str]
-            Fill paths to the input files
+    # def pitch_marker(curr_utt: UttObj, next_utt: UttObj, timestamp_pairs) -> UttObj:
+    #     """
+    #     Parameters
+    #     ----------
+    #     wav files : List[str]
+    #         Fill paths to the input files
 
-        Returns
-        -------
-        An list utterance objects representing marker nodes
+    #     Returns
+    #     -------
+    #     An list utterance objects representing marker nodes
 
-        Algorithm:
-        ----------
-        1.
-        """
+    #     Algorithm:
+    #     ----------
+    #     1.
+    #     """
 
-        to_insert_list = [
-            timestamp
-            for timestamp in timestamp_pairs
-            if curr_utt.start
-            < timestamp[0]
-            < curr_utt.end  # TO DO? CHANGE THIS TO NEXT UTT?
-        ]
+    #     to_insert_list = [
+    #         timestamp
+    #         for timestamp in timestamp_pairs
+    #         if curr_utt.start
+    #         < timestamp[0]
+    #         < (next_utt.start if next_utt else curr_utt.end)
+    #     ]
+    #     print("To insert list in pitch is: ")
+    #     print(to_insert_list)
 
-        # Change to importing label for pitch change from configs file
-        for timestamp in to_insert_list:
-            return UttObj(
-                timestamp[0],
-                timestamp[0],
-                curr_utt.speaker,
-                "pitch_change",
-                curr_utt.flexible_info,
-            )
+    #     # Change to importing label for pitch change from configs file
+    #     for timestamp in to_insert_list:
+    #         return UttObj(
+    #             timestamp[0],
+    #             timestamp[0],
+    #             curr_utt.speaker,
+    #             "pitch_change",
+    #             curr_utt.flexible_info,
+    #         )
 
-        return
+    #     return

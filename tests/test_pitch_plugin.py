@@ -38,7 +38,7 @@ from gailbot.shared.utils.general import read_csv
 
 def setup_dependencies():
     gb = GailBot()
-    input = "/Users/hannahshader/Downloads/supranos.wav"
+    input = "/Users/hannahshader/Downloads/Test_Set.wav"
     output = "/Users/hannahshader/Desktop"
 
     # source_id = gb.add_source(input, output)
@@ -49,10 +49,10 @@ def setup_dependencies():
     # utterances_map = methods.get_utterance_objects()
     # print(utterances_map)
 
-    google_api = "/Users/hannahshader/Desktop/google.json"
-    google_engine_setting = {"engine": "google", "google_api_key": google_api}
-    google_engine_name = "google engine"
-    gb.add_engine(name=google_engine_name, setting=google_engine_setting)
+    # google_api = "/Users/hannahshader/Desktop/google.json"
+    # google_engine_setting = {"engine": "google", "google_api_key": google_api}
+    # google_engine_name = "google engine"
+    # gb.add_engine(name=google_engine_name, setting=google_engine_setting)
 
     # Get a list of the new requirements
 
@@ -75,11 +75,11 @@ def setup_dependencies():
         },
     )
     print("Error Check: Created new setting.")
-    gb.create_profile(name="0024", setting=new_setting)
+    gb.create_profile(name="0034", setting=new_setting)
     print("Error Check: Created profile.")
 
     source_id = gb.add_source(input, output)
-    gb.apply_profile_to_source(source_id=source_id, profile_name="0024")
+    gb.apply_profile_to_source(source_id=source_id, profile_name="0034")
     print("Error Check: Applied source.")
     whisper_transcription_result = gb.transcribe()
     print("Error Check: Transcribed.")
